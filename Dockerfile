@@ -27,12 +27,12 @@ COPY . .
 RUN cat config_files/bashrc >> .bashrc
 
 # Change apt servers to a local mirror (improves update download speed)
-RUN sed -i -e 's/http:\/\/archive\.ubuntu\.com\/ubuntu\//mirror:\/\/mirrors\.ubuntu\.com\/mirrors\.txt/' /etc/apt/sources.list
+#RUN sed -i -e 's/http:\/\/archive\.ubuntu\.com\/ubuntu\//mirror:\/\/mirrors\.ubuntu\.com\/mirrors\.txt/' /etc/apt/sources.list
 
 # Update system and install required packages (silently)
-RUN apt-get update -q=2
+RUN apt-get update
 RUN apt-get install -y python3.8 ssh openjdk-8-jre-headless \
-vim net-tools iputils-ping -qq > /dev/null 2>&1
+vim net-tools iputils-ping
 
 # Create a symbolic link to make 'python' be recognized as a system command
 RUN ln -sf /usr/bin/python3 /usr/bin/python
