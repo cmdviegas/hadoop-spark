@@ -28,8 +28,6 @@ docker network create --subnet=172.18.0.0/24 hadoop_network
 ```
 docker run -it -d --network=hadoop_network --ip 172.18.0.3 --name=slave1 --hostname=slave1 hadoopcluster/hadoop-spark:v3
 docker run -it -d --network=hadoop_network --ip 172.18.0.4 --name=slave2 --hostname=slave2 hadoopcluster/hadoop-spark:v3
-docker run -it -d --network=hadoop_network --ip 172.18.0.5 --name=slave3 --hostname=slave3 hadoopcluster/hadoop-spark:v3
-docker run -it -d --network=hadoop_network --ip 172.18.0.6 --name=slave4 --hostname=slave4 hadoopcluster/hadoop-spark:v3
 ```
 
 4. Run Hadoop master (name node)
