@@ -1,0 +1,58 @@
+# ██████╗  ██████╗ █████╗
+# ██╔══██╗██╔════╝██╔══██╗
+# ██║  ██║██║     ███████║
+# ██║  ██║██║     ██╔══██║
+# ██████╔╝╚██████╗██║  ██║
+# ╚═════╝  ╚═════╝╚═╝  ╚═╝
+# DEPARTAMENTO DE ENGENHARIA DE COMPUTACAO E AUTOMACAO
+# UNIVERSIDADE FEDERAL DO RIO GRANDE DO NORTE, NATAL/RN
+#
+# (C) 2022 CARLOS M D VIEGAS
+#
+# This is a docker-compose file that creates a stack of 
+# Apache Hadoop 3.3.4 containers
+#
+
+version: '3.9'
+
+networks:
+  hadoop_network:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.18.0.0/24
+
+services:
+  node-master:
+    container_name: node-master
+    hostname: node-master
+    image: hadoopcluster/hadoop:3.3.4
+    build: .
+    tty: true
+    networks:
+      hadoop_network:
+        ipv4_address: 172.18.0.2
+    ports:
+      - 9870:9870
+      - 8088:8088
+      - 18080:18080
+    command: /root/config_files/bootstrap.sh
+    volumes: 
+      - ./apps:/root/apps
+
+  slave1:
+    container_name: slave1
+    hostname: slave1
+    image: hadoopcluster/hadoop:3.3.4
+    build: .
+    tty: true
+    networks:
+      hadoop_network:
+        ipv4_address: 172.18.0.3
+    depends_on:
+      - node-master
+    command: /root/config_files/bootstrap.sh
+    volumes: 
+      - ./apps:/root/apps
+
