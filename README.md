@@ -6,13 +6,15 @@ This is a script to deploy Apache Hadoop in distributed mode using Docker as inf
 
 ### :desktop_computer: How to run
 
-[auto mode] docker-compose.yml file option
+#### [auto mode]
+#### docker-compose.yml file option
 
 ```
 docker-compose up --build
 ```
 
-[manual mode] Docker file option
+#### [manual mode] 
+#### Dockerfile option
 
 1. Build image based on Dockerfile
 ```

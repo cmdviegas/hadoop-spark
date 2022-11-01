@@ -23,16 +23,8 @@ WORKDIR ${MYDIR}
 # Copy all files from local folder to container, except the ones in .dockerignore
 COPY . .
 
-# Load environment variables into .bashrc file
-RUN cat config_files/bashrc >> .bashrc
-
-# Change apt servers to a local mirror (improves update download speed)
-#RUN sed -i -e 's/http:\/\/archive\.ubuntu\.com\/ubuntu\//mirror:\/\/mirrors\.ubuntu\.com\/mirrors\.txt/' /etc/apt/sources.list
-
 # Update system and install required packages (silently)
-RUN apt-get update
-RUN apt-get install -y python3.8 ssh openjdk-8-jre-headless \
-vim net-tools iputils-ping
+RUN apt-get update && apt-get install -y python3.8 ssh openjdk-8-jre-headless vim net-tools iputils-ping dos2unix
 
 # Create a symbolic link to make 'python' be recognized as a system command
 RUN ln -sf /usr/bin/python3 /usr/bin/python
@@ -67,6 +59,12 @@ RUN ln -sf hadoop-3* hadoop
 #RUN wget --no-check-certificate https://dlcdn.apache.org/spark/spark-3.3.1/spark-3.3.1-bin-hadoop3.tgz
 RUN tar -zxf spark-3*-bin-hadoop3.tgz -C ${HADOOP_HOME} && rm -rf spark-3*-bin-hadoop3.tgz
 RUN ln -sf ${HADOOP_HOME}/spark-3*-bin-hadoop3 ${HADOOP_HOME}/spark
+
+# Optional (convert charset from UTF-16 to UTF-8)
+RUN dos2unix config_files/*
+
+# Load environment variables into .bashrc file
+RUN cat config_files/bashrc >> .bashrc
 
 # Copy config files to Hadoop config folder
 COPY config_files/*.xml ${HADOOP_CONF_DIR}/
