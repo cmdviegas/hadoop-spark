@@ -1,3 +1,4 @@
 172.18.0.2 node-master
 172.18.0.3 slave1
 172.18.0.4 slave2
+127.0.0.1 localhost
