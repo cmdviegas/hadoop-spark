@@ -23,7 +23,7 @@ printf " * [${green}BOOT${reset}] ${lblue}Starting bootstrap.sh${reset}...\n"
 source /root/.bashrc
 
 # Copy hosts to hosts file
-cat /root/config_files/hosts > /etc/hosts
+cat /root/config_files/hosts >> /etc/hosts
 
 # Start SSH service
 service ssh start
