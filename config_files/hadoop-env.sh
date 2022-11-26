@@ -61,7 +61,7 @@
 
 # The java implementation to use. By default, this environment
 # variable is REQUIRED on ALL platforms except OS X!
-export JAVA_HOME="/usr/lib/jvm/java-8-openjdk-amd64/jre"
+export JAVA_HOME="/usr/lib/jvm/java-8-openjdk-arm64/jre"
 
 # Location of Hadoop.  By default, Hadoop will attempt to determine
 # this location based upon its execution path.

@@ -70,3 +70,33 @@ services:
     command: /root/config_files/bootstrap.sh
     volumes: 
       - ./apps:/root/apps
+
+  slave3:
+    container_name: slave3
+    hostname: slave3
+    image: hadoopcluster/hadoop:3.3.4
+    build: .
+    tty: true
+    networks:
+      hadoop_network:
+        ipv4_address: 172.18.0.5
+    depends_on:
+      - node-master
+    command: /root/config_files/bootstrap.sh
+    volumes: 
+      - ./apps:/root/apps
+
+  slave4:
+    container_name: slave4
+    hostname: slave4
+    image: hadoopcluster/hadoop:3.3.4
+    build: .
+    tty: true
+    networks:
+      hadoop_network:
+        ipv4_address: 172.18.0.6
+    depends_on:
+      - node-master
+    command: /root/config_files/bootstrap.sh
+    volumes: 
+      - ./apps:/root/apps
