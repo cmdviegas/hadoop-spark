@@ -24,7 +24,7 @@ WORKDIR ${MYDIR}
 COPY . .
 
 # Update system and install required packages (silently)
-RUN apt-get update && apt-get install -y python3.8 ssh openjdk-8-jre-headless vim net-tools iputils-ping dos2unix
+RUN apt-get update && apt-get install -y python3.8 ssh openjdk-11-jre-headless vim net-tools iputils-ping dos2unix
 
 # Create a symbolic link to make 'python' be recognized as a system command
 RUN ln -sf /usr/bin/python3 /usr/bin/python
@@ -39,7 +39,7 @@ ENV HADOOP_CONF_DIR "${HADOOP_HOME}/etc/hadoop"
 ENV HADOOP_COMMON_LIB_NATIVE_DIR "${HADOOP_HOME}/lib/native"
 ENV HADOOP_OPTS "${HADOOP_OPTS} -XX:-PrintWarnings -Djava.net.preferIPv4Stack=true -Djava.library.path=${HADOOP_COMMON_LIB_NATIVE_DIR}"
 ENV LD_LIBRARY_PATH "${HADOOP_COMMON_LIB_NATIVE_DIR}"
-ENV JAVA_HOME "/usr/lib/jvm/java-8-openjdk-amd64/jre"
+ENV JAVA_HOME "/usr/lib/jvm/java-11-openjdk-amd64"
 #ENV _JAVA_OPTIONS "-Xmx2048m"
 ENV HDFS_NAMENODE_USER "root"
 ENV HDFS_DATANODE_USER "${HDFS_NAMENODE_USER}"
