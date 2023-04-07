@@ -31,6 +31,11 @@
         <name>yarn.resourcemanager.hostname</name>
         <value>node-master</value>
     </property>
+  
+    <property>
+        <name>yarn.resourcemanager.bind-host</name>
+        <value>0.0.0.0</value>
+    </property>
 
     <property>
         <name>yarn.nodemanager.aux-services</name>
