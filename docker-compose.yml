@@ -27,7 +27,7 @@ services:
   node-master:
     container_name: node-master
     hostname: node-master
-    image: hadoopcluster/hadoop:3.3.5
+    image: hadoopcluster/hadoop-spark:v3
     build: .
     tty: true
     networks:
@@ -44,7 +44,7 @@ services:
   slave1:
     container_name: slave1
     hostname: slave1
-    image: hadoopcluster/hadoop:3.3.5
+    image: hadoopcluster/hadoop-spark:v3
     build: .
     tty: true
     networks:
@@ -59,7 +59,7 @@ services:
   slave2:
     container_name: slave2
     hostname: slave2
-    image: hadoopcluster/hadoop:3.3.5
+    image: hadoopcluster/hadoop-spark:v3
     build: .
     tty: true
     networks:
