@@ -37,7 +37,6 @@ services:
       - 9870:9870
       - 8088:8088
       - 18080:18080
-      - 22:22
     command: /root/config_files/bootstrap.sh
     volumes: 
       - ./apps:/root/apps
