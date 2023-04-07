@@ -10,7 +10,7 @@
 # (C) 2022 CARLOS M D VIEGAS
 #
 # This is a docker-compose file that creates a stack of 
-# Apache Hadoop 3.3.4 containers
+# Apache Hadoop 3.3.5 containers
 #
 
 version: '3.9'
@@ -27,7 +27,7 @@ services:
   node-master:
     container_name: node-master
     hostname: node-master
-    image: hadoopcluster/hadoop:3.3.4
+    image: hadoopcluster/hadoop:3.3.5
     build: .
     tty: true
     networks:
@@ -44,7 +44,7 @@ services:
   slave1:
     container_name: slave1
     hostname: slave1
-    image: hadoopcluster/hadoop:3.3.4
+    image: hadoopcluster/hadoop:3.3.5
     build: .
     tty: true
     networks:
@@ -59,7 +59,7 @@ services:
   slave2:
     container_name: slave2
     hostname: slave2
-    image: hadoopcluster/hadoop:3.3.4
+    image: hadoopcluster/hadoop:3.3.5
     build: .
     tty: true
     networks:
