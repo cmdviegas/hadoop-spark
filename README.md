@@ -39,7 +39,7 @@ docker run -it -p 9870:9870 -p 8088:8088 -p 18080:18080 --network=hadoop_network
 
 ### 📜 License
 
-Copyright (c) 2022 [CARLOS M. D. VIEGAS](https://github.com/cmdviegas).
+Copyright (c) 2023 [CARLOS M. D. VIEGAS](https://github.com/cmdviegas).
 
 This script is free and open-source software licensed under the [MIT License](https://github.com/cmdviegas/docker-hadoop-cluster/blob/master/LICENSE). 
 
