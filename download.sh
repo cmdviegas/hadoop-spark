@@ -19,7 +19,6 @@ if [[ "$option" =~ ^[Yy][Ee][Ss]$ ]]; then
   wget --no-check-certificate https://dlcdn.apache.org/hadoop/common/hadoop-3.3.5/hadoop-3.3.5.tar.gz
 fi
 
-#option = ""
 read -p "Deseja fazer o download do Apache Spark 3.3.2 (yes/NO): " option
 
 if [[ "$option" =~ ^[Yy][Ee][Ss]$ ]]; then
