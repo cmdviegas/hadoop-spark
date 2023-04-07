@@ -42,7 +42,7 @@ if [ "$HOSTNAME" == "node-master" ] ; then
     ${green} ▒ ░░▒░▒ ▒▒   ▓▒█░ ▒▒▓  ▒ ░ ▒░▒░▒░ ░ ▒░▒░▒░ ▒▓▒░ ░  ░
     ${green} ▒ ░▒░ ░  ▒   ▒▒ ░ ░ ▒  ▒   ░ ▒ ▒░   ░ ▒ ▒░ ░▒ ░
     ${green} ░  ░░ ░  ░   ▒    ░ ░  ░ ░ ░ ░ ▒  ░ ░ ░ ▒  ░░
-    ${green} ░  ░  ░      ░  ░   ░        ░ ░      ░ ░     ${lblue}$(tput blink)v3.3.4${reset}\n\n"
+    ${green} ░  ░  ░      ░  ░   ░        ░ ░      ░ ░     ${lblue}$(tput blink)v3.3.5${reset}\n\n"
 
     # Time to wait for slaves to establish ssh connection with node-master
     # Only needed when node-master is started before slaves
