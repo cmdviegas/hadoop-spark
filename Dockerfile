@@ -50,13 +50,13 @@ ENV SPARK_HOME "${HADOOP_HOME}/spark"
 ENV PATH "$PATH:${HADOOP_HOME}/sbin:${HADOOP_HOME}/bin:${JAVA_HOME}/bin:${SPARK_HOME}/bin:${SPARK_HOME}/sbin"
 
 # Copy and extract Hadoop to container filesystem
-# Download hadoop-3.3.4.tar.gz from Apache (if needed)
-#RUN wget --no-check-certificate https://dlcdn.apache.org/hadoop/common/hadoop-3.3.4/hadoop-3.3.4.tar.gz
+# Download hadoop-3.3.5.tar.gz from Apache (if needed)
+#RUN wget --no-check-certificate https://dlcdn.apache.org/hadoop/common/hadoop-3.3.5/hadoop-3.3.5.tar.gz
 RUN tar -zxf hadoop-3*.tar.gz -C ${MYDIR} && rm -rf hadoop-3*.tar.gz
 RUN ln -sf hadoop-3* hadoop
 
-# Download spark-3.3.1-bin-hadoop3.tgz from Apache (if needed)
-#RUN wget --no-check-certificate https://dlcdn.apache.org/spark/spark-3.3.1/spark-3.3.1-bin-hadoop3.tgz
+# Download spark-3.3.2-bin-hadoop3.tgz from Apache (if needed)
+#RUN wget --no-check-certificate https://dlcdn.apache.org/spark/spark-3.3.2/spark-3.3.2-bin-hadoop3.tgz
 RUN tar -zxf spark-3*-bin-hadoop3.tgz -C ${HADOOP_HOME} && rm -rf spark-3*-bin-hadoop3.tgz
 RUN ln -sf ${HADOOP_HOME}/spark-3*-bin-hadoop3 ${HADOOP_HOME}/spark
 
