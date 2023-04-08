@@ -10,7 +10,7 @@
 # (C) 2023 CARLOS M D VIEGAS
 #
 # This is a docker-compose file that creates a stack of 
-# Apache Hadoop 3.3.5 containers
+# Apache Hadoop 3.3.5 containers with Spark 3.3.2
 #
 
 version: '3.9'
@@ -27,8 +27,12 @@ services:
   node-master:
     container_name: node-master
     hostname: node-master
-    image: hadoopcluster/hadoop-spark:v3
-    build: .
+    image: hadoopcluster/hadoop-spark:v4
+    build:
+      context: .
+      args:
+        USER: spark
+        PASS: spark
     tty: true
     networks:
       hadoop_network:
@@ -37,36 +41,42 @@ services:
       - 9870:9870
       - 8088:8088
       - 18080:18080
-    command: /root/config_files/bootstrap.sh
+      - 22:22
     volumes: 
-      - ./apps:/root/apps
+      - ./apps:/home/spark/apps
 
   slave1:
     container_name: slave1
     hostname: slave1
-    image: hadoopcluster/hadoop-spark:v3
-    build: .
+    image: hadoopcluster/hadoop-spark:v4
+    build:
+      context: .
+      args:
+        USER: spark
+        PASS: spark
     tty: true
     networks:
       hadoop_network:
         ipv4_address: 172.18.0.3
     depends_on:
       - node-master
-    command: /root/config_files/bootstrap.sh
     volumes: 
-      - ./apps:/root/apps
+      - ./apps:/home/spark/apps
 
   slave2:
     container_name: slave2
     hostname: slave2
-    image: hadoopcluster/hadoop-spark:v3
-    build: .
+    image: hadoopcluster/hadoop-spark:v4
+    build:
+      context: .
+      args:
+        USER: spark
+        PASS: spark
     tty: true
     networks:
       hadoop_network:
         ipv4_address: 172.18.0.4
     depends_on:
       - node-master
-    command: /root/config_files/bootstrap.sh
     volumes: 
-      - ./apps:/root/apps
+      - ./apps:/home/spark/apps
