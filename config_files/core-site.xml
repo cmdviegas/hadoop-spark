@@ -34,7 +34,7 @@
 
     <property>
         <name>hadoop.http.staticuser.user</name>
-        <value>root</value>
+        <value>spark</value>
     </property>
 
 </configuration>
