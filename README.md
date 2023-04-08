@@ -34,14 +34,14 @@ docker run -it -d --network=hadoop_network --ip 172.18.0.4 --name=slave2 --hostn
 
 4. Run Hadoop master (name node)
 ```
-docker run -it -p 9870:9870 -p 8088:8088 -p 18080:18080 -p 22:22 --network=hadoop_network --ip 172.18.0.2 --name=node-master --hostname=node-master hadoopcluster/hadoop-spark:v4
+docker run -it -p 9870:9870 -p 8088:8088 -p 18080:18080 -p 2222:22 --network=hadoop_network --ip 172.18.0.2 --name=node-master --hostname=node-master hadoopcluster/hadoop-spark:v4
 ```
 
 ### :rocket: Tips
 
 #### To access node-master
 ```
-ssh -p 22 spark@localhost
+ssh -p 2222 spark@localhost
 ```
 or
 ```
