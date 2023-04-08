@@ -2,7 +2,7 @@
 #
 # Environment variables for Apache Hadoop 3.x.x + Spark 3.x.x
 #
-export HADOOP_HOME="/root/hadoop"
+export HADOOP_HOME="${PWD}/hadoop"
 export HADOOP_COMMON_HOME="${HADOOP_HOME}"
 export HADOOP_HDFS_HOME="${HADOOP_HOME}"
 export HADOOP_MAPRED_HOME="${HADOOP_HOME}"
@@ -13,7 +13,6 @@ export HADOOP_OPTS="$HADOOP_OPTS -XX:-PrintWarnings -Djava.net.preferIPv4Stack=t
 export LD_LIBRARY_PATH="${HADOOP_COMMON_LIB_NATIVE_DIR}"
 export JAVA_HOME="/usr/lib/jvm/java-11-openjdk-amd64"
 #export _JAVA_OPTIONS="-Xmx2048m"
-export HDFS_NAMENODE_USER="root"
 export HDFS_DATANODE_USER="${HDFS_NAMENODE_USER}"
 export HDFS_SECONDARYNAMENODE_USER="${HDFS_NAMENODE_USER}"
 export YARN_RESOURCEMANAGER_USER="${HDFS_NAMENODE_USER}"
