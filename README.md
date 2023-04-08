@@ -41,7 +41,7 @@ docker run -it -p 9870:9870 -p 8088:8088 -p 18080:18080 -p 22:22 --network=hadoo
 
 #### To access node-master
 ```
-ssh -p 22 spark@node-master
+ssh -p 22 spark@localhost
 ```
 or
 ```
