@@ -46,7 +46,7 @@ ENV SPARK_HOME "${HADOOP_HOME}/spark"
 COPY . .
 
 # Set permissions
-RUN echo "${PASSWORD}" | sudo -S chown "${USERNAME}:${USERNAME}" -R config_files/
+RUN echo "${PASSWORD}" | sudo -S chown "${USERNAME}:${USERNAME}" -R ${MYDIR}
 
 # Copy and extract Hadoop to container filesystem
 # Download hadoop-3.3.5.tar.gz from Apache (if needed)
