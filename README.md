@@ -2,7 +2,7 @@
 
 This is a script to deploy Apache Hadoop and Apache Spark in distributed mode using Docker as infrastructure.
 
-⚠️ Before you begin, you must have to download Apache Hadoop 3.3.5 (`hadoop-3.3.5.tar.gz`) and Apache Spark 3.3.2 (`spark-3.3.2-bin-hadoop3.tgz`) and place them alongside the folder´s repo. There is a `download.sh` script to perform the download of both. Alternatively, you could edit `Dockerfile` by uncommenting lines 53 and 59 to perform the download.
+⚠️ Before you begin, you must have to download Apache Hadoop 3.3.5 (`hadoop-3.3.5.tar.gz`) and Apache Spark 3.3.2 (`spark-3.3.2-bin-hadoop3.tgz`) and place them alongside the folder´s repo. There is a `download.sh` script to perform the download of both. Alternatively, you could edit `Dockerfile` by uncommenting lines 55 and 61 to perform the download.
 
 ### :desktop_computer: How to run
 
