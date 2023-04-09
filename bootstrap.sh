@@ -17,24 +17,29 @@ USERNAME=$1
 PASSWORD=$2
 
 # Some coloring
-green=$(tput setaf 2)
-lblue=$(tput setaf 6)
-reset=$(tput sgr0)
-printf "[${green}BOOT${reset}] ${lblue}Starting bootstrap.sh${reset}...\n"
+GR=$(tput setaf 2)
+LB=$(tput setaf 6)
+RE=$(tput sgr0)
+SYS="[${GR}SYSTEM${RE}]${LB}"
+CLUSTER="[${GR}CLUSTER${RE}]${LB}"
+EOF="${RE}...\n"
+
+printf "${SYS} Starting bootstrap.sh${EOF}"
 
 # Copy hosts to hosts file
 FILE=.first_boot
 if [ ! -e $FILE ] ; then
-    printf "[${green}HOSTS${reset}] ${lblue}Copying hosts file${reset}...\n"
+    printf "${SYS} Copying hosts file to /etc/hosts${EOF}"
     echo "${PASSWORD}" | sudo -S bash -c "cat ${PWD}/config_files/hosts > /etc/hosts"
 fi
 
 # Load .bashrc
-printf "[${green}BASH${reset}] ${lblue}Loading .bashrc${reset}...\n"
+printf "\n${SYS} Loading environment variables in .bashrc${EOF}"
 #source ${MYDIR}/.bashrc
 eval "$(tail -n +10 ~/.bashrc)" # workaround for ubuntu .bashrc
 
 # Start SSH service
+printf "${SYS} Starting ssh server${EOF}"
 echo "${PASSWORD}" | sudo -S service ssh start
 
 # Do only at node-master
@@ -42,16 +47,16 @@ if [ "$HOSTNAME" == "node-master" ] ; then
 
     # Hadoop banner
     printf "
-    ${lblue} APACHE
-    ${green} ██░ ██  ▄▄▄      ▓█████▄  ▒█████   ▒█████   ██▓███
-    ${green}▓██░ ██▒▒████▄    ▒██▀ ██▌▒██▒  ██▒▒██▒  ██▒▓██░  ██▒
-    ${green}▒██▀▀██░▒██  ▀█▄  ░██   █▌▒██░  ██▒▒██░  ██▒▓██░ ██▓▒
-    ${green}░▓█ ░██ ░██▄▄▄▄██ ░▓█▄   ▌▒██   ██░▒██   ██░▒██▄█▓▒ ▒
-    ${green}░▓█▒░██▓ ▓█   ▓██▒░▒████▓ ░ ████▓▒░░ ████▓▒░▒██▒ ░  ░
-    ${green} ▒ ░░▒░▒ ▒▒   ▓▒█░ ▒▒▓  ▒ ░ ▒░▒░▒░ ░ ▒░▒░▒░ ▒▓▒░ ░  ░
-    ${green} ▒ ░▒░ ░  ▒   ▒▒ ░ ░ ▒  ▒   ░ ▒ ▒░   ░ ▒ ▒░ ░▒ ░
-    ${green} ░  ░░ ░  ░   ▒    ░ ░  ░ ░ ░ ░ ▒  ░ ░ ░ ▒  ░░
-    ${green} ░  ░  ░      ░  ░   ░        ░ ░      ░ ░     ${lblue}$(tput blink)v3.3.5${reset}\n\n"
+    ${LB} APACHE
+    ${GR} ██░ ██  ▄▄▄      ▓█████▄  ▒█████   ▒█████   ██▓███
+    ${GR}▓██░ ██▒▒████▄    ▒██▀ ██▌▒██▒  ██▒▒██▒  ██▒▓██░  ██▒
+    ${GR}▒██▀▀██░▒██  ▀█▄  ░██   █▌▒██░  ██▒▒██░  ██▒▓██░ ██▓▒
+    ${GR}░▓█ ░██ ░██▄▄▄▄██ ░▓█▄   ▌▒██   ██░▒██   ██░▒██▄█▓▒ ▒
+    ${GR}░▓█▒░██▓ ▓█   ▓██▒░▒████▓ ░ ████▓▒░░ ████▓▒░▒██▒ ░  ░
+    ${GR} ▒ ░░▒░▒ ▒▒   ▓▒█░ ▒▒▓  ▒ ░ ▒░▒░▒░ ░ ▒░▒░▒░ ▒▓▒░ ░  ░
+    ${GR} ▒ ░▒░ ░  ▒   ▒▒ ░ ░ ▒  ▒   ░ ▒ ▒░   ░ ▒ ▒░ ░▒ ░
+    ${GR} ░  ░░ ░  ░   ▒    ░ ░  ░ ░ ░ ░ ▒  ░ ░ ░ ▒  ░░
+    ${GR} ░  ░  ░      ░  ░   ░        ░ ░      ░ ░     ${LB}$(tput blink)v3.3.5${RE}\n\n"
                                         
     # Time to wait for slaves to establish ssh connection with node-master
     # Only needed when node-master is started before slaves
@@ -59,25 +64,21 @@ if [ "$HOSTNAME" == "node-master" ] ; then
 
     # Format HDFS only at first boot
     if [ ! -e $FILE ] ; then
-        printf "[${green}HDFS${reset}] ${lblue}Formatting filesystem${reset}...\n"
-        sleep 2
+        printf "${CLUSTER} Formatting filesystem${EOF}"
         hdfs namenode -format
     fi
 
     sleep 5
 
-    # Start HDFS service
-    printf "[${green}HDFS${reset}] ${lblue}Starting HDFS service${reset}...\n"
-    start-dfs.sh
-
-    # Start YARN service
-    printf "[${green}YARN${reset}] ${lblue}Starting YARN service${reset}...\n"
-    start-yarn.sh
+    # Start HDFS and YARN services
+    printf "${CLUSTER} Starting HDFS and YARN services${EOF}"
+    start-dfs.sh && start-yarn.sh
 
     sleep 5
 
     # Create /user folders
     if [ ! -e $FILE ] ; then
+        printf "${CLUSTER} Create folders in HDFS${EOF}"
         hdfs dfs -mkdir -p /user/${HDFS_NAMENODE_USER}
         hdfs dfs -mkdir /spark-logs
         hdfs dfs -mkdir /spark-libs
@@ -85,16 +86,16 @@ if [ "$HOSTNAME" == "node-master" ] ; then
     fi
 
     printf "
-    ${lblue} APACHE
-    ${green}   ██████  ██▓███   ▄▄▄       ██▀███   ██ ▄█▀
-    ${green} ▒██    ▒ ▓██░  ██▒▒████▄    ▓██ ▒ ██▒ ██▄█▒ 
-    ${green} ░ ▓██▄   ▓██░ ██▓▒▒██  ▀█▄  ▓██ ░▄█ ▒▓███▄░ 
-    ${green}   ▒   ██▒▒██▄█▓▒ ▒░██▄▄▄▄██ ▒██▀▀█▄  ▓██ █▄ 
-    ${green} ▒██████▒▒▒██▒ ░  ░ ▓█   ▓██▒░██▓ ▒██▒▒██▒ █▄
-    ${green} ▒ ▒▓▒ ▒ ░▒▓▒░ ░  ░ ▒▒   ▓▒█░░ ▒▓ ░▒▓░▒ ▒▒ ▓▒
-    ${green} ░ ░▒  ░ ░░▒ ░       ▒   ▒▒ ░  ░▒ ░ ▒░░ ░▒ ▒░
-    ${green} ░  ░  ░  ░░         ░   ▒     ░░   ░ ░ ░░ ░ 
-    ${green}       ░                 ░  ░   ░     ░  ░       ${lblue}$(tput blink)v3.3.2${reset}\n\n"
+    ${LB} APACHE
+    ${GR}   ██████  ██▓███   ▄▄▄       ██▀███   ██ ▄█▀
+    ${GR} ▒██    ▒ ▓██░  ██▒▒████▄    ▓██ ▒ ██▒ ██▄█▒ 
+    ${GR} ░ ▓██▄   ▓██░ ██▓▒▒██  ▀█▄  ▓██ ░▄█ ▒▓███▄░ 
+    ${GR}   ▒   ██▒▒██▄█▓▒ ▒░██▄▄▄▄██ ▒██▀▀█▄  ▓██ █▄ 
+    ${GR} ▒██████▒▒▒██▒ ░  ░ ▓█   ▓██▒░██▓ ▒██▒▒██▒ █▄
+    ${GR} ▒ ▒▓▒ ▒ ░▒▓▒░ ░  ░ ▒▒   ▓▒█░░ ▒▓ ░▒▓░▒ ▒▒ ▓▒
+    ${GR} ░ ░▒  ░ ░░▒ ░       ▒   ▒▒ ░  ░▒ ░ ▒░░ ░▒ ▒░
+    ${GR} ░  ░  ░  ░░         ░   ▒     ░░   ░ ░ ░░ ░ 
+    ${GR}       ░                 ░  ░   ░     ░  ░       ${LB}$(tput blink)v3.3.2${RE}\n\n"
 
     sleep 5
 
@@ -107,19 +108,18 @@ if [ "$HOSTNAME" == "node-master" ] ; then
     #fi
     
     # Start SPARK history server
-    printf "[${green}SPARK${reset}] ${lblue}Starting SPARK history server${reset}...\n"
+    printf "${CLUSTER} Starting SPARK history server${EOF}"
     start-history-server.sh
 
-    printf "[${green}HDFS${reset}] ${lblue}Checking HDFS nodes report${reset}...\n"
+    printf "${CLUSTER} Checking HDFS nodes report${EOF}"
     hdfs dfsadmin -report
 
     sleep 5
 
-    printf "[${green}YARN${reset}] ${lblue}Checking YARN nodes list${reset}...\n"
+    printf "${CLUSTER} Checking YARN nodes list${EOF}"
     yarn node -list
 
-    printf "${green}$(tput blink)ALL SET!${reset}\n"
-
+    printf "${CLUSTER} ${GR}$(tput blink)ALL SET!${RE}\n"
 fi
 
 # Cleaning up
