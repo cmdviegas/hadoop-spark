@@ -67,6 +67,7 @@ RUN dos2unix config_files/*
 
 # Load environment variables into .bashrc file
 RUN cat config_files/bashrc >> .bashrc
+RUN echo "export HDFS_NAMENODE_USER=\"$USERNAME\"" >> .bashrc
 
 # Copy config files to Hadoop config folder
 RUN cp config_files/*.xml ${HADOOP_CONF_DIR}/
