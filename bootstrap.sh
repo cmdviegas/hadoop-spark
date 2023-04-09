@@ -22,6 +22,13 @@ lblue=$(tput setaf 6)
 reset=$(tput sgr0)
 printf "[${green}BOOT${reset}] ${lblue}Starting bootstrap.sh${reset}...\n"
 
+# Copy hosts to hosts file
+FILE=.first_boot
+if [ ! -e $FILE ] ; then
+    printf "[${green}HOSTS${reset}] ${lblue}Copying hosts file${reset}...\n"
+    echo "${PASSWORD}" | sudo -S bash -c "cat ${PWD}/config_files/hosts > /etc/hosts"
+fi
+
 # Load .bashrc
 printf "[${green}BASH${reset}] ${lblue}Loading .bashrc${reset}...\n"
 
@@ -30,12 +37,6 @@ if [ ! -e $FILE ] ; then
 fi
 #source ${MYDIR}/.bashrc
 eval "$(tail -n +10 ~/.bashrc)" # workaround for ubuntu .bashrc
-
-# Copy hosts to hosts file
-if [ ! -e $FILE ] ; then
-    printf "[${green}HOSTS${reset}] ${lblue}Copying hosts file${reset}...\n"
-    echo "${PASSWORD}" | sudo -S bash -c "cat ${PWD}/config_files/hosts > /etc/hosts"
-fi
 
 # Start SSH service
 echo "${PASSWORD}" | sudo -S service ssh start
@@ -119,15 +120,12 @@ if [ "$HOSTNAME" == "node-master" ] ; then
 
     printf "${green}$(tput blink)ALL SET!${reset}\n"
 
-    # Cleaning up
-    if [ ! -e $FILE ] ; then
-        rm -rf config_files/
-    fi
 fi
 
-FILE=.first_boot
+# Cleaning up
 if [ ! -e $FILE ] ; then
     echo "Do not remove this file" > $FILE
+    rm -rf config_files/
 fi
 
 # Start bash terminal
