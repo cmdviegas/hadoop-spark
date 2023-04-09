@@ -99,10 +99,10 @@ if [ "$HOSTNAME" == "node-master" ] ; then
     sleep 5
 
     # Pandas installation (optional)
-    # echo "${PASSWORD}" | sudo apt install python3-pip
-    # pip install pandas==1.5.3 pyarrow==11.0.0
     # if [ ! -e $FILE ] ; then
-    #    echo "export PATH="$PATH:$PWD/.local/bin" >> ~/.bashrc
+    #    echo "${PASSWORD}" | sudo apt install python3-pip
+    #    pip install pandas==1.5.3 pyarrow==11.0.0
+    #    echo "export PATH=\"$PATH:$PWD/.local/bin\"" >> ~/.bashrc
     # fi
     # eval "$(tail -n +10 ~/.bashrc)" # workaround for ubuntu .bashrc
 
