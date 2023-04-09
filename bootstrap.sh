@@ -27,7 +27,6 @@ printf "[${green}BASH${reset}] ${lblue}Loading .bashrc${reset}...\n"
 
 FILE=.first_boot
 if [ ! -e $FILE ] ; then
-    echo "Do not remove this file" > $FILE
     echo "export HDFS_NAMENODE_USER=\"$1\"" >> ~/.bashrc
 fi
 #source ${MYDIR}/.bashrc
@@ -119,6 +118,7 @@ fi
 # Cleaning up
 if [ ! -e $FILE ] ; then
     rm -rf config_files/
+    echo "Do not remove this file" > $FILE
 fi
 
 # Start bash terminal
