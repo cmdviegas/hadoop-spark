@@ -30,7 +30,7 @@ printf "${SYS} Starting bootstrap.sh${EOF}"
 FILE=.first_boot
 if [ ! -e $FILE ] ; then
     printf "${SYS} Copying hosts file to /etc/hosts${EOF}"
-    echo "${PASSWORD}" | sudo -S bash -c "cat ${PWD}/config_files/hosts > /etc/hosts"
+    echo "${PASSWORD}" | sudo -S bash -c "cat ${HOME}/config_files/hosts > /etc/hosts"
 fi
 
 # Load .bashrc
@@ -103,7 +103,7 @@ if [ "$HOSTNAME" == "node-master" ] ; then
     # if [ ! -e $FILE ] ; then
     #    echo "${PASSWORD}" | sudo apt install -y python3-pip
     #    pip install pandas==1.5.3 pyarrow==11.0.0
-    #    echo "export PATH=\"$PATH:$PWD/.local/bin\"" >> ~/.bashrc
+    #    echo "export PATH=\"$PATH:$HOME/.local/bin\"" >> ~/.bashrc
     #    eval "$(tail -n +10 ~/.bashrc)" # workaround for ubuntu .bashrc
     #fi
     
