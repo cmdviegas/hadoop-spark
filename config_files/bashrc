@@ -13,9 +13,13 @@ export HADOOP_OPTS="$HADOOP_OPTS -XX:-PrintWarnings -Djava.net.preferIPv4Stack=t
 export LD_LIBRARY_PATH="${HADOOP_COMMON_LIB_NATIVE_DIR}"
 export JAVA_HOME="/usr/lib/jvm/java-11-openjdk-amd64"
 #export _JAVA_OPTIONS="-Xmx2048m"
+
+export SPARK_HOME="${HADOOP_HOME}/spark"
+export HIVE_HOME="${HADOOP_HOME}/hive"
+export CLASSPATH="${CLASSPATH}:${HIVE_HOME}/lib/*"
+export PATH="${PATH}:${HADOOP_HOME}/sbin:${HADOOP_HOME}/bin:${JAVA_HOME}/bin:${SPARK_HOME}/bin:${SPARK_HOME}/sbin:${HIVE_HOME}/bin"
+
 export HDFS_DATANODE_USER="${HDFS_NAMENODE_USER}"
 export HDFS_SECONDARYNAMENODE_USER="${HDFS_NAMENODE_USER}"
 export YARN_RESOURCEMANAGER_USER="${HDFS_NAMENODE_USER}"
 export YARN_NODEMANAGER_USER="${HDFS_NAMENODE_USER}"
-export SPARK_HOME="${HADOOP_HOME}/spark"
-export PATH="$PATH:${HADOOP_HOME}/sbin:${HADOOP_HOME}/bin:${JAVA_HOME}/bin:${SPARK_HOME}/bin:${SPARK_HOME}/sbin"
