@@ -25,7 +25,6 @@ printf "[${green}BOOT${reset}] ${lblue}Starting bootstrap.sh${reset}...\n"
 # Load .bashrc
 printf "[${green}BASH${reset}] ${lblue}Loading .bashrc${reset}...\n"
 
-FILE=.first_boot
 if [ ! -e $FILE ] ; then
     echo "export HDFS_NAMENODE_USER=\"$1\"" >> ~/.bashrc
 fi
@@ -67,7 +66,7 @@ if [ "$HOSTNAME" == "node-master" ] ; then
         sleep 2
         hdfs namenode -format
     fi
-    
+
     sleep 5
 
     # Start HDFS service
@@ -102,6 +101,10 @@ if [ "$HOSTNAME" == "node-master" ] ; then
 
     sleep 5
 
+    # Pandas installation (optional)
+    # echo "${PASSWORD}" | sudo apt install python3-pip
+    # pip install pandas==1.5.3 pyarrow==11.0.0
+
     # Start SPARK history server
     printf "[${green}SPARK${reset}] ${lblue}Starting SPARK history server${reset}...\n"
     start-history-server.sh
@@ -115,11 +118,15 @@ if [ "$HOSTNAME" == "node-master" ] ; then
     yarn node -list
 
     printf "${green}$(tput blink)ALL SET!${reset}\n"
+
+    # Cleaning up
+    if [ ! -e $FILE ] ; then
+        rm -rf config_files/
+    fi
 fi
 
-# Cleaning up
+FILE=.first_boot
 if [ ! -e $FILE ] ; then
-    rm -rf config_files/
     echo "Do not remove this file" > $FILE
 fi
 
