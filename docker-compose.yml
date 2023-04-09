@@ -53,11 +53,6 @@ services:
     volumes: 
       - ./apps:/home/spark/apps
       - spark-data-slave1:/home/spark/
-    healthcheck:
-      test: ["CMD", "hdfs", "dfs", "-test", "-e", "/"]
-      interval: 1m
-      timeout: 15s
-      retries: 3
 
   slave2:
     container_name: slave2
@@ -73,11 +68,6 @@ services:
     volumes: 
       - ./apps:/home/spark/apps
       - spark-data-slave2:/home/spark/
-    healthcheck:
-      test: ["CMD", "hdfs", "dfs", "-test", "-e", "/"]
-      interval: 1m
-      timeout: 15s
-      retries: 3
 
 networks:
   hadoop_network:
