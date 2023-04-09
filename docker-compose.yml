@@ -15,14 +15,6 @@
 
 version: '3.9'
 
-networks:
-  hadoop_network:
-    driver: bridge
-    ipam:
-      driver: default
-      config:
-        - subnet: 172.18.0.0/24
-
 services:
   node-master:
     container_name: node-master
@@ -34,6 +26,7 @@ services:
         USER: spark
         PASS: spark
     tty: true
+    restart: unless-stopped
     networks:
       hadoop_network:
         ipv4_address: 172.18.0.2
@@ -44,6 +37,7 @@ services:
       - 2222:22
     volumes: 
       - ./apps:/home/spark/apps
+      - spark-data-master:/home/spark/
 
   slave1:
     container_name: slave1
@@ -55,6 +49,7 @@ services:
         USER: spark
         PASS: spark
     tty: true
+    restart: unless-stopped
     networks:
       hadoop_network:
         ipv4_address: 172.18.0.3
@@ -62,6 +57,7 @@ services:
       - node-master
     volumes: 
       - ./apps:/home/spark/apps
+      - spark-data-slave1:/home/spark/
 
   slave2:
     container_name: slave2
@@ -73,6 +69,7 @@ services:
         USER: spark
         PASS: spark
     tty: true
+    restart: unless-stopped
     networks:
       hadoop_network:
         ipv4_address: 172.18.0.4
@@ -80,3 +77,17 @@ services:
       - node-master
     volumes: 
       - ./apps:/home/spark/apps
+      - spark-data-slave2:/home/spark/
+
+networks:
+  hadoop_network:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.18.0.0/24
+
+volumes:
+  spark-data-master:
+  spark-data-slave1:
+  spark-data-slave2:
