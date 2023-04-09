@@ -78,7 +78,7 @@ if [ "$HOSTNAME" == "node-master" ] ; then
 
     # Create /user folders
     if [ ! -e $FILE ] ; then
-        printf "${CLUSTER} Create folders in HDFS${EOF}"
+        printf "${CLUSTER} Creating folders in HDFS${EOF}"
         hdfs dfs -mkdir -p /user/${HDFS_NAMENODE_USER}
         hdfs dfs -mkdir /spark-logs
         hdfs dfs -mkdir /spark-libs
