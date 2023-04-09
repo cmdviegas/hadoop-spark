@@ -67,6 +67,8 @@ if [ "$HOSTNAME" == "node-master" ] ; then
         sleep 2
         hdfs namenode -format
     fi
+    
+    sleep 5
 
     # Start HDFS service
     printf "[${green}HDFS${reset}] ${lblue}Starting HDFS service${reset}...\n"
