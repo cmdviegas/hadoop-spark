@@ -43,11 +43,6 @@ services:
     container_name: slave1
     hostname: slave1
     image: hadoopcluster/hadoop-spark:v4
-    build:
-      context: .
-      args:
-        USER: spark
-        PASS: spark
     tty: true
     restart: unless-stopped
     networks:
@@ -58,16 +53,16 @@ services:
     volumes: 
       - ./apps:/home/spark/apps
       - spark-data-slave1:/home/spark/
+    healthcheck:
+      test: ["CMD", "hdfs", "dfs", "-test", "-e", "/"]
+      interval: 1m
+      timeout: 15s
+      retries: 3
 
   slave2:
     container_name: slave2
     hostname: slave2
     image: hadoopcluster/hadoop-spark:v4
-    build:
-      context: .
-      args:
-        USER: spark
-        PASS: spark
     tty: true
     restart: unless-stopped
     networks:
@@ -78,6 +73,11 @@ services:
     volumes: 
       - ./apps:/home/spark/apps
       - spark-data-slave2:/home/spark/
+    healthcheck:
+      test: ["CMD", "hdfs", "dfs", "-test", "-e", "/"]
+      interval: 1m
+      timeout: 15s
+      retries: 3
 
 networks:
   hadoop_network:
