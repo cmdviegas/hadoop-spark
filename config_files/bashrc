@@ -2,7 +2,7 @@
 #
 # Environment variables for Apache Hadoop 3.x.x + Spark 3.x.x
 #
-export HADOOP_HOME="${PWD}/hadoop"
+export HADOOP_HOME="${HOME}/hadoop"
 export HADOOP_COMMON_HOME="${HADOOP_HOME}"
 export HADOOP_HDFS_HOME="${HADOOP_HOME}"
 export HADOOP_MAPRED_HOME="${HADOOP_HOME}"
