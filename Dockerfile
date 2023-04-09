@@ -16,6 +16,8 @@
 FROM ubuntu:22.04
 
 # Update system and install required packages (silently)
+#RUN sed -i -e 's/http:\/\/archive\.ubuntu\.com\/ubuntu\//mirror:\/\/mirrors\.ubuntu\.com\/mirrors\.txt/' /etc/apt/sources.list
+RUN sed --in-place --regexp-extended "s/(\/\/)(archive\.ubuntu)/\1br.\2/" /etc/apt/sources.list
 RUN apt-get update && apt-get install -y sudo ssh vim nano openjdk-11-jdk-headless python3.9 net-tools iputils-ping dos2unix
 
 # Create symbolic link to make 'python' be recognized as a system command
