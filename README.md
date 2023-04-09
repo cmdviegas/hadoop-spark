@@ -7,7 +7,7 @@ This is a script to deploy Apache Hadoop and Apache Spark in distributed mode us
 ### :desktop_computer: How to run
 
 #### [auto mode]
-#### docker-compose.yml file option
+#### Docker Compose option
 
 ```
 docker compose build && docker compose up --no-build
