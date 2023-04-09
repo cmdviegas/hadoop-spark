@@ -100,12 +100,12 @@ if [ "$HOSTNAME" == "node-master" ] ; then
 
     # Pandas installation (optional)
     # if [ ! -e $FILE ] ; then
-    #    echo "${PASSWORD}" | sudo apt install python3-pip
+    #    echo "${PASSWORD}" | sudo apt install -y python3-pip
     #    pip install pandas==1.5.3 pyarrow==11.0.0
     #    echo "export PATH=\"$PATH:$PWD/.local/bin\"" >> ~/.bashrc
-    # fi
-    # eval "$(tail -n +10 ~/.bashrc)" # workaround for ubuntu .bashrc
-
+    #    eval "$(tail -n +10 ~/.bashrc)" # workaround for ubuntu .bashrc
+    #fi
+    
     # Start SPARK history server
     printf "[${green}SPARK${reset}] ${lblue}Starting SPARK history server${reset}...\n"
     start-history-server.sh
