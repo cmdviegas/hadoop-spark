@@ -15,9 +15,7 @@ export JAVA_HOME="/usr/lib/jvm/java-11-openjdk-amd64"
 #export _JAVA_OPTIONS="-Xmx2048m"
 
 export SPARK_HOME="${HADOOP_HOME}/spark"
-export HIVE_HOME="${HADOOP_HOME}/hive"
-export CLASSPATH="${CLASSPATH}:${HIVE_HOME}/lib/*"
-export PATH="${PATH}:${HADOOP_HOME}/sbin:${HADOOP_HOME}/bin:${JAVA_HOME}/bin:${SPARK_HOME}/bin:${SPARK_HOME}/sbin:${HIVE_HOME}/bin"
+export PATH="${PATH}:${HADOOP_HOME}/sbin:${HADOOP_HOME}/bin:${JAVA_HOME}/bin:${SPARK_HOME}/bin:${SPARK_HOME}/sbin"
 
 export HDFS_DATANODE_USER="${HDFS_NAMENODE_USER}"
 export HDFS_SECONDARYNAMENODE_USER="${HDFS_NAMENODE_USER}"
