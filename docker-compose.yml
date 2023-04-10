@@ -70,25 +70,6 @@ services:
       - ./apps:/home/spark/apps
       - spark-data-slave2:/home/spark/
 
-  db:
-    container_name: db
-    hostname: db
-    image: postgres
-    tty: true
-    restart: unless-stopped
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: spark
-      PGDATA: /home/spark/db-data
-    ports:
-      - 5432:5432
-    networks:
-      hadoop_network:
-        ipv4_address: 172.18.0.5
-    volumes: 
-      - ./apps:/home/spark/apps
-      - postgres-db:/home/spark/db-data
-
 networks:
   hadoop_network:
     driver: bridge
@@ -101,4 +82,3 @@ volumes:
   spark-data-master:
   spark-data-slave1:
   spark-data-slave2:
-  postgres-db:
