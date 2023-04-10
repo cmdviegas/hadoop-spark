@@ -42,6 +42,7 @@ WORKDIR ${MYDIR}
 # Configure Hadoop enviroment variables
 ENV HADOOP_HOME "${MYDIR}/hadoop"
 ENV HADOOP_CONF_DIR "${HADOOP_HOME}/etc/hadoop"
+ENV HIVE_HOME "${HADOOP_HOME}/hive"
 ENV SPARK_HOME "${HADOOP_HOME}/spark"
 
 # Copy all files from local folder to container, except the ones in .dockerignore
@@ -50,15 +51,16 @@ COPY . .
 # Set permissions
 RUN echo "${PASSWORD}" | sudo -S chown "${USERNAME}:${USERNAME}" -R ${MYDIR}
 
+ARG DOWNLOAD
 # Copy and extract Hadoop to container filesystem
 # Download hadoop-3.3.5.tar.gz from Apache (if needed)
-#RUN wget --no-check-certificate https://dlcdn.apache.org/hadoop/common/hadoop-3.3.5/hadoop-3.3.5.tar.gz
+RUN if ${DOWNLOAD}; then wget --no-check-certificate https://dlcdn.apache.org/hadoop/common/hadoop-3.3.5/hadoop-3.3.5.tar.gz; fi
 RUN tar -zxf hadoop-3*.tar.gz -C ${MYDIR} && rm -rf hadoop-3*.tar.gz
 RUN ln -sf hadoop-3* hadoop
 
 # Copy and extract Spark to container filesystem
 # Download spark-3.3.2-bin-hadoop3.tgz from Apache (if needed)
-#RUN wget --no-check-certificate https://dlcdn.apache.org/spark/spark-3.3.2/spark-3.3.2-bin-hadoop3.tgz
+RUN if ${DOWNLOAD}; then wget --no-check-certificate https://dlcdn.apache.org/spark/spark-3.3.2/spark-3.3.2-bin-hadoop3.tgz; fi
 RUN tar -zxf spark-3*-bin-hadoop3.tgz -C ${HADOOP_HOME} && rm -rf spark-3*-bin-hadoop3.tgz
 RUN ln -sf ${HADOOP_HOME}/spark-3*-bin-hadoop3 ${SPARK_HOME}
 
@@ -70,9 +72,12 @@ RUN cat config_files/bashrc >> .bashrc
 RUN echo "export HDFS_NAMENODE_USER=\"$USERNAME\"" >> .bashrc
 
 # Copy config files to Hadoop config folder
-RUN cp config_files/*.xml ${HADOOP_CONF_DIR}/
-RUN cp config_files/workers ${HADOOP_CONF_DIR}/
+RUN cp config_files/core-site.xml ${HADOOP_CONF_DIR}/
 RUN cp config_files/hadoop-env.sh ${HADOOP_CONF_DIR}/
+RUN cp config_files/hdfs-site.xml ${HADOOP_CONF_DIR}/
+RUN cp config_files/mapred-site.xml ${HADOOP_CONF_DIR}/
+RUN cp config_files/workers ${HADOOP_CONF_DIR}/
+RUN cp config_files/yarn-site.xml ${HADOOP_CONF_DIR}/
 RUN chmod 0755 ${HADOOP_CONF_DIR}/*.sh
 
 # Copy config files to Spark config folder
