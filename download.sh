@@ -13,20 +13,13 @@
 # This is a bash script to automatically download hadoop and spark 
 #
 
-read -p "Would you like to download Hadoop and Spark from Apache servers? (yes/NO): " option
+read -p "Download Apache Hadoop 3.3.5? (y/N): " hadoop
+read -p "Download Apache Spark 3.3.2? (y/N): " spark
 
-if [[ "$option" =~ ^[Yy][Ee][Ss]$ ]]; then
+if [[ "$hadoop" =~ ^([Yy]|[Yy][Ee][Ss])$ ]]; then
+  wget -nc --no-check-certificate https://dlcdn.apache.org/hadoop/common/hadoop-3.3.5/hadoop-3.3.5.tar.gz
+fi
 
-  read -p "Download Apache Hadoop 3.3.5? (yes/NO): " hadoop
-
-  read -p "Download Apache Spark 3.3.2 (yes/NO): " spark
-
-  if [[ "$hadoop" =~ ^[Yy][Ee][Ss]$ ]]; then
-    wget --no-check-certificate https://dlcdn.apache.org/hadoop/common/hadoop-3.3.5/hadoop-3.3.5.tar.gz
-  fi
-
-  if [[ "$spark" =~ ^[Yy][Ee][Ss]$ ]]; then
-    wget --no-check-certificate https://dlcdn.apache.org/spark/spark-3.3.2/spark-3.3.2-bin-hadoop3.tgz
-  fi
-
+if [[ "$spark" =~ ^([Yy]|[Yy][Ee][Ss])$ ]]; then
+  wget -nc --no-check-certificate https://dlcdn.apache.org/spark/spark-3.3.2/spark-3.3.2-bin-hadoop3.tgz
 fi
