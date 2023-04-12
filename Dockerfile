@@ -42,7 +42,6 @@ WORKDIR ${MYDIR}
 # Configure Hadoop enviroment variables
 ENV HADOOP_HOME "${MYDIR}/hadoop"
 ENV HADOOP_CONF_DIR "${HADOOP_HOME}/etc/hadoop"
-ENV HIVE_HOME "${HADOOP_HOME}/hive"
 ENV SPARK_HOME "${HADOOP_HOME}/spark"
 
 # Copy all files from local folder to container, except the ones in .dockerignore
@@ -51,17 +50,18 @@ COPY . .
 # Set permissions
 RUN echo "${PASSWORD}" | sudo -S chown "${USERNAME}:${USERNAME}" -R ${MYDIR}
 
-ARG DOWNLOAD
-# Copy and extract Hadoop to container filesystem
-# Download hadoop-3.3.5.tar.gz from Apache (if needed)
-RUN if ${DOWNLOAD}; then wget --no-check-certificate https://dlcdn.apache.org/hadoop/common/hadoop-3.3.5/hadoop-3.3.5.tar.gz; fi
-RUN tar -zxf hadoop-3*.tar.gz -C ${MYDIR} && rm -rf hadoop-3*.tar.gz
+# Extract Hadoop to container filesystem
+# Download Hadoop 3.3.5 from Apache servers (if needed)
+ENV FILENAME hadoop-3.3.5.tar.gz
+RUN if [ ! -e $FILENAME ]; then wget --no-check-certificate https://dlcdn.apache.org/hadoop/common/$(echo "$FILENAME" | sed "s/\.tar\.gz$//")/$FILENAME; fi
+RUN tar -zxf $FILENAME -C ${MYDIR} && rm -rf $FILENAME
 RUN ln -sf hadoop-3* hadoop
 
-# Copy and extract Spark to container filesystem
-# Download spark-3.3.2-bin-hadoop3.tgz from Apache (if needed)
-RUN if ${DOWNLOAD}; then wget --no-check-certificate https://dlcdn.apache.org/spark/spark-3.3.2/spark-3.3.2-bin-hadoop3.tgz; fi
-RUN tar -zxf spark-3*-bin-hadoop3.tgz -C ${HADOOP_HOME} && rm -rf spark-3*-bin-hadoop3.tgz
+# Extract Spark to container filesystem
+# Download Spark 3.3.2 from Apache server (if needed)
+ENV FILENAME spark-3.3.2-bin-hadoop3.tgz
+RUN if [ ! -e $FILENAME ]; then wget --no-check-certificate https://dlcdn.apache.org/spark/$(echo "$FILENAME" | sed -E 's/^spark-([0-9]+\.[0-9]+\.[0-9]+).*/spark-\1/')/$FILENAME; fi
+RUN tar -zxf $FILENAME -C ${HADOOP_HOME} && rm -rf $FILENAME
 RUN ln -sf ${HADOOP_HOME}/spark-3*-bin-hadoop3 ${SPARK_HOME}
 
 # Optional (convert charset from UTF-16 to UTF-8)
