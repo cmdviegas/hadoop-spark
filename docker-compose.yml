@@ -25,7 +25,6 @@ services:
       args:
         USER: spark
         PASS: spark
-        DOWNLOAD: false
     tty: true
     restart: unless-stopped
     networks:
