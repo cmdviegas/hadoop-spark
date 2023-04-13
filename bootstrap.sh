@@ -68,13 +68,13 @@ if [ "$HOSTNAME" == "node-master" ] ; then
         hdfs namenode -format
     fi
 
-    sleep 5
+    sleep 3
 
     # Start HDFS and YARN services
     printf "${CLUSTER} Starting HDFS and YARN services${EOF}"
     start-dfs.sh && start-yarn.sh
 
-    sleep 5
+    sleep 3
 
     # Create /user folders
     if [ ! -e $FILE ] ; then
@@ -97,8 +97,6 @@ if [ "$HOSTNAME" == "node-master" ] ; then
     ${GR} ░  ░  ░  ░░         ░   ▒     ░░   ░ ░ ░░ ░ 
     ${GR}       ░                 ░  ░   ░     ░  ░       ${LB}$(tput blink)v3.3.2${RE}\n\n"
 
-    sleep 5
-
     # Pandas installation (optional)
     # if [ ! -e $FILE ] ; then
     #    echo "${PASSWORD}" | sudo apt install -y python3-pip
@@ -113,8 +111,6 @@ if [ "$HOSTNAME" == "node-master" ] ; then
 
     printf "${CLUSTER} Checking HDFS nodes report${EOF}"
     hdfs dfsadmin -report
-
-    sleep 5
 
     printf "${CLUSTER} Checking YARN nodes list${EOF}"
     yarn node -list
