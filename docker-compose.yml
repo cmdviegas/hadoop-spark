@@ -34,7 +34,7 @@ services:
       - 9870:9870
       - 8088:8088
       - 18080:18080
-      - 2222:22
+      - "2222:22"
     volumes: 
       - ./apps:/home/spark/apps
       - spark-data-master:/home/spark/
