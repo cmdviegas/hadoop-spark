@@ -56,18 +56,19 @@ docker exec -it node-master /bin/bash
 
 #### v5 - 23/04/2023 
  - :package: Updated Apache Hadoop version to 3.5.5
-#### - :package: Updated Apache Spark version to 3.4.0
-#### - :sparkles: Added '.env' file with some build environment variables as user definitions (should be edited with username and password for spark and postgres)
-#### - :sparkles: Slave nodes were renamed to node-X (i.e.: node-1, node-2, ...)
-#### - :sparkles: /data folder was renamed to /hdfs-data
-#### - :sparkles: Added Hive 3.1.3 with PostgreSQL as MetastoreDB
-#### - :sparkles: Added $HIVE_EXTERNAL env var to indicate whether to use Hive 3.1.3 (external) or Hive 2.3.9 (builtin) [true/false]
-#### - :sparkles: By default spark-warehouse is stored in HDFS
-#### - :rotating_light: If using Hive builtin, derby-metastore is placed alongside user home folder (locally)
-#### - :lipstick: Added a sql folder with config files for postgresql as metastore of hive
-#### - :lipstick: Added sub-folders to config_files with specific configuration files for hadoop, spark, hive and system
-#### - :rotating_light: Auto download Hadoop, Spark and Hive when needed
-#### - :lipstick: Other improvements.
+ - :package: Updated Apache Spark version to 3.4.0
+ - :sparkles: Added '.env' file with some build environment variables as user definitions (should be edited with username and password for spark and postgres)
+ - :sparkles: Slave nodes were renamed to node-X (i.e.: node-1, node-2, ...)
+ - :sparkles: /data folder was renamed to /hdfs-data
+ - :sparkles: Added Hive 3.1.3 with PostgreSQL as MetastoreDB
+ - :sparkles: Added $HIVE_EXTERNAL env var to indicate whether to use Hive 3.1.3 (external) or Hive 2.3.9 (builtin) [true/false]
+ - :sparkles: By default spark-warehouse is stored in HDFS
+ - :rotating_light: If using Hive builtin, derby-metastore is placed alongside user home folder (locally)
+ - :lipstick: Added a sql folder with config files for postgresql as metastore of hive
+ - :lipstick: Added sub-folders to config_files with specific configuration files for hadoop, spark, hive and system
+ - :rotating_light: Auto download Hadoop, Spark and Hive when needed
+ - :lipstick: Other improvements.
+
 
 ### :page_facing_up: License
 
