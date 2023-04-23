@@ -1,0 +1,28 @@
+# ██████╗  ██████╗ █████╗
+# ██╔══██╗██╔════╝██╔══██╗
+# ██║  ██║██║     ███████║
+# ██║  ██║██║     ██╔══██║
+# ██████╔╝╚██████╗██║  ██║
+# ╚═════╝  ╚═════╝╚═╝  ╚═╝
+# DEPARTAMENTO DE ENGENHARIA DE COMPUTACAO E AUTOMACAO
+# UNIVERSIDADE FEDERAL DO RIO GRANDE DO NORTE, NATAL/RN
+#
+# (C) 2023 CARLOS M D VIEGAS
+# https://github.com/cmdviegas
+#
+# Hosts file
+#
+
+127.0.0.1 localhost
+172.18.0.2 node-master
+172.18.0.3 node-1
+172.18.0.4 node-2
+172.18.0.5 node-3
+172.18.0.6 node-4
+172.18.0.7 node-5
+172.18.0.8 node-6
+172.18.0.9 node-7
+172.18.0.10 node-8
+172.18.0.11 node-9
+172.18.0.12 node-10
+172.18.0.20 postgres-db
