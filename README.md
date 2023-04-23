@@ -1,18 +1,22 @@
-## Deploying APACHE HADOOP 3.x + APACHE SPARK 3.x
+## Deploying a cluster with Apache Hadoop 3.3.5 + Apache Spark 3.4.0 + Apache Hive 3.1.3
 
-This is a script to deploy Apache Hadoop and Apache Spark in distributed mode using Docker as infrastructure.
+This is a script to deploy a cluster with Apache Hadoop and Apache Spark + Apache Hive in distributed mode using Docker as infrastructure.
 
-<!--⚠️ Before you begin, you must have to download Apache Hadoop 3.3.5 (`hadoop-3.3.5.tar.gz`) and Apache Spark 3.3.2 (`spark-3.3.2-bin-hadoop3.tgz`) and place them alongside the folder´s repo. There is a `download.sh` script to perform the download of both. Alternatively, you could edit `Dockerfile` by uncommenting lines 55 and 61 to perform the download.-->
+### :rocket: How to build/run
 
-### :desktop_computer: How to run
-
-#### [auto mode]
-#### Docker Compose option
-
+#### [Hadoop + Spark + Hive (builtin) + Derby as Metastore (locally)]
 ```
-docker compose build --no-cache && docker compose up --no-build
+docker compose build && docker compose up 
 ```
 
+#### [Hadoop + Spark + Hive (external) + PostgreSQL as Metastore (in a container)]
+```
+docker compose build --build-arg HIVEEXTERNAL=true && docker compose --profile hiveexternal up 
+```
+
+⚠️ You should edit `.env` file in order to set username and password for hadoop and postgresql (if needed) and also the number of worker nodes in the cluster (and other definitions too).
+
+<!-- 
 #### [manual mode] 
 #### Dockerfile option
 
@@ -36,8 +40,8 @@ docker run -it -d --network=hadoop_network --ip 172.18.0.4 --name=slave2 --hostn
 ```
 docker run -it -p 9870:9870 -p 8088:8088 -p 18080:18080 -p 2222:22 --network=hadoop_network --ip 172.18.0.2 --name=node-master --hostname=node-master hadoopcluster/hadoop-spark:v4
 ```
-
-### :rocket: Tips
+-->
+### :bulb: Tips
 
 #### To access node-master
 ```
@@ -48,7 +52,24 @@ or
 docker exec -it node-master /bin/bash
 ```
 
-### 📜 License
+### :memo: Changelog
+
+#### v5 - 23/04/2023 
+#### - :package: Updated Apache Hadoop version to 3.5.5
+#### - :package: Updated Apache Spark version to 3.4.0
+#### - :sparkles: Added '.env' file with some build environment variables as user definitions (should be edited with username and password for spark and postgres)
+#### - :sparkles: Slave nodes were renamed to node-X (i.e.: node-1, node-2, ...)
+#### - :sparkles: /data folder was renamed to /hdfs-data
+#### - :sparkles: Added Hive 3.1.3 with PostgreSQL as MetastoreDB
+#### - :sparkles: Added $HIVE_EXTERNAL env var to indicate whether to use Hive 3.1.3 (external) or Hive 2.3.9 (builtin) [true/false]
+#### - :sparkles: By default spark-warehouse is stored in HDFS
+#### - :rotating_light: If using Hive builtin, derby-metastore is placed alongside user home folder (locally)
+#### - :lipstick: Added a sql folder with config files for postgresql as metastore of hive
+#### - :lipstick: Added sub-folders to config_files with specific configuration files for hadoop, spark, hive and system
+#### - :rotating_light: Auto download Hadoop, Spark and Hive when needed
+#### - :lipstick: Other improvements.
+
+### :page_facing_up: License
 
 Copyright (c) 2023 [CARLOS M. D. VIEGAS](https://github.com/cmdviegas).
 
