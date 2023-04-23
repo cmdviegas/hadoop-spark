@@ -3,8 +3,10 @@
 .gitattributes
 .dockerignore
 Dockerfile
-docker-compose.yml
+*.yml
 LICENSE
 LICENSE.apache
 README.md
 download.sh
+sql/
+.env
