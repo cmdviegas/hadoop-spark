@@ -6,18 +6,22 @@ This is a script to deploy a cluster with Apache Hadoop and Apache Spark + Apach
 
 ⚠️ You should edit `.env` file in order to set username and password for hadoop and postgresql (if needed) and also the number of worker nodes in the cluster (and other definitions too).
 
-#### [Hadoop + Spark + Hive 2.3.9 (builtin) + Derby as Metastore]
+#### Option 1: Hadoop + Spark + Hive 2.3.9 (builtin) + Derby as Metastore
+
+It creates the node-master container and worker nodes containers according to `$NODE_REPLICAS` defined in `.env` file.
+
 ```
 docker compose build && docker compose up 
 ```
-It creates the node-master container and worker nodes containers according to `$REPLICAS` defined in `.env`.
 
 
-#### [Hadoop + Spark + Hive 3.1.3 (external) + PostgreSQL as Metastore]
+#### Option 2: Hadoop + Spark + Hive 3.1.3 (external) + PostgreSQL as Metastore
+
+It creates the node-master container, db container (with postgresql) and worker nodes containers according to `$NODE_REPLICAS` defined in `.env` file.
+
 ```
 docker compose build --build-arg HIVEEXTERNAL=true && docker compose --profile hiveexternal up 
 ```
-It creates the node-master container, db container (with postgresql) and worker nodes containers according to `$REPLICAS` defined in `.env`.
 
 
 <!-- 
@@ -64,7 +68,7 @@ docker exec -it node-master /bin/bash
  - :package: Updated Python version to 3.10;
  - :sparkles: Added `.env` file with some build environment variables as user definitions (should be edited with username and password for spark and postgres);
  - :sparkles: Slave/worker nodes were renamed to node-X (i.e.: node-1, node-2, ...);
- - :sparkles: The number of worker nodes should be defined in `.env` file by setting an integer value for `$REPLICAS`;
+ - :sparkles: The number of worker nodes should be defined in `.env` file by setting an integer value for `$NODE_REPLICAS`;
  - :sparkles: /data folder was renamed to /hdfs-data;
  - :sparkles: Added Hive 3.1.3 with PostgreSQL as MetastoreDB (optional, according to user preference through `$HIVEEXTERNAL` var);
  - :sparkles: Added `$HIVEEXTERNAL` env var to indicate whether to use Hive 3.1.3 (external) or Hive 2.3.9 (builtin) [set it `true` or `false`, respectively];
