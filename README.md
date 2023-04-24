@@ -4,17 +4,21 @@ This is a script to deploy a cluster with Apache Hadoop and Apache Spark + Apach
 
 ### :rocket: How to build/run
 
-#### [Hadoop + Spark + Hive (builtin) + Derby as Metastore (locally)]
+⚠️ You should edit `.env` file in order to set username and password for hadoop and postgresql (if needed) and also the number of worker nodes in the cluster (and other definitions too).
+
+#### [Hadoop + Spark + Hive 2.3.9 (builtin) + Derby as Metastore]
 ```
 docker compose build && docker compose up 
 ```
+It creates the node-master container and worker nodes containers according to `$REPLICAS` defined in `.env`.
 
-#### [Hadoop + Spark + Hive (external) + PostgreSQL as Metastore (in a container)]
+
+#### [Hadoop + Spark + Hive 3.1.3 (external) + PostgreSQL as Metastore]
 ```
 docker compose build --build-arg HIVEEXTERNAL=true && docker compose --profile hiveexternal up 
 ```
+It creates the node-master container, db container (with postgresql) and worker nodes containers according to `$REPLICAS` defined in `.env`.
 
-⚠️ You should edit `.env` file in order to set username and password for hadoop and postgresql (if needed) and also the number of worker nodes in the cluster (and other definitions too).
 
 <!-- 
 #### [manual mode] 
