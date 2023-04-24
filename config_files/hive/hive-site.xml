@@ -63,7 +63,7 @@
 
 
     
-    <property>
+    <!--property>
         <name>datanucleus.autoCreateSchema</name>
         <value>false</value>
     </property>
@@ -87,6 +87,6 @@
     <property>
         <name>hive.server2.authentication</name>
         <value>none</value>
-    </property>
+    </property-->
 
 </configuration>
