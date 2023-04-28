@@ -95,7 +95,7 @@ services:
       - POSTGRES_PASSWORD=${PSQL_PGPASSWORD}
     profiles:
       - hiveexternal
-    expose:
+    ports:
       - "5432:5432"
     networks:
       hadoop_network:
