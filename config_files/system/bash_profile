@@ -40,7 +40,7 @@ export HADOOP_OPTS="${HADOOP_OPTS} -XX:-PrintWarnings -Djava.net.preferIPv4Stack
 addToPATH "${HADOOP_HOME}/sbin:${HADOOP_HOME}/bin"
 
 # HDFS
-export HDFS_NAMENODE_USER=
+export HDFS_NAMENODE_USER=spark
 export HDFS_DATANODE_USER="${HDFS_NAMENODE_USER}"
 export HDFS_SECONDARYNAMENODE_USER="${HDFS_NAMENODE_USER}"
 
@@ -49,9 +49,9 @@ export YARN_RESOURCEMANAGER_USER="${HDFS_NAMENODE_USER}"
 export YARN_NODEMANAGER_USER="${HDFS_NAMENODE_USER}"
 
 # SPARK
-export SPARK_HOME="${HADOOP_HOME}/spark"
+export SPARK_HOME="${HOME}/spark"
 addToPATH "${SPARK_HOME}/bin:${SPARK_HOME}/sbin"
 
 # HIVE
-export HIVE_HOME=
+export HIVE_HOME="${HOME}/hive"
 addToPATH "${HIVE_HOME}/bin"
