@@ -32,17 +32,26 @@
 
     <property>
         <name>dfs.namenode.name.dir</name>
-        <value>/home/USERNAME_REPLACE/hdfs-data/nameNode</value>
+        <value></value>
+        <description>Determines where on the local filesystem the DFS name node should store the name table(fsimage).</description>
     </property>
 
     <property>
         <name>dfs.datanode.data.dir</name>
-        <value>/home/USERNAME_REPLACE/hdfs-data/dataNode</value>
+        <value></value>
+        <description>Determines where on the local filesystem an DFS data node should store its blocks.</description>
     </property>
 
     <property>
         <name>dfs.replication</name>
-        <value>2</value>
+        <value></value>
+        <description>Default block replication across data nodes. The actual number of replications can be specified when the file is created.</description>
+    </property>
+
+    <property>
+        <name>dfs.blocksize</name>
+        <value>128m</value>
+        <description>The default block size for new files, in bytes.</description>
     </property>
 
 </configuration>

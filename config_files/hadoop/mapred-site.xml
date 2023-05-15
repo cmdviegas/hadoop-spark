@@ -33,41 +33,49 @@
     <property>
         <name>mapreduce.framework.name</name>
         <value>yarn</value>
+        <description>The runtime framework for executing MapReduce jobs. Can be one of local, classic or yarn.</description>
+    </property>
+
+    <property>
+        <name>yarn.app.mapreduce.am.resource.mb</name>
+        <value></value>
+        <description>The amount of memory the MR AppMaster needs.</description>
+    </property>
+
+    <property>
+        <name>mapreduce.map.memory.mb</name>
+        <value></value>
+        <description>The amount of memory to request from the scheduler for each map task.</description>
+    </property>
+
+    <property>
+        <name>mapreduce.reduce.memory.mb</name>
+        <value></value>
+        <description>The amount of memory to request from the scheduler for each reduce task.</description>
     </property>
 
     <property>
         <name>mapreduce.application.classpath</name>
-        <value>$HADOOP_MAPRED_HOME/share/hadoop/mapreduce/*, $HADOOP_MAPRED_HOME/share/hadoop/mapreduce/lib/*</value>
+        <value>${HADOOP_MAPRED_HOME}/share/hadoop/mapreduce/*,${HADOOP_MAPRED_HOME}/share/hadoop/mapreduce/lib/*</value>
+        <description>CLASSPATH for MR applications.</description>
     </property>
 
     <property>
         <name>yarn.app.mapreduce.am.env</name>
         <value>HADOOP_MAPRED_HOME=${HADOOP_HOME}</value>
+        <description>User added environment variables for the MR App Master processes, specified as a comma separated list.</description>
     </property>
 
     <property>
         <name>mapreduce.map.env</name>
         <value>HADOOP_MAPRED_HOME=${HADOOP_HOME}</value>
+        <description>User added environment variables for map, specified as a comma separated list.</description>
     </property>
 
     <property>
         <name>mapreduce.reduce.env</name>
         <value>HADOOP_MAPRED_HOME=${HADOOP_HOME}</value>
-    </property>
-
-    <property>
-        <name>yarn.app.mapreduce.am.resource.mb</name>
-        <value>512</value>
-    </property>
-
-    <property>
-        <name>mapreduce.map.memory.mb</name>
-        <value>256</value>
-    </property>
-
-    <property>
-        <name>mapreduce.reduce.memory.mb</name>
-        <value>256</value>
+        <description>User added environment variables for reduce, specified as a comma separated list.</description>
     </property>
 
 </configuration>

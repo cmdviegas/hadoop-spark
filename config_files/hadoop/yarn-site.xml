@@ -33,51 +33,61 @@
     <property>
         <name>yarn.resourcemanager.hostname</name>
         <value>node-master</value>
+        <description>The hostname of the RM.</description> 
     </property>
   
     <property>
         <name>yarn.resourcemanager.bind-host</name>
         <value>0.0.0.0</value>
+        <description>The actual address the server will bind to.</description>
     </property>
 
     <property>
         <name>yarn.nodemanager.aux-services</name>
         <value>mapreduce_shuffle</value>
+        <description>The auxiliary service name.</description>
+    </property>
+
+    <property>
+        <name>yarn.nodemanager.aux-services.mapreduce_shuffle.class</name>
+        <value>org.apache.hadoop.mapred.ShuffleHandler</value>
+        <description>The auxiliary service class to use.</description>
     </property>
 
     <property>
         <name>yarn.nodemanager.resource.memory-mb</name>
-        <value>1024</value>
+        <value></value>
+        <description>Amount of physical memory, in MB, that can be allocated for containers.</description>
+    </property>
+
+    <property>
+        <name>yarn.scheduler.capacity.maximum-am-resource-percent</name>
+        <value></value>
+        <description>Maximum percent of resources in the cluster which can be used to run application masters - controls number of concurrent active applications.</description>
     </property>
 
     <property>
         <name>yarn.scheduler.maximum-allocation-mb</name>
-        <value>1024</value>
+        <value></value>
+        <description>The maximum allocation for every container request at the RM, in MBs.</description>
     </property>
 
     <property>
         <name>yarn.scheduler.minimum-allocation-mb</name>
-        <value>256</value>
+        <value></value>
+        <description>The minimum allocation for every container request at the RM, in MBs.</description>
     </property>
 
     <property>
         <name>yarn.nodemanager.vmem-check-enabled</name>
         <value>false</value>
-    </property>
-
-    <property>
-        <name>yarn.nodemanager.aux-services.mapreduce.shuffle.class</name>
-        <value>org.apache.hadoop.mapred.ShuffleHandler</value>
-    </property>
-
-    <property>
-        <name>yarn.scheduler.capacity.maximum-am-resource-percent</name>
-        <value>0.95</value>
+        <description>Whether virtual memory limits will be enforced for containers.</description>
     </property>
 
     <property>
         <name>yarn.application.classpath</name>
-        <value>$HADOOP_CONF_DIR,$HADOOP_COMMON_HOME/share/hadoop/common/*,$HADOOP_COMMON_HOME/share/hadoop/common/lib/*,$HADOOP_HDFS_HOME/share/hadoop/hdfs/*,$HADOOP_HDFS_HOME/share/hadoop/hdfs/lib/*,$HADOOP_CONF_DIR/*,$HADOOP_YARN_HOME/share/hadoop/yarn/*,$HADOOP_YARN_HOME/share/hadoop/yarn/lib/*</value>
+        <value>${HADOOP_CONF_DIR},${HADOOP_COMMON_HOME}/share/hadoop/common/*,${HADOOP_COMMON_HOME}/share/hadoop/common/lib/*,${HADOOP_HDFS_HOME}/share/hadoop/hdfs/*,${HADOOP_HDFS_HOME}/share/hadoop/hdfs/lib/*,${HADOOP_CONF_DIR}/*,${HADOOP_YARN_HOME}/share/hadoop/yarn/*,${HADOOP_YARN_HOME}/share/hadoop/yarn/lib/*</value>
+        <description>CLASSPATH for YARN applications.</description>
     </property>
 
 </configuration>
