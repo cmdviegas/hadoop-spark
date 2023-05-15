@@ -56,25 +56,25 @@
 
     <property>
         <name>yarn.nodemanager.resource.memory-mb</name>
-        <value></value>
+        <value>2048</value>
         <description>Amount of physical memory, in MB, that can be allocated for containers.</description>
     </property>
 
     <property>
         <name>yarn.scheduler.capacity.maximum-am-resource-percent</name>
-        <value></value>
+        <value>0.9</value>
         <description>Maximum percent of resources in the cluster which can be used to run application masters - controls number of concurrent active applications.</description>
     </property>
 
     <property>
         <name>yarn.scheduler.maximum-allocation-mb</name>
-        <value></value>
+        <value>1536</value>
         <description>The maximum allocation for every container request at the RM, in MBs.</description>
     </property>
 
     <property>
         <name>yarn.scheduler.minimum-allocation-mb</name>
-        <value></value>
+        <value>512</value>
         <description>The minimum allocation for every container request at the RM, in MBs.</description>
     </property>
 
