@@ -70,8 +70,8 @@ WORKDIR ${MYDIR}
 # Configure Hadoop enviroment variables
 ENV HADOOP_HOME "${MYDIR}/hadoop"
 ENV HADOOP_CONF_DIR "${HADOOP_HOME}/etc/hadoop"
-ENV SPARK_HOME "${HADOOP_HOME}/spark"
-ENV HIVE_HOME "${HADOOP_HOME}/hive"
+ENV SPARK_HOME "${MYDIR}/spark"
+ENV HIVE_HOME "${MYDIR}/hive"
 
 # Copy all files from local folder to container, except the ones in .dockerignore
 COPY . .
@@ -84,21 +84,21 @@ RUN sudo -S chown "${USERNAME}:${USERNAME}" -R ${MYDIR}
 ENV FILENAME hadoop-3.3.5.tar.gz
 RUN wget -nc --no-check-certificate https://dlcdn.apache.org/hadoop/common/$(echo "${FILENAME}" | sed "s/\.tar\.gz$//")/${FILENAME}
 RUN tar -zxf ${FILENAME} -C ${MYDIR} && rm -rf $FILENAME
-RUN ln -sf hadoop-3* hadoop
+RUN ln -sf hadoop-3* ${HADOOP_HOME}
 
 # Extract Spark to container filesystem
 # Download Spark 3.4.0 from Apache server (if needed)
 ENV FILENAME spark-3.4.0-bin-hadoop3.tgz
 RUN wget -nc --no-check-certificate https://dlcdn.apache.org/spark/$(echo "${FILENAME}" | sed -E 's/^spark-([0-9]+\.[0-9]+\.[0-9]+).*/spark-\1/')/${FILENAME}
-RUN tar -zxf ${FILENAME} -C ${HADOOP_HOME} && rm -rf ${FILENAME}
-RUN ln -sf ${HADOOP_HOME}/spark-3*-bin-hadoop3 ${SPARK_HOME}
+RUN tar -zxf ${FILENAME} -C ${MYDIR} && rm -rf ${FILENAME}
+RUN ln -sf ${MYDIR}/spark-3*-bin-hadoop3 ${SPARK_HOME}
 
 # Extract Hive to container filesystem
 # Download Hive 3.1.3 from Apache server (if needed)
 ENV FILENAME apache-hive-3.1.3-bin.tar.gz
 RUN wget -nc --no-check-certificate https://dlcdn.apache.org/hive/$(echo "${FILENAME}" | sed -E 's/^apache-hive-([0-9]+\.[0-9]+\.[0-9]+).*/hive-\1/')/${FILENAME}
-RUN tar -zxf ${FILENAME} -C ${HADOOP_HOME} && rm -rf ${FILENAME}
-RUN ln -sf ${HADOOP_HOME}/apache-hive-* ${HIVE_HOME}
+RUN tar -zxf ${FILENAME} -C ${MYDIR} && rm -rf ${FILENAME}
+RUN ln -sf ${MYDIR}/apache-hive-* ${HIVE_HOME}
 RUN wget -nc --no-check-certificate https://jdbc.postgresql.org/download/postgresql-42.6.0.jar -P ${SPARK_HOME}/jars
 
 # Optional (convert charset from UTF-16 to UTF-8)
