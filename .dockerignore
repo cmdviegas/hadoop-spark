@@ -3,10 +3,12 @@
 .gitattributes
 .dockerignore
 Dockerfile
+Dockerfile.hive
+.env
+.env.hive
 *.yml
 LICENSE
 LICENSE.apache
 README.md
 download.sh
 sql/
-.env
