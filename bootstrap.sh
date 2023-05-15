@@ -58,7 +58,7 @@ sed -i "s/^export\? HDFS_NAMENODE_USER=.*/export HDFS_NAMENODE_USER=${SYS_USERNA
 # Replace or remove HIVE_HOME vars accordingly input $1 parameter HIVE or HADDOP
 case "$1" in
     HIVE)
-        sed -i 's|^export\? HIVE_HOME=.*|export HIVE_HOME="${HADOOP_HOME}/hive"|' "${HOME}/.bashrc"
+        sed -i 's|^export\? HIVE_HOME=.*|export HIVE_HOME="${HOME}/hive"|' "${HOME}/.bashrc"
         ;;
     HADOOP)
         sed -i 's|^export\? HIVE_HOME=.*|export HIVE_HOME=|' "${HOME}/.bashrc"
