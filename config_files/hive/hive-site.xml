@@ -38,7 +38,7 @@
 
     <property>
         <name>javax.jdo.option.ConnectionURL</name>
-        <value></value>
+        <value>jdbc:postgresql://postgres-db:5432/hive_metastore?createDatabaseIfNotExist=true</value>
         <description>JDBC connect string for a JDBC metastore.</description>
     </property>
 
@@ -50,13 +50,13 @@
 
     <property>
         <name>javax.jdo.option.ConnectionUserName</name>
-        <value></value>
+        <value>postgres</value>
         <description>username to use against metastore database.</description>
     </property>
 
     <property>
         <name>javax.jdo.option.ConnectionPassword</name>
-        <value></value>
+        <value>spark</value>
         <description>password to use against metastore database.</description>
     </property>
 
