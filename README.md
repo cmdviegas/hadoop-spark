@@ -73,7 +73,7 @@ docker exec -it node-master /bin/bash
  - :sparkles: Hive config files (`hive-site.xml`) is automatically updated during execution time according to `.env` file;
  - :sparkles: `$HADOOP_ROOT_LOGGER` var is now set to `WARN,DFRA` (in `.bashrc`) in order to reduce the number of verbose output during HADOOP deployment;
  - :package: Added `python3-pip` and `numpy`, to be used by Spark MLlib;
- - :package: Downgrade to Java 8, since Hive does not support Java 11;
+ - :package: Downgraded to Java 8, since Hive does not support Java 11;
  - :rotating_light: `$HIVEEXTERNAL` does not exist anymore;
  - :lipstick: Other minor improvements.
 
@@ -101,4 +101,4 @@ Copyright (c) 2023 [CARLOS M. D. VIEGAS](https://github.com/cmdviegas).
 
 This script is free and open-source software licensed under the [MIT License](https://github.com/cmdviegas/docker-hadoop-cluster/blob/master/LICENSE). 
 
-`Apache Hadoop` and `Apache Spark` are free and open-source software licensed under the [Apache License](https://github.com/cmdviegas/docker-hadoop-cluster/blob/master/LICENSE.apache).
+`Apache Hadoop`, `Apache Spark` and `Apache Hive` are free and open-source software licensed under the [Apache License](https://github.com/cmdviegas/docker-hadoop-cluster/blob/master/LICENSE.apache).
