@@ -32,19 +32,19 @@
 
     <property>
         <name>dfs.namenode.name.dir</name>
-        <value></value>
+        <value>/home/spark/hdfs-data/nameNode</value>
         <description>Determines where on the local filesystem the DFS name node should store the name table(fsimage).</description>
     </property>
 
     <property>
         <name>dfs.datanode.data.dir</name>
-        <value></value>
+        <value>/home/spark/hdfs-data/dataNode</value>
         <description>Determines where on the local filesystem an DFS data node should store its blocks.</description>
     </property>
 
     <property>
         <name>dfs.replication</name>
-        <value></value>
+        <value>1</value>
         <description>Default block replication across data nodes. The actual number of replications can be specified when the file is created.</description>
     </property>
 
