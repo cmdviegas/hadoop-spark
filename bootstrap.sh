@@ -54,7 +54,7 @@ fi
 ###
 #### .bashrc
 # Replace username in the .bashrc (HDFS_NAMENODE_USER)
-sed -i "s/^export\? HDFS_NAMENODE_USER=.*/export HDFS_NAMENODE_USER=${SYS_USERNAME}/" "${HOME}/.bashrc"
+sed -i "s/^export\? HDFS_NAMENODE_USER=.*/export HDFS_NAMENODE_USER=${USERNAME}/" "${HOME}/.bashrc"
 # Replace or remove HIVE_HOME vars accordingly input $1 parameter HIVE or HADDOP
 case "$1" in
     HIVE)
@@ -272,3 +272,5 @@ esac
 
 unset PSQL_PGUSER
 unset PSQL_PGPASSWORD
+unset USERNAME
+unset PASSWORD
