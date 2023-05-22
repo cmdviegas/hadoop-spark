@@ -27,19 +27,19 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
-        USER: ${SYS_USERNAME}
-        PASS: ${SYS_PASSWORD}
+        USER: ${SYS_USERNAME} # USERNAME (change at .env file)
+        PASS: ${SYS_PASSWORD} # USER PASSWORD (change at .env file)
     tty: true
     restart: no
     networks:
       hadoop_network:
         ipv4_address: ${IP_NODEMASTER}
     ports:
-      - "9870:9870/tcp"
-      - "8088:8088/tcp"
-      - "4040:4040/tcp"
-      - "18080:18080/tcp"
-      - "2222:22/tcp"
+      - "9870:9870/tcp" # HDFS
+      - "8088:8088/tcp" # YARN
+      - "4040:4040/tcp" # SPARK HISTORY (DURING A VALID SPARKSESSION)
+      - "18080:18080/tcp" # SPARK HISTORY SERVER
+      - "2222:22/tcp" # SSH
     volumes: 
       - ./apps:/home/${SYS_USERNAME}/apps
       - .env:/home/${SYS_USERNAME}/.env
@@ -60,6 +60,8 @@ services:
       replicas: ${NODE_REPLICAS}
     tty: true
     restart: on-failure:2
+    ports:
+      - "8042-8062:8042/tcp" # YARN
     networks:
       - hadoop_network
     depends_on:
@@ -79,8 +81,8 @@ services:
     tty: true
     restart: unless-stopped
     ports:
-      - "10000:10000/tcp"
-      - "10002:10002/tcp"
+      - "10000:10000/tcp" # HIVE SERVER
+      - "10002:10002/tcp" # HIVE WEB INTERFACE
     networks:
       hadoop_network:
         ipv4_address: ${IP_HIVE}
@@ -113,7 +115,7 @@ services:
     profiles:
       - hive
     ports:
-      - "5432:5432/tcp"
+      - "5432:5432/tcp" # PGSQL SERVER
     networks:
       hadoop_network:
         ipv4_address: ${IP_DB}
