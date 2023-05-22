@@ -72,7 +72,9 @@ docker exec -it node-master /bin/bash
  - :sparkles: Spark config files (`spark-defaults.conf`) is automatically updated during execution time according to `.env` file;
  - :sparkles: Hive config files (`hive-site.xml`) is automatically updated during execution time according to `.env` file;
  - :sparkles: `$HADOOP_ROOT_LOGGER` var is now set to `WARN,DFRA` (in `.bashrc`) in order to reduce the number of verbose output during HADOOP deployment;
- - :package: Added `python3-pip` and `numpy`, to be used by Spark MLlib;
+ - :package: Added `python3-pip`;
+ - :package: Added `pandas` to be used by Spark MLlib;
+ - :package: Added `graphframes` to be used by Spark Graphframes;
  - :package: Downgraded to Java 8, since Hive does not support Java 11;
  - :rotating_light: `$HIVEEXTERNAL` does not exist anymore;
  - :lipstick: Other minor improvements.
