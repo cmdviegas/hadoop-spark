@@ -32,22 +32,20 @@ ENV USERNAME "${USER}"
 ENV PASSWORD "${PASS}"
 
 # Update system and install required packages
+
+# Local mirror
 #RUN sed -i -e 's/http:\/\/archive\.ubuntu\.com\/ubuntu\//mirror:\/\/mirrors\.ubuntu\.com\/mirrors\.txt/' /etc/apt/sources.list
+
+# BR Mirror
 RUN sed --in-place --regexp-extended "s/(\/\/)(archive\.ubuntu)/\1br.\2/" /etc/apt/sources.list
-RUN apt-get update && apt-get install -y \
-            --no-install-recommends sudo \ 
-                                    ssh \
-                                    vim \
-                                    nano \
-                                    wget \
-                                    openjdk-8-jdk-headless \
-                                    python3.10-minimal \
-                                    python3-numpy \
-                                    iproute2 \
-                                    iputils-ping \
-                                    net-tools \
-                                    dos2unix \
-                                    postgresql-client
+
+RUN apt-get update -qq 
+RUN DEBIAN_FRONTEND=noninteractive DEBCONF_NOWARNINGS=yes \
+apt-get install -qq --no-install-recommends \
+sudo vim nano dos2unix ssh wget openjdk-8-jdk-headless \
+python3.10-minimal python3-pip iproute2 iputils-ping net-tools \
+postgresql-client < /dev/null > /dev/null
+
 # Clear apt cache and lists to reduce size
 RUN apt clean && rm -rf /var/lib/apt/lists/*
 
@@ -69,7 +67,6 @@ WORKDIR ${MYDIR}
 
 # Configure Hadoop enviroment variables
 ENV HADOOP_HOME "${MYDIR}/hadoop"
-ENV HADOOP_CONF_DIR "${HADOOP_HOME}/etc/hadoop"
 ENV SPARK_HOME "${MYDIR}/spark"
 ENV HIVE_HOME "${MYDIR}/hive"
 
@@ -82,24 +79,31 @@ RUN sudo -S chown "${USERNAME}:${USERNAME}" -R ${MYDIR}
 # Extract Hadoop to container filesystem
 # Download Hadoop 3.3.5 from Apache servers (if needed)
 ENV FILENAME hadoop-3.3.5.tar.gz
-RUN wget -nc --no-check-certificate https://dlcdn.apache.org/hadoop/common/$(echo "${FILENAME}" | sed "s/\.tar\.gz$//")/${FILENAME}
+RUN wget -q -nc --no-check-certificate https://dlcdn.apache.org/hadoop/common/$(echo "${FILENAME}" | sed "s/\.tar\.gz$//")/${FILENAME}
 RUN tar -zxf ${FILENAME} -C ${MYDIR} && rm -rf $FILENAME
 RUN ln -sf hadoop-3* ${HADOOP_HOME}
 
 # Extract Spark to container filesystem
 # Download Spark 3.4.0 from Apache server (if needed)
 ENV FILENAME spark-3.4.0-bin-hadoop3.tgz
-RUN wget -nc --no-check-certificate https://dlcdn.apache.org/spark/$(echo "${FILENAME}" | sed -E 's/^spark-([0-9]+\.[0-9]+\.[0-9]+).*/spark-\1/')/${FILENAME}
+RUN wget -q -nc --no-check-certificate https://dlcdn.apache.org/spark/$(echo "${FILENAME}" | sed -E 's/^spark-([0-9]+\.[0-9]+\.[0-9]+).*/spark-\1/')/${FILENAME}
 RUN tar -zxf ${FILENAME} -C ${MYDIR} && rm -rf ${FILENAME}
 RUN ln -sf ${MYDIR}/spark-3*-bin-hadoop3 ${SPARK_HOME}
 
 # Extract Hive to container filesystem
 # Download Hive 3.1.3 from Apache server (if needed)
 ENV FILENAME apache-hive-3.1.3-bin.tar.gz
-RUN wget -nc --no-check-certificate https://dlcdn.apache.org/hive/$(echo "${FILENAME}" | sed -E 's/^apache-hive-([0-9]+\.[0-9]+\.[0-9]+).*/hive-\1/')/${FILENAME}
+RUN wget -q -nc --no-check-certificate https://dlcdn.apache.org/hive/$(echo "${FILENAME}" | sed -E 's/^apache-hive-([0-9]+\.[0-9]+\.[0-9]+).*/hive-\1/')/${FILENAME}
 RUN tar -zxf ${FILENAME} -C ${MYDIR} && rm -rf ${FILENAME}
 RUN ln -sf ${MYDIR}/apache-hive-* ${HIVE_HOME}
-RUN wget -nc --no-check-certificate https://jdbc.postgresql.org/download/postgresql-42.6.0.jar -P ${SPARK_HOME}/jars
+
+# Additional libs for Spark
+# PostgresSQL JDBC
+RUN wget -q -nc --no-check-certificate https://jdbc.postgresql.org/download/postgresql-42.6.0.jar -P ${SPARK_HOME}/jars
+# Graphframes
+RUN wget -q -nc --no-check-certificate https://repos.spark-packages.org/graphframes/graphframes/0.8.2-spark3.2-s_2.12/graphframes-0.8.2-spark3.2-s_2.12.jar -P ${SPARK_HOME}/jars
+# Install graphframes / pandas (for Spark GraphX/Graphframes and MLlib)
+RUN pip install -q graphframes pandas
 
 # Optional (convert charset from UTF-16 to UTF-8)
 RUN dos2unix config_files/*
@@ -108,12 +112,12 @@ RUN dos2unix config_files/*
 RUN cat config_files/system/bash_profile >> ${MYDIR}/.bashrc
 
 # Copy config files to Hadoop config folder
-RUN cp config_files/hadoop/core-site.xml ${HADOOP_CONF_DIR}/
-RUN cp config_files/hadoop/hadoop-env.sh ${HADOOP_CONF_DIR}/
-RUN cp config_files/hadoop/hdfs-site.xml ${HADOOP_CONF_DIR}/
-RUN cp config_files/hadoop/mapred-site.xml ${HADOOP_CONF_DIR}/
-RUN cp config_files/hadoop/yarn-site.xml ${HADOOP_CONF_DIR}/
-RUN chmod 0755 ${HADOOP_CONF_DIR}/*.sh
+RUN cp config_files/hadoop/core-site.xml ${HADOOP_HOME}/etc/hadoop/
+RUN cp config_files/hadoop/hadoop-env.sh ${HADOOP_HOME}/etc/hadoop/
+RUN cp config_files/hadoop/hdfs-site.xml ${HADOOP_HOME}/etc/hadoop/
+RUN cp config_files/hadoop/mapred-site.xml ${HADOOP_HOME}/etc/hadoop/
+RUN cp config_files/hadoop/yarn-site.xml ${HADOOP_HOME}/etc/hadoop/
+RUN chmod 0755 ${HADOOP_HOME}/etc/hadoop/*.sh
 
 # Copy config files to Spark config folder
 RUN cp config_files/spark/spark-defaults.conf ${SPARK_HOME}/conf
@@ -130,7 +134,7 @@ RUN ssh-keygen -q -N "" -t rsa -f .ssh/id_rsa
 RUN cp .ssh/id_rsa.pub .ssh/authorized_keys && chmod 0600 .ssh/authorized_keys
 
 # Cleaning
-RUN rm -rf config_files/
+RUN sudo rm -rf config_files/ /tmp/* /var/tmp/*
 
 # Run 'bootstrap.sh' script on boot
 RUN chmod 0700 bootstrap.sh
