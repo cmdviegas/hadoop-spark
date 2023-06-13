@@ -131,7 +131,19 @@ services:
       start_period: 3s
       interval: 1s
       timeout: 3s
-      retries: 2
+      retries: 2  
+  
+  jupyter:
+    container_name: pyspark-notebook
+    hostname: pyspark
+    image: jupyter/pyspark-notebook
+    tty: true
+    restart: unless-stopped
+    ports:
+      - "10000:8888/tcp"
+    networks:
+      hadoop_network:
+        ipv4_address: ${IP_NOTE}
 
 networks:
   hadoop_network:
