@@ -11,7 +11,7 @@
 # https://github.com/cmdviegas
 
 ### Description:
-# This Dockerfile creates an image of Apache Hadoop 3.3.5 and Apache Spark 3.4.0. Optionally, it includes Apache Hive 3.1.3 with Postgresql 15.2
+# This Dockerfile creates an image of Apache Hadoop 3.3.5 and Apache Spark 3.4.1. Optionally, it includes Apache Hive 3.1.3 with Postgresql 15.2
 
 ### How it works:
 # This file uses ubuntu linux as base system and then downloads hadoop, spark and hive (if needed). In installs all dependencies to run the cluster. The docker image will contain a fully distributed hadoop cluster with multiple worker nodes.
@@ -84,8 +84,8 @@ RUN tar -zxf ${FILENAME} -C ${MYDIR} && rm -rf $FILENAME
 RUN ln -sf hadoop-3* ${HADOOP_HOME}
 
 # Extract Spark to container filesystem
-# Download Spark 3.4.0 from Apache server (if needed)
-ENV FILENAME spark-3.4.0-bin-hadoop3.tgz
+# Download Spark 3.4.1 from Apache server (if needed)
+ENV FILENAME spark-3.4.1-bin-hadoop3.tgz
 RUN wget -q -nc --no-check-certificate https://dlcdn.apache.org/spark/$(echo "${FILENAME}" | sed -E 's/^spark-([0-9]+\.[0-9]+\.[0-9]+).*/spark-\1/')/${FILENAME}
 RUN tar -zxf ${FILENAME} -C ${MYDIR} && rm -rf ${FILENAME}
 RUN ln -sf ${MYDIR}/spark-3*-bin-hadoop3 ${SPARK_HOME}
