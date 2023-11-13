@@ -1,4 +1,4 @@
-## Deploying a cluster with Apache Hadoop 3.3.5 + Apache Spark 3.4.0 + Apache Hive 3.1.3
+## Deploying a cluster with Apache Hadoop 3.3.5 + Apache Spark 3.4.1 + Apache Hive 3.1.3
 
 This is a script that deploys a cluster with Apache Hadoop and Apache Spark (+ Apache Hive) in fully distributed mode using Docker as infrastructure.
 
