@@ -77,15 +77,15 @@ COPY . .
 RUN sudo -S chown "${USERNAME}:${USERNAME}" -R ${MYDIR}
 
 # Extract Hadoop to container filesystem
-# Download Hadoop 3.3.5 from Apache servers (if needed)
-ENV FILENAME hadoop-3.3.5.tar.gz
+# Download Hadoop 3.4.0 from Apache servers (if needed)
+ENV FILENAME hadoop-3.4.0.tar.gz
 RUN wget -q -nc --no-check-certificate https://dlcdn.apache.org/hadoop/common/$(echo "${FILENAME}" | sed "s/\.tar\.gz$//")/${FILENAME}
 RUN tar -zxf ${FILENAME} -C ${MYDIR} && rm -rf $FILENAME
 RUN ln -sf hadoop-3* ${HADOOP_HOME}
 
 # Extract Spark to container filesystem
-# Download Spark 3.4.1 from Apache server (if needed)
-ENV FILENAME spark-3.4.1-bin-hadoop3.tgz
+# Download Spark 3.5.1 from Apache server (if needed)
+ENV FILENAME spark-3.5.1-bin-hadoop3.tgz
 RUN wget -q -nc --no-check-certificate https://dlcdn.apache.org/spark/$(echo "${FILENAME}" | sed -E 's/^spark-([0-9]+\.[0-9]+\.[0-9]+).*/spark-\1/')/${FILENAME}
 RUN tar -zxf ${FILENAME} -C ${MYDIR} && rm -rf ${FILENAME}
 RUN ln -sf ${MYDIR}/spark-3*-bin-hadoop3 ${SPARK_HOME}
