@@ -99,9 +99,9 @@ RUN ln -sf ${MYDIR}/apache-hive-* ${HIVE_HOME}
 
 # Additional libs for Spark
 # PostgresSQL JDBC
-RUN wget -q -nc --no-check-certificate https://jdbc.postgresql.org/download/postgresql-42.6.0.jar -P ${SPARK_HOME}/jars
+RUN wget -q -nc --no-check-certificate https://jdbc.postgresql.org/download/postgresql-42.7.3.jar -P ${SPARK_HOME}/jars
 # Graphframes
-RUN wget -q -nc --no-check-certificate https://repos.spark-packages.org/graphframes/graphframes/0.8.2-spark3.2-s_2.12/graphframes-0.8.2-spark3.2-s_2.12.jar -P ${SPARK_HOME}/jars
+RUN wget -q -nc --no-check-certificate https://repos.spark-packages.org/graphframes/graphframes/0.8.3-spark3.5-s_2.12/graphframes-0.8.3-spark3.5-s_2.12.jar -P ${SPARK_HOME}/jars
 # Install graphframes / pandas (for Spark GraphX/Graphframes and MLlib)
 RUN pip install -q graphframes pandas
 
