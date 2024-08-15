@@ -84,8 +84,8 @@ RUN tar -zxf ${FILENAME} -C ${MYDIR} && rm -rf $FILENAME
 RUN ln -sf hadoop-3* ${HADOOP_HOME}
 
 # Extract Spark to container filesystem
-# Download Spark 3.5.1 from Apache server (if needed)
-ENV FILENAME spark-3.5.1-bin-hadoop3.tgz
+# Download Spark 3.5.2 from Apache server (if needed)
+ENV FILENAME spark-3.5.2-bin-hadoop3.tgz
 RUN wget -q -nc --no-check-certificate https://dlcdn.apache.org/spark/$(echo "${FILENAME}" | sed -E 's/^spark-([0-9]+\.[0-9]+\.[0-9]+).*/spark-\1/')/${FILENAME}
 RUN tar -zxf ${FILENAME} -C ${MYDIR} && rm -rf ${FILENAME}
 RUN ln -sf ${MYDIR}/spark-3*-bin-hadoop3 ${SPARK_HOME}
