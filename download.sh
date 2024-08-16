@@ -8,14 +8,14 @@
 # DEPARTAMENTO DE ENGENHARIA DE COMPUTACAO E AUTOMACAO
 # UNIVERSIDADE FEDERAL DO RIO GRANDE DO NORTE, NATAL/RN
 #
-# (C) 2023 CARLOS M D VIEGAS
+# (C) 2024 CARLOS M D VIEGAS
 # https://github.com/cmdviegas
 #
 # This is a bash script to automatically download hadoop and spark 
 #
 
 read -p "Download Apache Hadoop 3.4.0? (y/N): " hadoop
-read -p "Download Apache Spark 3.5.1? (y/N): " spark
+read -p "Download Apache Spark 3.5.2? (y/N): " spark
 read -p "Download Apache Hive 3.1.3? (y/N): " hive
 
 if [[ "$hadoop" =~ ^([Yy]|[Yy][Ee][Ss])$ ]]; then
@@ -23,7 +23,7 @@ if [[ "$hadoop" =~ ^([Yy]|[Yy][Ee][Ss])$ ]]; then
 fi
 
 if [[ "$spark" =~ ^([Yy]|[Yy][Ee][Ss])$ ]]; then
-  wget -nc --no-check-certificate https://dlcdn.apache.org/spark/spark-3.5.1/spark-3.5.1-bin-hadoop3.tgz
+  wget -nc --no-check-certificate https://dlcdn.apache.org/spark/spark-3.5.2/spark-3.5.2-bin-hadoop3.tgz
 fi
 
 if [[ "$hive" =~ ^([Yy]|[Yy][Ee][Ss])$ ]]; then
