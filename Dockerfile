@@ -7,11 +7,11 @@
 # DEPARTAMENTO DE ENGENHARIA DE COMPUTACAO E AUTOMACAO
 # UNIVERSIDADE FEDERAL DO RIO GRANDE DO NORTE, NATAL/RN
 #
-# (C) 2023 CARLOS M D VIEGAS
+# (C) 2024 CARLOS M D VIEGAS
 # https://github.com/cmdviegas
 
 ### Description:
-# This Dockerfile creates an image of Apache Hadoop 3.3.5 and Apache Spark 3.4.1. Optionally, it includes Apache Hive 3.1.3 with Postgresql 15.2
+# This Dockerfile creates an image of Apache Hadoop 3.3.5 and Apache Spark 3.5.2. Optionally, it includes Apache Hive 3.1.3 with Postgresql 15.2
 
 ### How it works:
 # This file uses ubuntu linux as base system and then downloads hadoop, spark and hive (if needed). In installs all dependencies to run the cluster. The docker image will contain a fully distributed hadoop cluster with multiple worker nodes.
