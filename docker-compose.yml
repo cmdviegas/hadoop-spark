@@ -16,8 +16,6 @@
 ### How it works:
 # It initializes 'node-master' container with hadoop and spark services and multiple 'node-X' containers as worker nodes (according to the number of replicas). 'node-master' starts hadoop and spark services and then creates a cluster by connecting to each 'node-X'. There is an .env file that defines some environment variables that should be edited by the user.
 
-version: '3.9'
-
 services:
   node-master:
     container_name: node-master
