@@ -91,7 +91,7 @@ docker exec -it node-master /bin/bash
  - :lipstick: Other minor improvements.
 
 #### v5 - 23/04/2023 
- - :package: Updated Apache Hadoop version to 3.5.5;
+ - :package: Updated Apache Hadoop version to 3.3.5;
  - :package: Updated Apache Spark version to 3.4.0;
  - :package: Updated Python version to 3.10;
  - :sparkles: Added `.env` file with some build environment variables as user definitions (should be edited with username and password for spark and postgres);
