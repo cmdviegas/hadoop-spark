@@ -65,6 +65,10 @@ docker exec -it node-master /bin/bash
 
 ### :memo: Changelog
 
+
+#### 21/10/2024 
+ - :package: Updated Apache Spark version to 3.5.3;
+ 
 #### 16/08/2024 
  - :package: Updated Apache Spark version to 3.5.2;
 
