@@ -15,7 +15,7 @@
 #
 
 read -p "Download Apache Hadoop 3.4.0? (y/N): " hadoop
-read -p "Download Apache Spark 3.5.23? (y/N): " spark
+read -p "Download Apache Spark 3.5.3? (y/N): " spark
 read -p "Download Apache Hive 3.1.3? (y/N): " hive
 
 if [[ "$hadoop" =~ ^([Yy]|[Yy][Ee][Ss])$ ]]; then
