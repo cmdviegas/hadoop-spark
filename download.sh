@@ -15,7 +15,7 @@
 #
 
 read -p "Download Apache Hadoop 3.4.0? (y/N): " hadoop
-read -p "Download Apache Spark 3.5.2? (y/N): " spark
+read -p "Download Apache Spark 3.5.23? (y/N): " spark
 read -p "Download Apache Hive 3.1.3? (y/N): " hive
 
 if [[ "$hadoop" =~ ^([Yy]|[Yy][Ee][Ss])$ ]]; then
@@ -23,7 +23,7 @@ if [[ "$hadoop" =~ ^([Yy]|[Yy][Ee][Ss])$ ]]; then
 fi
 
 if [[ "$spark" =~ ^([Yy]|[Yy][Ee][Ss])$ ]]; then
-  wget -nc --no-check-certificate https://dlcdn.apache.org/spark/spark-3.5.2/spark-3.5.2-bin-hadoop3.tgz
+  wget -nc --no-check-certificate https://dlcdn.apache.org/spark/spark-3.5.3/spark-3.5.3-bin-hadoop3.tgz
 fi
 
 if [[ "$hive" =~ ^([Yy]|[Yy][Ee][Ss])$ ]]; then
