@@ -80,4 +80,3 @@ networks:
 
 volumes:
   node-master:
-  postgres-db:
