@@ -50,7 +50,7 @@ RUN echo "CHECKING HADOOP AND SPARK FILES..." \
         echo "🚨 ERROR: Spark file not found. Please download the required files by running download.sh"; \
         exit 1; \
     else \
-        echo "EXTRACTING FILES... Hadoop: ${HADOOP_FILE}, Spark: ${SPARK_FILE}" && \
+        echo "EXTRACTING FILES..." && \
         tar -xzf "${HADOOP_FILE}" -C "${MYDIR}" && \
         tar -xzf "${SPARK_FILE}" -C "${MYDIR}" && \
         rm -f "${HADOOP_FILE}" "${SPARK_FILE}"; \
