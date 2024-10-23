@@ -28,7 +28,36 @@ ARG PASS
 ENV USERNAME "${USER}"
 ENV PASSWORD "${PASS}"
 
-# Update system and install required packages
+# Set working dir
+ENV MYDIR /home/${USERNAME}
+WORKDIR ${MYDIR}
+
+# Configure Hadoop enviroment variables
+ENV HADOOP_HOME "${MYDIR}/hadoop"
+ENV SPARK_HOME "${MYDIR}/spark"
+
+# Copy all files from local folder to container, except the ones in .dockerignore
+COPY . .
+
+# Extract Hadoop/Spark to the container filesystem
+RUN echo "CHECKING HADOOP AND SPARK FILES..." \
+    && HADOOP_FILE=$(ls hadoop-*.tar.gz 2>/dev/null) && \
+    SPARK_FILE=$(ls spark-*.tgz 2>/dev/null) && \
+    if [ -z "$HADOOP_FILE" ]; then \
+        echo "\n\n🚨 ERROR: Hadoop file not found. Please download the required files by running download.sh"; \
+        exit 1; \
+    elif [ -z "$SPARK_FILE" ]; then \
+        echo "\n\n🚨 ERROR: Spark file not found. Please download the required files by running download.sh"; \
+        exit 1; \
+    else \
+        echo "EXTRACTING FILES... Hadoop: ${HADOOP_FILE}, Spark: ${SPARK_FILE}" && \
+        tar -xzf "${HADOOP_FILE}" -C "${MYDIR}" && \
+        tar -xzf "${SPARK_FILE}" -C "${MYDIR}" && \
+        rm -f "${HADOOP_FILE}" "${SPARK_FILE}"; \
+    fi
+
+RUN ln -sf ${MYDIR}/hadoop-3*/ ${HADOOP_HOME}
+RUN ln -sf ${MYDIR}/spark-3*-bin-hadoop3/ ${SPARK_HOME}
 
 # Local mirror
 #RUN sed -i -e 's/http:\/\/archive\.ubuntu\.com\/ubuntu\//mirror:\/\/mirrors\.ubuntu\.com\/mirrors\.txt/' /etc/apt/sources.list
@@ -36,6 +65,7 @@ ENV PASSWORD "${PASS}"
 # BR Mirror
 RUN sed --in-place --regexp-extended "s/(\/\/)(archive\.ubuntu)/\1br.\2/" /etc/apt/sources.list
 
+# Update system and install required packages
 RUN echo "RUNNING APT UPDATE..." \
     && apt-get update -qq 
 RUN echo "RUNNING APT-GET TO INSTALL REQUIRED RESOURCES..." \ 
@@ -60,39 +90,9 @@ RUN usermod -aG sudo ${USERNAME}
 RUN echo "${USERNAME} ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/${USERNAME}
 USER ${USERNAME}
 
-# Set working dir
-ENV MYDIR /home/${USERNAME}
-WORKDIR ${MYDIR}
-
-# Configure Hadoop enviroment variables
-ENV HADOOP_HOME "${MYDIR}/hadoop"
-ENV SPARK_HOME "${MYDIR}/spark"
-
-# Copy all files from local folder to container, except the ones in .dockerignore
-COPY . .
-
 # Set permissions to user folder
 RUN echo "SETTING PERMISSIONS..." \
     && sudo -S chown "${USERNAME}:${USERNAME}" -R ${MYDIR}
-
-# Extract Hadoop/Spark to the container filesystem
-RUN echo "EXTRACTING FILES..." \
-    && bash -c ' \
-    # Check if the mandatory files are present and process them
-    for app in hadoop spark; do \
-        file=$(ls ${app}*.tar.gz 2>/dev/null || ls ${app}*.tgz 2>/dev/null); \
-        if [ -z "$file" ]; then \
-            echo -e "\n\n🚨 ERROR: ${app^} file (.tar.gz or .tgz) was not found. Please download the required files by running '\''sh download.sh'\''.\n\n" >&2; \
-            exit 1; \
-        else \
-            # Extract the file
-            tar -xzf "$file" -C ${MYDIR} && rm -rf ${file}; \
-        fi; \
-    done; \
-'
-
-RUN ln -sf ${MYDIR}/hadoop-3*/ ${HADOOP_HOME}
-RUN ln -sf ${MYDIR}/spark-3*-bin-hadoop3/ ${SPARK_HOME}
 
 # Additional libs for Spark
 # PostgresSQL JDBC
