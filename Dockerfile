@@ -44,10 +44,10 @@ RUN echo "CHECKING HADOOP AND SPARK FILES..." \
     && HADOOP_FILE=$(ls hadoop-*.tar.gz 2>/dev/null) && \
     SPARK_FILE=$(ls spark-*.tgz 2>/dev/null) && \
     if [ -z "$HADOOP_FILE" ]; then \
-        echo "\n\n🚨 ERROR: Hadoop file not found. Please download the required files by running download.sh"; \
+        echo "🚨 ERROR: Hadoop file not found. Please download the required files by running download.sh"; \
         exit 1; \
     elif [ -z "$SPARK_FILE" ]; then \
-        echo "\n\n🚨 ERROR: Spark file not found. Please download the required files by running download.sh"; \
+        echo "🚨 ERROR: Spark file not found. Please download the required files by running download.sh"; \
         exit 1; \
     else \
         echo "EXTRACTING FILES... Hadoop: ${HADOOP_FILE}, Spark: ${SPARK_FILE}" && \
