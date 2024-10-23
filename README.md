@@ -30,8 +30,8 @@ docker exec -it node-master /bin/bash
 
 #### 23/10/2024 
  - :package: Updated `Apache Spark` version to 3.5.3;
- - :package: Updated `Java` to JDK 11;
- - :package: Updated `PostgresSQL` JDBC to 42.7.4;
+ - :package: Updated `Java JDK` version to 11;
+ - :package: Updated `PostgresSQL JDBC driver` to 42.7.4;
  - :package: Updated `graphframes` to 0.8.4;
  - :rotating_light: Apache Hive (external) removed from this repository; 
  - :lipstick: Folder apps now called myfiles;
