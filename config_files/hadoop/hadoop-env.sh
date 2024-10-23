@@ -7,7 +7,7 @@
 # DEPARTAMENTO DE ENGENHARIA DE COMPUTACAO E AUTOMACAO
 # UNIVERSIDADE FEDERAL DO RIO GRANDE DO NORTE, NATAL/RN
 #
-# (C) 2023 CARLOS M D VIEGAS
+# (C) 2022-2025 CARLOS M D VIEGAS
 # https://github.com/cmdviegas
 
 
@@ -63,7 +63,7 @@
 
 # The java implementation to use. By default, this environment
 # variable is REQUIRED on ALL platforms except OS X!
-export JAVA_HOME="/usr/lib/jvm/java-8-openjdk-amd64"
+export JAVA_HOME="/usr/lib/jvm/java-11-openjdk-amd64"
 
 # Location of Hadoop.  By default, Hadoop will attempt to determine
 # this location based upon its execution path.

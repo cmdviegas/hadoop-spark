@@ -8,30 +8,12 @@
 # DEPARTAMENTO DE ENGENHARIA DE COMPUTACAO E AUTOMACAO
 # UNIVERSIDADE FEDERAL DO RIO GRANDE DO NORTE, NATAL/RN
 #
-# (C) 2024 CARLOS M D VIEGAS
+# (C) 2022-2025 CARLOS M D VIEGAS
 # https://github.com/cmdviegas
 #
-# This is a bash script to automatically download hadoop and spark 
+# This is a bash script to automatically download Hadoop and Spark and Hive (if needed)
 #
 
-read -p "Download Apache Hadoop 3.4.0? (y/N): " hadoop
-read -p "Download Apache Spark 3.5.3? (y/N): " spark
-read -p "Download Apache Hive 3.1.3? (y/N): " hive
-
-case "$hadoop" in
-  [Yy]|[Yy][Ee][Ss]) 
-    wget -nc --no-check-certificate https://dlcdn.apache.org/hadoop/common/hadoop-3.4.0/hadoop-3.4.0.tar.gz
-    ;;
-esac
-
-case "$spark" in
-  [Yy]|[Yy][Ee][Ss]) 
-    wget -nc --no-check-certificate https://dlcdn.apache.org/spark/spark-3.5.3/spark-3.5.3-bin-hadoop3.tgz
-    ;;
-esac
-
-case "$hive" in
-  [Yy]|[Yy][Ee][Ss]) 
-    wget -nc --no-check-certificate https://dlcdn.apache.org/hive/hive-3.1.3/apache-hive-3.1.3-bin.tar.gz
-    ;;
-esac
+echo "Downloading Apache Hadoop 3.4.0 and Apache Spark 3.5.3 ..."
+wget -nc --no-check-certificate https://dlcdn.apache.org/hadoop/common/hadoop-3.4.0/hadoop-3.4.0.tar.gz
+wget -nc --no-check-certificate https://dlcdn.apache.org/spark/spark-3.5.3/spark-3.5.3-bin-hadoop3.tgz

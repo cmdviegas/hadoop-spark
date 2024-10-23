@@ -7,11 +7,11 @@
 # DEPARTAMENTO DE ENGENHARIA DE COMPUTACAO E AUTOMACAO
 # UNIVERSIDADE FEDERAL DO RIO GRANDE DO NORTE, NATAL/RN
 #
-# (C) 2023 CARLOS M D VIEGAS
+# (C) 2022-2025 CARLOS M D VIEGAS
 # https://github.com/cmdviegas
 
 ### Description:
-# This is a docker-compose file that creates a stack of nodes running Apache Hadoop 3.3.5 and Spark 3.4.0. Optionally, it includes Apache Hive 3.1.3 with Postgresql 15.2 as metastore.
+# This is a docker-compose file that creates a stack of nodes running Apache Hadoop 3.4.0 and Spark 3.5.3.
 
 ### How it works:
 # It initializes 'node-master' container with hadoop and spark services and multiple 'node-X' containers as worker nodes (according to the number of replicas). 'node-master' starts hadoop and spark services and then creates a cluster by connecting to each 'node-X'. There is an .env file that defines some environment variables that should be edited by the user.
@@ -39,11 +39,11 @@ services:
       - "18080:18080/tcp" # SPARK HISTORY SERVER
       - "2222:22/tcp" # SSH
     volumes: 
-      - ./apps:/home/${SYS_USERNAME}/apps
+      - ./myfiles:/home/${SYS_USERNAME}/myfiles
       - .env:/home/${SYS_USERNAME}/.env
       - node-master:/home/${SYS_USERNAME}/
     entrypoint: ./bootstrap.sh
-    command: HADOOP
+    command: MASTER
     healthcheck:
       test: bash -c 'ssh -q -o ConnectTimeout=1 ${SYS_USERNAME}@node-master exit'
       start_period: 3s
@@ -58,78 +58,17 @@ services:
       replicas: ${NODE_REPLICAS}
     tty: true
     restart: on-failure:2
-    ports:
-      - "8042-8062:8042/tcp" # YARN
     networks:
       - hadoop_network
     depends_on:
       node-master:
         condition: service_healthy
     entrypoint: ./bootstrap.sh
-    command: HADOOP
+    command: WORKER
     volumes: 
-      - ./apps:/home/${SYS_USERNAME}/apps
+      - ./myfiles:/home/${SYS_USERNAME}/myfiles
       - .env:/home/${SYS_USERNAME}/.env
       - /home/${SYS_USERNAME}/
-
-  hive:
-    container_name: hive
-    hostname: hive-server
-    image: hadoopcluster/${IMAGE_VER}
-    tty: true
-    restart: unless-stopped
-    ports:
-      - "10000:10000/tcp" # HIVE SERVER
-      - "10002:10002/tcp" # HIVE WEB INTERFACE
-    networks:
-      hadoop_network:
-        ipv4_address: ${IP_HIVE}
-    profiles:
-      - hive
-    depends_on:
-      node-master:
-        condition: service_healthy
-    entrypoint: ./bootstrap.sh
-    command: HIVE
-    volumes: 
-      - ./apps:/home/${SYS_USERNAME}/apps
-      - .env:/home/${SYS_USERNAME}/.env
-      - /home/${SYS_USERNAME}/
-
-  db:
-    container_name: db
-    hostname: postgres-db
-    image: postgres:15.2
-    tty: true
-    restart: unless-stopped
-    environment:
-      - PGUSER=${PSQL_PGUSER}
-      - PGPASSWORD=${PSQL_PGPASSWORD}
-      - PGDATA=/postgres/data
-      - POSTGRES_HOST_AUTH_METHOD=md5
-      - POSTGRES_DB=${PSQL_DBNAME}
-      - POSTGRES_USER=${PSQL_PGUSER}
-      - POSTGRES_PASSWORD=${PSQL_PGPASSWORD}
-    profiles:
-      - hive
-    ports:
-      - "5432:5432/tcp" # PGSQL SERVER
-    networks:
-      hadoop_network:
-        ipv4_address: ${IP_DB}
-    volumes: 
-      - ./apps:/postgres/apps
-      - postgres-db:/postgres/data
-      - ./sql/postgresql.conf:/postgres/conf/postgresql.conf
-      - ./sql/pg_hba.conf:/postgres/conf/pg_hba.conf
-      - ./sql/set_sql_permission.sh:/docker-entrypoint-initdb.d/set_sql_permission.sh
-    command: postgres -c config_file=/postgres/conf/postgresql.conf
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready"]
-      start_period: 3s
-      interval: 1s
-      timeout: 3s
-      retries: 2
 
 networks:
   hadoop_network:
