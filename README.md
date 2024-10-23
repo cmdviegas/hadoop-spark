@@ -15,31 +15,6 @@ By default, it creates three containers: one node-master and two worker nodes. T
 docker compose build && docker compose up 
 ```
 
-<!-- 
-#### [manual mode] 
-#### Dockerfile option
-
-1. Build image based on Dockerfile
-```
-docker build --build-arg USER=spark --build-arg PASS=spark -t hadoopcluster/hadoop-spark:v4 .
-```
-
-2. Create an isolated network to run Hadoop nodes
-```
-docker network create --subnet=172.18.0.0/24 hadoop_network
-```
-
-3. Run Hadoop slaves (data nodes)
-```
-docker run -it -d --network=hadoop_network --ip 172.18.0.3 --name=slave1 --hostname=slave1 hadoopcluster/hadoop-spark:v4
-docker run -it -d --network=hadoop_network --ip 172.18.0.4 --name=slave2 --hostname=slave2 hadoopcluster/hadoop-spark:v4
-```
-
-4. Run Hadoop master (name node)
-```
-docker run -it -p 9870:9870 -p 8088:8088 -p 18080:18080 -p 2222:22 --network=hadoop_network --ip 172.18.0.2 --name=node-master --hostname=node-master hadoopcluster/hadoop-spark:v4
-```
--->
 ### :bulb: Tips
 
 #### To access node-master
@@ -54,20 +29,20 @@ docker exec -it node-master /bin/bash
 ### :memo: Changelog
 
 #### 23/10/2024 
- - :package: Updated Apache Spark version to 3.5.3;
- - :package: Updated Java to JDK 11;
- - :package: Updated PostgresSQL JDBC to 42.7.4;
+ - :package: Updated `Apache Spark` version to 3.5.3;
+ - :package: Updated `Java` to JDK 11;
+ - :package: Updated `PostgresSQL` JDBC to 42.7.4;
  - :package: Updated `graphframes` to 0.8.4;
  - :rotating_light: Apache Hive (external) removed from this repository; 
  - :lipstick: Folder apps now called myfiles;
  - :lipstick: Minor fixes and several optimizations.
 
 #### 16/08/2024 
- - :package: Updated Apache Spark version to 3.5.2;
+ - :package: Updated `Apache Spark` version to 3.5.2;
 
 #### 15/04/2024 
- - :package: Updated Apache Hadoop version to 3.4.0;
- - :package: Updated Apache Spark version to 3.5.1;
+ - :package: Updated `Apache Hadoop` version to 3.4.0;
+ - :package: Updated `Apache Spark` version to 3.5.1;
 
 #### 14/05/2023
  - :sparkles: `.env` file is now read during execution time, this way allowing to change parameters without the need to rebuild the whole image from scratch. Parameters like the number of worker nodes, amount of memory RAM, nodes IP range, and others;
@@ -84,14 +59,14 @@ docker exec -it node-master /bin/bash
  - :lipstick: Other minor improvements.
 
 #### 23/04/2023 
- - :package: Updated Apache Hadoop version to 3.3.5;
- - :package: Updated Apache Spark version to 3.4.0;
- - :package: Updated Python version to 3.10;
+ - :package: Updated `Apache Hadoop` version to 3.3.5;
+ - :package: Updated `Apache Spark` version to 3.4.0;
+ - :package: Updated `Python` version to 3.10;
  - :sparkles: Added `.env` file with some build environment variables as user definitions (should be edited with username and password for spark and postgres);
  - :sparkles: Slave/worker nodes were renamed to node-X (i.e.: node-1, node-2, ...);
  - :sparkles: The number of worker nodes should be defined in `.env` file by setting an integer value for `$NODE_REPLICAS`;
  - :sparkles: /data folder was renamed to /hdfs-data;
- - :sparkles: Added Hive 3.1.3 with PostgreSQL as MetastoreDB (optional, according to user preference through `$HIVEEXTERNAL` var);
+ - :sparkles: Added `Hive` 3.1.3 with PostgreSQL as MetastoreDB (optional, according to user preference through `$HIVEEXTERNAL` var);
  - :sparkles: Added `$HIVEEXTERNAL` env var to indicate whether to use Hive 3.1.3 (external) or Hive 2.3.9 (builtin) [set it `true` or `false`, respectively];
  - :sparkles: By default `spark-warehouse` folder is stored in HDFS;
  - :rotating_light: If using Hive builtin, derby-metastore is placed alongside user home folder (locally);
