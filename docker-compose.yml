@@ -20,7 +20,7 @@ services:
   node-master:
     container_name: node-master
     hostname: node-master
-    image: hadoopcluster/${IMAGE_VER}
+    image: sparkcluster/${IMAGE_VER}
     build:
       context: .
       dockerfile: Dockerfile
@@ -32,7 +32,7 @@ services:
     tty: true
     restart: no
     networks:
-      hadoop_network:
+      spark_network:
         ipv4_address: ${IP_NODEMASTER}
     ports:
       - "9870:9870/tcp" # HDFS
@@ -54,14 +54,14 @@ services:
       retries: 3
 
   node:
-    image: hadoopcluster/${IMAGE_VER}
+    image: sparkcluster/${IMAGE_VER}
     deploy:
       mode: replicated
       replicas: ${NODE_REPLICAS}
     tty: true
     restart: on-failure:2
     networks:
-      - hadoop_network
+      - spark_network
     depends_on:
       node-master:
         condition: service_healthy
@@ -73,7 +73,7 @@ services:
       - /home/${USERNAME}/
 
 networks:
-  hadoop_network:
+  spark_network:
     driver: bridge
     ipam:
       driver: default
