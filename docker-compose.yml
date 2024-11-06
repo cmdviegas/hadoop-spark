@@ -14,13 +14,13 @@
 # This is a docker-compose file that creates a stack of nodes running Apache Hadoop 3.4.0 and Spark 3.5.3.
 
 ### How it works:
-# It initializes 'node-master' container with hadoop and spark services and multiple 'node-X' containers as worker nodes (according to the number of replicas). 'node-master' starts hadoop and spark services and then creates a cluster by connecting to each 'node-X'. There is an .env file that defines some environment variables that should be edited by the user.
+# It initializes 'spark-master' container with hadoop and spark services and multiple 'worker-X' containers as worker nodes (according to the number of replicas). 'spark-master' starts hadoop and spark services and then creates a cluster by connecting to each 'worker-X'. There is an .env file that defines some environment variables that should be edited by the user.
 
 services:
-  node-master:
-    container_name: node-master
-    hostname: node-master
-    image: sparkcluster/${IMAGE_VER}
+  spark-master:
+    container_name: ${MASTER_HOSTNAME}
+    hostname: ${MASTER_HOSTNAME}
+    image: sparkcluster/${IMAGE_NAME}
     build:
       context: .
       dockerfile: Dockerfile
@@ -33,7 +33,7 @@ services:
     restart: no
     networks:
       spark_network:
-        ipv4_address: ${IP_NODEMASTER}
+        ipv4_address: ${IP_MASTER}
     ports:
       - "9870:9870/tcp" # HDFS
       - "8088:8088/tcp" # YARN
@@ -43,27 +43,27 @@ services:
     volumes: 
       - ./myfiles:/home/${USERNAME}/myfiles
       - .env:/home/${USERNAME}/.env
-      - node-master:/home/${USERNAME}/
+      - master:/home/${USERNAME}/
     entrypoint: ./bootstrap.sh
     command: MASTER
     healthcheck:
-      test: bash -c 'ssh -q -o ConnectTimeout=1 ${USERNAME}@node-master exit'
+      test: bash -c 'ssh -q -o ConnectTimeout=1 ${USERNAME}@${MASTER_HOSTNAME} exit'
       start_period: 3s
       interval: 2s
       timeout: 3s
       retries: 3
 
-  node:
-    image: sparkcluster/${IMAGE_VER}
+  worker:
+    image: sparkcluster/${IMAGE_NAME}
     deploy:
       mode: replicated
-      replicas: ${NODE_REPLICAS}
+      replicas: ${REPLICAS}
     tty: true
     restart: on-failure:2
     networks:
       - spark_network
     depends_on:
-      node-master:
+      spark-master:
         condition: service_healthy
     entrypoint: ./bootstrap.sh
     command: WORKER
@@ -81,4 +81,4 @@ networks:
         - subnet: ${IP_RANGE}
 
 volumes:
-  node-master:
+  master:

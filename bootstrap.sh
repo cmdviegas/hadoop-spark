@@ -19,8 +19,8 @@
 # On first startup:
 # - Load .bashrc
 # - Start SSH server
-# - Format namenode HDFS (node-master only)
-# - Creates HDFS folders and copy files to them (node-master only)
+# - Format namenode HDFS (spark-master only)
+# - Creates HDFS folders and copy files to them (spark-master only)
 # - Edit HADOOP/SPARK properties in .xml/.conf files according to values defined in .env
 # - Start HDFS, YARN and SPARK HISTORY SERVER
 
@@ -66,17 +66,17 @@ sudo service ssh start
 truncate -s 0 ${HADOOP_CONF_DIR}/workers
 {
     echo "127.0.0.1 localhost"
-    echo "${IP_NODEMASTER} node-master"
-    for i in $(seq 1 "${NODE_REPLICAS}"); do
-        echo "${IP_RANGE%0/*}$((i+2)) node-$i"
-        echo "node-$i" >> "${HADOOP_CONF_DIR}/workers"
+    echo "${IP_NODEMASTER} ${MASTER_HOSTNAME}"
+    for i in $(seq 1 "${REPLICAS}"); do
+        echo "${IP_RANGE%0/*}$((i+2)) worker-$i"
+        echo "worker-$i" >> "${HADOOP_CONF_DIR}/workers"
     done
 } | sudo tee /etc/hosts > /dev/null # Copy hosts file to /etc/hosts
 ###
 
 ###
 #### Init services
-# Initialize hadoop services (only at node-master)
+# Initialize hadoop services (only at spark-master)
 if [ "$1" == "MASTER" ] ; then
 
     # Format HDFS
@@ -144,7 +144,7 @@ if [ "$1" == "MASTER" ] ; then
     yarn node -list
 
     printf "\n${INFO} ${GREEN_COLOR}$(tput blink)ALL SET!${RESET_COLORS}\n\n"
-    printf "TIP: To access node-master, type: ${YELLOW_COLOR}docker exec -it node-master /bin/bash${RESET_COLORS}\n"
+    printf "TIP: To access ${MASTER_HOSTNAME}, type: ${YELLOW_COLOR}docker exec -it ${MASTER_HOSTNAME} /bin/bash${RESET_COLORS}\n"
 fi
 # Starting bash terminal
 /bin/bash
