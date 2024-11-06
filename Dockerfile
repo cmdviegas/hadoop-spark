@@ -25,39 +25,8 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 # Get username and password from build arguments
 ARG USER
 ARG PASS
-ENV USERNAME "${USER}"
-ENV PASSWORD "${PASS}"
-
-# Set working dir
-ENV MYDIR /home/${USERNAME}
-WORKDIR ${MYDIR}
-
-# Configure Hadoop enviroment variables
-ENV HADOOP_HOME "${MYDIR}/hadoop"
-ENV SPARK_HOME "${MYDIR}/spark"
-
-# Copy all files from local folder to container, except the ones in .dockerignore
-COPY . .
-
-# Extract Hadoop/Spark to the container filesystem
-RUN echo "CHECKING HADOOP AND SPARK FILES..." \
-    && HADOOP_FILE=$(ls hadoop-*.tar.gz 2>/dev/null) && \
-    SPARK_FILE=$(ls spark-*.tgz 2>/dev/null) && \
-    if [ -z "$HADOOP_FILE" ]; then \
-        echo "🚨 ERROR: Hadoop file not found. Please download the required files by running download.sh"; \
-        exit 1; \
-    elif [ -z "$SPARK_FILE" ]; then \
-        echo "🚨 ERROR: Spark file not found. Please download the required files by running download.sh"; \
-        exit 1; \
-    else \
-        echo "EXTRACTING FILES..." && \
-        tar -xzf "${HADOOP_FILE}" -C "${MYDIR}" && \
-        tar -xzf "${SPARK_FILE}" -C "${MYDIR}" && \
-        rm -f "${HADOOP_FILE}" "${SPARK_FILE}"; \
-    fi
-
-RUN ln -sf ${MYDIR}/hadoop-3*/ ${HADOOP_HOME}
-RUN ln -sf ${MYDIR}/spark-3*-bin-hadoop3/ ${SPARK_HOME}
+ENV USERNAME="${USER}"
+ENV PASSWORD="${PASS}"
 
 # Local mirror
 #RUN sed -i -e 's/http:\/\/archive\.ubuntu\.com\/ubuntu\//mirror:\/\/mirrors\.ubuntu\.com\/mirrors\.txt/' /etc/apt/sources.list
@@ -71,7 +40,7 @@ RUN echo "RUNNING APT UPDATE..." \
 RUN echo "RUNNING APT-GET TO INSTALL REQUIRED RESOURCES..." \ 
     && DEBIAN_FRONTEND=noninteractive DEBCONF_NOWARNINGS=yes \
     apt-get install -qq --no-install-recommends \
-    sudo vim nano dos2unix ssh wget openjdk-11-jdk-headless \
+    sudo vim nano dos2unix ssh wget aria2 openjdk-11-jdk-headless \
     python3.10-minimal python3-pip iproute2 iputils-ping net-tools \
     postgresql-client < /dev/null > /dev/null
 
@@ -90,17 +59,50 @@ RUN usermod -aG sudo ${USERNAME}
 RUN echo "${USERNAME} ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/${USERNAME}
 USER ${USERNAME}
 
+# Set working dir
+ENV MYDIR="/home/${USERNAME}"
+WORKDIR ${MYDIR}
+
+# Configure Hadoop enviroment variables
+ENV HADOOP_HOME="${MYDIR}/hadoop"
+ENV SPARK_HOME="${MYDIR}/spark"
+
+# Copy all files from local folder to container, except the ones in .dockerignore
+COPY . .
+
 # Set permissions to user folder
 RUN echo "SETTING PERMISSIONS..." \
     && sudo -S chown "${USERNAME}:${USERNAME}" -R ${MYDIR}
 
+# Extract Hadoop/Spark to the container filesystem
+ARG SPARK_VER
+ARG HADOOP_VER
+ENV SPARK_VERSION=${SPARK_VER}
+ENV HADOOP_VERSION=${HADOOP_VER}
+
+RUN if [ ! -f ${MYDIR}/hadoop-${HADOOP_VERSION}.tar.gz ]; then \
+    aria2c -x 16 --check-certificate=false --allow-overwrite=false \
+    https://dlcdn.apache.org/hadoop/common/hadoop-${HADOOP_VERSION}/hadoop-${HADOOP_VERSION}.tar.gz; \
+    fi
+RUN tar -zxf hadoop-${HADOOP_VERSION}.tar.gz -C ${MYDIR} && rm -rf hadoop-${HADOOP_VERSION}.tar.gz
+RUN ln -sf ${MYDIR}/hadoop-3* ${HADOOP_HOME}
+
+RUN if [ ! -f ${MYDIR}/spark-${SPARK_VERSION}-bin-hadoop3.tgz ]; then \
+    aria2c -x 16 --check-certificate=false --allow-overwrite=false \
+    https://dlcdn.apache.org/spark/spark-${SPARK_VERSION}/spark-${SPARK_VERSION}-bin-hadoop3.tgz; \
+    fi
+RUN tar -zxf spark-${SPARK_VERSION}-bin-hadoop3.tgz -C ${MYDIR} && rm -rf spark-${SPARK_VERSION}-bin-hadoop3.tgz
+RUN ln -sf ${MYDIR}/spark-3*-bin-hadoop3 ${SPARK_HOME}
+
 # Additional libs for Spark
 # PostgresSQL JDBC
 RUN echo "DOWNLOADING JDBC..." \
-    && wget -q -nc --no-check-certificate https://jdbc.postgresql.org/download/postgresql-42.7.4.jar -P ${SPARK_HOME}/jars
+    && aria2c -x 16 --check-certificate=false --allow-overwrite=false \
+    https://jdbc.postgresql.org/download/postgresql-42.7.4.jar -d ${SPARK_HOME}/jars
 # Graphframes
 RUN echo "DOWNLOADING GRAPHFRAMES..." \
-    && wget -q -nc --no-check-certificate https://repos.spark-packages.org/graphframes/graphframes/0.8.4-spark3.5-s_2.12/graphframes-0.8.4-spark3.5-s_2.12.jar -P ${SPARK_HOME}/jars
+    && aria2c -x 16 --check-certificate=false --allow-overwrite=false \
+    https://repos.spark-packages.org/graphframes/graphframes/0.8.4-spark3.5-s_2.12/graphframes-0.8.4-spark3.5-s_2.12.jar -d ${SPARK_HOME}/jars
 # Install graphframes / pandas (for Spark GraphX/Graphframes and MLlib)
 RUN echo "INSTALLING PANDAS..." \
     && pip install --no-warn-script-location -q graphframes pandas

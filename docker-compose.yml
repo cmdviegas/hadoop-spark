@@ -25,8 +25,10 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
-        USER: ${SYS_USERNAME} # USERNAME (change at .env file)
-        PASS: ${SYS_PASSWORD} # USER PASSWORD (change at .env file)
+        USER: ${USERNAME} # USERNAME (change at .env file)
+        PASS: ${PASSWORD} # USER PASSWORD (change at .env file)
+        SPARK_VER: ${SPARK_VERSION}
+        HADOOP_VER: ${HADOOP_VERSION}
     tty: true
     restart: no
     networks:
@@ -39,13 +41,13 @@ services:
       - "18080:18080/tcp" # SPARK HISTORY SERVER
       - "2222:22/tcp" # SSH
     volumes: 
-      - ./myfiles:/home/${SYS_USERNAME}/myfiles
-      - .env:/home/${SYS_USERNAME}/.env
-      - node-master:/home/${SYS_USERNAME}/
+      - ./myfiles:/home/${USERNAME}/myfiles
+      - .env:/home/${USERNAME}/.env
+      - node-master:/home/${USERNAME}/
     entrypoint: ./bootstrap.sh
     command: MASTER
     healthcheck:
-      test: bash -c 'ssh -q -o ConnectTimeout=1 ${SYS_USERNAME}@node-master exit'
+      test: bash -c 'ssh -q -o ConnectTimeout=1 ${USERNAME}@node-master exit'
       start_period: 3s
       interval: 2s
       timeout: 3s
@@ -66,9 +68,9 @@ services:
     entrypoint: ./bootstrap.sh
     command: WORKER
     volumes: 
-      - ./myfiles:/home/${SYS_USERNAME}/myfiles
-      - .env:/home/${SYS_USERNAME}/.env
-      - /home/${SYS_USERNAME}/
+      - ./myfiles:/home/${USERNAME}/myfiles
+      - .env:/home/${USERNAME}/.env
+      - /home/${USERNAME}/
 
 networks:
   hadoop_network:
