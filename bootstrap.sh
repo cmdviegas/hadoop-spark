@@ -66,7 +66,7 @@ sudo service ssh start
 truncate -s 0 ${HADOOP_CONF_DIR}/workers
 {
     echo "127.0.0.1 localhost"
-    echo "${IP_NODEMASTER} ${MASTER_HOSTNAME}"
+    echo "${IP_MASTER} ${MASTER_HOSTNAME}"
     for i in $(seq 1 "${REPLICAS}"); do
         echo "${IP_RANGE%0/*}$((i+2)) worker-$i"
         echo "worker-$i" >> "${HADOOP_CONF_DIR}/workers"
