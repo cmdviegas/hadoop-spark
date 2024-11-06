@@ -32,10 +32,11 @@ docker exec -it spark-master /bin/bash
 ### :memo: Changelog
 
 #### 06/11/2024 
- - :lipstick: $NODE_REPLICAS renamed to $REPLICAS;
+ - :lipstick: `$NODE_REPLICAS` renamed to `$REPLICAS`;
  - :lipstick: node-master renamed to spark-master;
  - :lipstick: node-X renamed to worker-X;
- - :lipstick: Minor fixes and several optimizations.
+ - :lipstick: Newer variables at `.env` file;
+ - :lipstick: Minor fixes and optimizations.
 
 #### 23/10/2024 
  - :package: Updated `Apache Spark` version to 3.5.3;
