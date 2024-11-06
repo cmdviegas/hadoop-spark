@@ -22,15 +22,20 @@ docker compose build && docker compose up
 Use one of the following commands to access the master node:
 
 ```
-ssh -p 2222 hadoop@localhost
+ssh -p 2222 spark@localhost
 ```
 or
 ```
-docker exec -it hadoop-master /bin/bash
-```xec -it node-master /bin/bash
+docker exec -it spark-master /bin/bash
 ```
 
 ### :memo: Changelog
+
+#### 06/11/2024 
+ - :lipstick: $NODE_REPLICAS renamed to $REPLICAS;
+ - :lipstick: node-master renamed to spark-master;
+ - :lipstick: node-X renamed to worker-X;
+ - :lipstick: Minor fixes and several optimizations.
 
 #### 23/10/2024 
  - :package: Updated `Apache Spark` version to 3.5.3;
