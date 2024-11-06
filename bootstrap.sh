@@ -71,7 +71,7 @@ truncate -s 0 ${HADOOP_CONF_DIR}/workers
         echo "${IP_RANGE%0/*}$((i+2)) node-$i"
         echo "node-$i" >> "${HADOOP_CONF_DIR}/workers"
     done
-} | sudo bash -c "cat > /etc/hosts" # Copy hosts file to /etc/hosts
+} | sudo tee /etc/hosts > /dev/null # Copy hosts file to /etc/hosts
 ###
 
 ###
