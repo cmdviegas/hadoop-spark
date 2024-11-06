@@ -14,7 +14,7 @@
 # This is a docker-compose file that creates a stack of nodes running Apache Hadoop 3.4.0 and Spark 3.5.3.
 
 ### How it works:
-# It initializes 'spark-master' container with hadoop and spark services and multiple 'worker-X' containers as worker nodes (according to the number of replicas). 'spark-master' starts hadoop and spark services and then creates a cluster by connecting to each 'worker-X'. There is an .env file that defines some environment variables that should be edited by the user.
+# This compose initializes a 'master' container with Hadoop and Spark services and multiple 'worker-X' containers as worker nodes, based on the specified number of replicas. The 'master' container starts Hadoop and Spark services and forms a cluster by connecting to each 'worker-X' node. An .env file is provided to define environment variables, which the user should modify as needed.
 
 services:
   spark-master:
