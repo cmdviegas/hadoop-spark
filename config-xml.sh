@@ -24,11 +24,9 @@
 #### Hadoop and Spark properties
 # Functions to update hadoop and spark properties dynamically according vars in .env file.
 function update_xml_values() { 
-#    sed -i "/<name>$1<\/name>/{n;s/<value>.*<\/value>/<value>$2<\/value>/;}" "$3"
     sed -i "/<name>$1<\/name>/{n;s#<value>.*</value>#<value>$2</value>#;}" "$3"
 }
 function update_spark_defaults() { 
-    #sed -i "s|^\($1[[:space:]]*\)[^[:space:]]*|\1$2|" "${SPARK_HOME}/conf/spark-defaults.conf"
     sed -i "s#^\($1[[:space:]]*\)[^[:space:]]*#\1$2#" "${SPARK_HOME}/conf/spark-defaults.conf"
 }
 function append_spark_config() { 
