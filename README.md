@@ -31,10 +31,14 @@ docker exec -it spark-master /bin/bash
 
 ### :memo: Changelog
 
+#### 07/11/2024 
+ - :package: Updated `Apache Hadoop` version to 3.4.1;
+ - :rotating_light: Bug fix: `pyspark` not opening.
+
 #### 06/11/2024 
  - :lipstick: `$NODE_REPLICAS` renamed to `$REPLICAS`;
- - :lipstick: node-master renamed to spark-master;
- - :lipstick: node-X renamed to worker-X;
+ - :lipstick: `node-master` renamed to `spark-master`;
+ - :lipstick: `node-*` renamed to `worker-*`;
  - :lipstick: Newer variables at `.env` file;
  - :lipstick: Minor fixes and optimizations.
 
@@ -43,9 +47,9 @@ docker exec -it spark-master /bin/bash
  - :package: Updated `Java JDK` version to 11;
  - :package: Updated `PostgresSQL JDBC driver` to 42.7.4;
  - :package: Updated `graphframes` to 0.8.4;
- - :rotating_light: Apache Hive (external) removed from this repository; 
- - :lipstick: Folder apps now called myfiles;
- - :lipstick: Minor fixes and several optimizations.
+ - :rotating_light: `Apache Hive` (external) removed from this repository; 
+ - :lipstick: Folder `apps` now called `myfiles`;
+ - :lipstick: Minor fixes and optimizations.
 
 #### 16/08/2024 
  - :package: Updated `Apache Spark` version to 3.5.2;
