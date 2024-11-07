@@ -14,6 +14,6 @@
 # This is a bash script to automatically download Hadoop and Spark and Hive (if needed)
 #
 
-echo "Downloading Apache Hadoop 3.4.0 and Apache Spark 3.5.3 ..."
-wget -nc --no-check-certificate https://dlcdn.apache.org/hadoop/common/hadoop-3.4.0/hadoop-3.4.0.tar.gz
-wget -nc --no-check-certificate https://dlcdn.apache.org/spark/spark-3.5.3/spark-3.5.3-bin-hadoop3.tgz
+echo "Downloading Apache Hadoop 3.4.1 and Apache Spark 3.5.3 ..."
+wget -nc --no-check-certificate https://archive.apache.org/dist/hadoop/core/hadoop-3.4.1/hadoop-3.4.1.tar.gz
+wget -nc --no-check-certificate https://archive.apache.org/dist/spark/spark-3.5.3/spark-3.5.3-bin-hadoop3.tgz
