@@ -32,7 +32,7 @@
 
     <property>
         <name>fs.defaultFS</name>
-        <value>hdfs://node-master:9000</value>
+        <value>hdfs://spark-master:9000</value>
         <description>The name of the default file system.</description>
     </property>
 

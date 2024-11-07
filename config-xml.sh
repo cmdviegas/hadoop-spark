@@ -52,7 +52,7 @@ update_xml_values "dfs.datanode.data.dir" "\/home\/${USERNAME}\/hdfs-data\/dataN
 update_spark_defaults "spark.eventLog.dir" "hdfs://${MASTER_HOSTNAME}:9000/spark-logs"
 update_spark_defaults "spark.history.fs.logDirectory" "hdfs://${MASTER_HOSTNAME}:9000/spark-logs"
 update_spark_defaults "spark.yarn.stagingDir" "hdfs://${MASTER_HOSTNAME}:9000/user"
-update_spark_defaults "spark.yarn.jars" "hdfs://${MASTER_HOSTNAME}:9000/spark-libs"
+update_spark_defaults "spark.yarn.jars" "hdfs://${MASTER_HOSTNAME}:9000/spark-libs/*"
 update_spark_defaults "spark.sql.warehouse.dir" "hdfs://${MASTER_HOSTNAME}:9000/user/${USERNAME}/spark-warehouse" 
 update_spark_defaults "spark.driver.memory" "${MEM_DRV}"
 update_spark_defaults "spark.executor.memory" "${MEM_EXE}"

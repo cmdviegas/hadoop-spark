@@ -24,6 +24,7 @@ function addToPATH {
 
 # JAVA
 export JAVA_HOME="/usr/lib/jvm/java-11-openjdk-amd64"
+#export _JAVA_OPTIONS="-Xmx2048m -Xms512m"
 addToPATH "${JAVA_HOME}/bin"
 
 # HADOOP BASE
