@@ -1,14 +1,14 @@
 ## Deploying a cluster with Apache Hadoop 3.4.x + Apache Spark 3.5.x
 
-This script deploys an Apache Hadoop and Apache Spark cluster in fully distributed mode using Docker as the underlying infrastructure.
+This script deploys an Apache Hadoop and Apache Spark cluster in fully distributed mode using Docker as the underlying infrastructure. By default, this project creates three containers: one master node and two worker nodes.
+
+⚠️ Note: You can adjust cluster parameters such as username, password, memory resources, and other settings by editing the `.env` file. This file is the primary configuration source for your cluster setup.
 
 ### :rocket: How to build and run
 
 ⚠️ Optional (Recommended): Before starting, it is advised to pre-download Apache Hadoop and Apache Spark by running the `download.sh` script. This step will speed up the build process.
 
-By default, the script creates three containers: one master node and two worker nodes. You can adjust the number of worker nodes by setting `$REPLICAS` to the desired value in the `.env` file.
-
-⚠️ Note: Edit the `.env` file to configure cluster parameters such as username, password, memory resources, and other settings. This file is the primary configuration source for your cluster setup.
+⚠️ Note: It is advised to use Docker Compose 1.18.0 or higher to ensure compatibility.
 
 #### To build and run this option:
 ```
@@ -19,17 +19,18 @@ docker compose build && docker compose up
 
 #### Accessing the Master Node
 
-Use one of the following commands to access the master node:
-
+To access the master node:
 ```
-ssh -p 2222 spark@localhost
-```
-or
-```
-docker exec -it spark-master /bin/bash
+docker exec -it spark-master bash
 ```
 
 ### :memo: Changelog
+
+#### 18/01/2025
+- :package: Updated `Apache Spark` version to 3.5.4;
+- :package: Updated `PostgresSQL JDBC driver` to 42.7.5;
+- :package: Added support for Spark Connect. By default it is started at port 15002/tcp;
+- :lipstick: Minor fixes and optimizations.
 
 #### 07/11/2024 
  - :package: Updated `Apache Hadoop` version to 3.4.1;

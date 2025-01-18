@@ -3,9 +3,11 @@
 .gitattributes
 .dockerignore
 Dockerfile
-.env
+Dockerfile.*
 *.yml
+*.yaml
 LICENSE
-LICENSE.apache
-README.md
+LICENSE.*
+README
+README.*
 download.sh

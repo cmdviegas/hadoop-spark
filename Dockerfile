@@ -11,7 +11,7 @@
 # https://github.com/cmdviegas
 
 ### Description:
-# This Dockerfile creates an image of Apache Hadoop 3.4.0 and Apache Spark 3.5.3.
+# This Dockerfile creates an image of Apache Hadoop 3.4.1 and Apache Spark 3.5.4.
 
 ### How it works:
 # This file uses ubuntu linux as base system and then downloads hadoop and spark. In installs all dependencies to run the cluster. The docker image will contain a fully distributed hadoop cluster with multiple worker nodes.
@@ -35,9 +35,9 @@ ENV PASSWORD="${PASS}"
 RUN sed --in-place --regexp-extended "s/(\/\/)(archive\.ubuntu)/\1br.\2/" /etc/apt/sources.list
 
 # Update system and install required packages
-RUN echo "RUNNING APT UPDATE..." \
+RUN echo "UPDATING APT SOURCES..." \
     && apt-get update -qq 
-RUN echo "RUNNING APT-GET TO INSTALL REQUIRED RESOURCES..." \ 
+RUN echo "INSTALLING REQUIRED RESOURCES..." \ 
     && DEBIAN_FRONTEND=noninteractive DEBCONF_NOWARNINGS=yes \
     apt-get install -qq --no-install-recommends \
     sudo vim nano dos2unix ssh wget aria2 openjdk-11-jdk-headless \
@@ -45,7 +45,7 @@ RUN echo "RUNNING APT-GET TO INSTALL REQUIRED RESOURCES..." \
     postgresql-client < /dev/null > /dev/null
 
 # Clear apt cache and lists to reduce size
-RUN apt clean && rm -rf /var/lib/apt/lists/*
+RUN apt-get autoremove -yqq --purge && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Creates symbolic link to make 'python' and 'python3' recognized as a system command
 RUN ln -sf /usr/bin/python3.10 /usr/bin/python
@@ -80,15 +80,17 @@ ARG HADOOP_VER
 ENV SPARK_VERSION=${SPARK_VER}
 ENV HADOOP_VERSION=${HADOOP_VER}
 
-RUN if [ ! -f ${MYDIR}/hadoop-${HADOOP_VERSION}.tar.gz ]; then \
-    aria2c -x 16 --check-certificate=false --allow-overwrite=false \
+RUN echo "DOWNLOADING/EXTRACTING HADOOP..." \
+    && if [ ! -f ${MYDIR}/hadoop-${HADOOP_VERSION}.tar.gz ]; then \
+    aria2c -x 16 --check-certificate=false --allow-overwrite=false --quiet=true \
     https://archive.apache.org/dist/hadoop/core/hadoop-${HADOOP_VERSION}/hadoop-${HADOOP_VERSION}.tar.gz; \
     fi
 RUN tar -zxf hadoop-${HADOOP_VERSION}.tar.gz -C ${MYDIR} && rm -rf hadoop-${HADOOP_VERSION}.tar.gz
 RUN ln -sf ${MYDIR}/hadoop-3* ${HADOOP_HOME}
 
-RUN if [ ! -f ${MYDIR}/spark-${SPARK_VERSION}-bin-hadoop3.tgz ]; then \
-    aria2c -x 16 --check-certificate=false --allow-overwrite=false \
+RUN echo "DOWNLOADING/EXTRACTING SPARK..." \
+    && if [ ! -f ${MYDIR}/spark-${SPARK_VERSION}-bin-hadoop3.tgz ]; then \
+    aria2c -x 16 --check-certificate=false --allow-overwrite=false --quiet=true \
     https://archive.apache.org/dist/spark/spark-${SPARK_VERSION}/spark-${SPARK_VERSION}-bin-hadoop3.tgz; \
     fi
 RUN tar -zxf spark-${SPARK_VERSION}-bin-hadoop3.tgz -C ${MYDIR} && rm -rf spark-${SPARK_VERSION}-bin-hadoop3.tgz
@@ -96,16 +98,15 @@ RUN ln -sf ${MYDIR}/spark-3*-bin-hadoop3 ${SPARK_HOME}
 
 # Additional libs for Spark
 # PostgresSQL JDBC
-RUN echo "DOWNLOADING JDBC..." \
-    && aria2c -x 16 --check-certificate=false --allow-overwrite=false \
-    https://jdbc.postgresql.org/download/postgresql-42.7.4.jar -d ${SPARK_HOME}/jars
-# Graphframes
+RUN echo "DOWNLOADING PSQL JDBC..." \
+    && aria2c -x 16 --check-certificate=false --allow-overwrite=false --quiet=true \
+    https://jdbc.postgresql.org/download/postgresql-42.7.5.jar -d ${SPARK_HOME}/jars
+# Install graphframes / pandas (for Spark GraphX/Graphframes and MLlib) and other dependencies for Spark Connect
 RUN echo "DOWNLOADING GRAPHFRAMES..." \
-    && aria2c -x 16 --check-certificate=false --allow-overwrite=false \
+    && aria2c -x 16 --check-certificate=false --allow-overwrite=false --quiet=true \
     https://repos.spark-packages.org/graphframes/graphframes/0.8.4-spark3.5-s_2.12/graphframes-0.8.4-spark3.5-s_2.12.jar -d ${SPARK_HOME}/jars
-# Install graphframes / pandas (for Spark GraphX/Graphframes and MLlib)
 RUN echo "INSTALLING PANDAS..." \
-    && pip install --no-warn-script-location -q graphframes pandas
+    && pip install -q --no-warn-script-location -q graphframes pandas pyarrow grpcio grpcio-status protobuf
 
 # Optional (convert charset from UTF-16 to UTF-8)
 RUN dos2unix config_files/*
@@ -130,7 +131,6 @@ RUN cat .ssh/id_rsa.pub >> .ssh/authorized_keys && chmod 0600 .ssh/authorized_ke
 # Cleaning
 RUN sudo rm -rf config_files/ /tmp/* /var/tmp/*
 
-# Run 'bootstrap.sh' script on boot
 RUN chmod 0700 bootstrap.sh config-xml.sh
+# Run 'bootstrap.sh' script on boot
 ENTRYPOINT ${MYDIR}/bootstrap.sh
-#CMD MASTER

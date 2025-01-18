@@ -10,17 +10,25 @@
 # (C) 2022-2025 CARLOS M D VIEGAS
 # https://github.com/cmdviegas
 
-### Description:
-# This is a docker-compose file that creates a stack of nodes running Apache Hadoop 3.4.0 and Spark 3.5.3.
+name: spark
 
-### How it works:
-# This compose initializes a 'master' container with Hadoop and Spark services and multiple 'worker-X' containers as worker nodes, based on the specified number of replicas. The 'master' container starts Hadoop and Spark services and forms a cluster by connecting to each 'worker-X' node. An .env file is provided to define environment variables, which the user should modify as needed.
+x-spark-common:
+  &spark-common
+  image: sparkcluster/${IMAGE_NAME}
+  tty: true
+  restart: on-failure
+  entrypoint: ./bootstrap.sh
+  networks:
+    - spark_network
+  volumes:
+    - ./myfiles:/home/${USERNAME}/myfiles
+    - .env:/home/${USERNAME}/.env
 
 services:
   spark-master:
-    container_name: ${MASTER_HOSTNAME}
-    hostname: ${MASTER_HOSTNAME}
-    image: sparkcluster/${IMAGE_NAME}
+    <<: *spark-common
+    container_name: spark-master
+    hostname: spark-master
     build:
       context: .
       dockerfile: Dockerfile
@@ -29,56 +37,41 @@ services:
         PASS: ${PASSWORD} # USER PASSWORD (change at .env file)
         SPARK_VER: ${SPARK_VERSION}
         HADOOP_VER: ${HADOOP_VERSION}
-    tty: true
-    restart: no
-    networks:
-      spark_network:
-        ipv4_address: ${IP_MASTER}
     ports:
       - "9870:9870/tcp" # HDFS
       - "8088:8088/tcp" # YARN
-      - "4040:4040/tcp" # SPARK HISTORY (DURING A VALID SPARKSESSION)
-      - "18080:18080/tcp" # SPARK HISTORY SERVER
-      - "2222:22/tcp" # SSH
-    volumes: 
-      - ./myfiles:/home/${USERNAME}/myfiles
-      - .env:/home/${USERNAME}/.env
+      - "18080:18080/tcp" # SPARK HISTORY SERVER (SparkUI)
+      - "15002:15002/tcp" # SPARK CONNECT
+    volumes:
       - master:/home/${USERNAME}/
-    entrypoint: ./bootstrap.sh
     command: MASTER
     healthcheck:
-      test: bash -c 'ssh -q -o ConnectTimeout=1 ${USERNAME}@${MASTER_HOSTNAME} exit'
-      start_period: 3s
+      test: bash -c 'ssh -q -o ConnectTimeout=2 ${USERNAME}@spark-master exit'
+      start_period: 5s
       interval: 2s
       timeout: 3s
       retries: 3
 
   worker:
-    image: sparkcluster/${IMAGE_NAME}
+    <<: *spark-common
     deploy:
       mode: replicated
       replicas: ${REPLICAS}
-    tty: true
-    restart: on-failure:2
-    networks:
-      - spark_network
+    command: WORKER
     depends_on:
       spark-master:
         condition: service_healthy
-    entrypoint: ./bootstrap.sh
-    command: WORKER
-    volumes: 
-      - ./myfiles:/home/${USERNAME}/myfiles
-      - .env:/home/${USERNAME}/.env
-      - /home/${USERNAME}/
 
 networks:
   spark_network:
+    name: spark_network
     driver: bridge
     ipam:
       driver: default
       config:
-        - subnet: ${IP_RANGE}
+        - subnet: 172.31.0.0/24
 
 volumes:
   master:
+    name: master_volume
+    driver: local

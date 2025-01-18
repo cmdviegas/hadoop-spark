@@ -61,17 +61,12 @@ sudo service ssh start
 ###
 
 ###
-#### /etc/hosts and ~/hadoop/etc/hadoop/workers
-# Creates /etc/hosts dynamically according to number of replicas and update hadoop workers file accordingly
+#### ~/hadoop/etc/hadoop/workers
+# update hadoop workers file according to number of replicas
 truncate -s 0 ${HADOOP_CONF_DIR}/workers
-{
-    echo "127.0.0.1 localhost"
-    echo "${IP_MASTER} ${MASTER_HOSTNAME}"
-    for i in $(seq 1 "${REPLICAS}"); do
-        echo "${IP_RANGE%0/*}$((i+2)) worker-$i"
-        echo "worker-$i" >> "${HADOOP_CONF_DIR}/workers"
-    done
-} | sudo tee /etc/hosts > /dev/null # Copy hosts file to /etc/hosts
+for i in $(seq 1 "${REPLICAS}"); do
+    echo "spark-worker-$i" >> "${HADOOP_CONF_DIR}/workers"
+done
 ###
 
 ###
@@ -135,6 +130,10 @@ if [ "$1" == "MASTER" ] ; then
     printf "${INFO} Starting SPARK history server${RESET_COLORS}...\n"
     start-history-server.sh
 
+    # Starting spark connect server (optional)
+    printf "${INFO} Starting SPARK CONNECT server${RESET_COLORS}...\n"
+    start-connect-server.sh --packages org.apache.spark:spark-connect_2.12:${SPARK_VERSION}
+
     # Checking HDFS status (optional)
     printf "${INFO} Checking HDFS nodes report${RESET_COLORS}...\n"
     hdfs dfsadmin -report
@@ -144,12 +143,12 @@ if [ "$1" == "MASTER" ] ; then
     yarn node -list
 
     printf "\n${INFO} ${GREEN_COLOR}$(tput blink)ALL SET!${RESET_COLORS}\n\n"
-    printf "TIP: To access ${MASTER_HOSTNAME}, type: ${YELLOW_COLOR}docker exec -it ${MASTER_HOSTNAME} /bin/bash${RESET_COLORS}\n"
+    printf "TIP: To access spark-master, type: ${YELLOW_COLOR}docker exec -it spark-master bash${RESET_COLORS}\n"
 fi
 # Starting bash terminal
 /bin/bash
 
-[ "$1" == "WORKER" ] && printf "${INFO} I'm up and ready${RESET_COLORS}!\n"
+if [ "$1" == "WORKER" ] && printf "${INFO} I'm up and ready${RESET_COLORS}!\n"
 
 unset USERNAME
 unset PASSWORD

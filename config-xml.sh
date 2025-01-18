@@ -34,9 +34,9 @@ function append_spark_config() {
 }
 
 # Update core-site.xml, yarn-site.xml, mapred-site.xml, hdfs-site.xml
-update_xml_values "fs.defaultFS" "hdfs://${MASTER_HOSTNAME}:9000" "${HADOOP_CONF_DIR}/core-site.xml"
+#update_xml_values "fs.defaultFS" "hdfs://${MASTER_HOSTNAME}:9000" "${HADOOP_CONF_DIR}/core-site.xml"
 update_xml_values "hadoop.http.staticuser.user" "${USERNAME}" "${HADOOP_CONF_DIR}/core-site.xml"
-update_xml_values "yarn.resourcemanager.hostname" "${MASTER_HOSTNAME}" "${HADOOP_CONF_DIR}/yarn-site.xml"
+#update_xml_values "yarn.resourcemanager.hostname" "${MASTER_HOSTNAME}" "${HADOOP_CONF_DIR}/yarn-site.xml"
 update_xml_values "yarn.nodemanager.resource.memory-mb" "${MEM_RM}" "${HADOOP_CONF_DIR}/yarn-site.xml"
 update_xml_values "yarn.scheduler.maximum-allocation-mb" "${MEM_MAX}" "${HADOOP_CONF_DIR}/yarn-site.xml"
 update_xml_values "yarn.scheduler.minimum-allocation-mb" "${MEM_MIN}" "${HADOOP_CONF_DIR}/yarn-site.xml"
@@ -49,13 +49,14 @@ update_xml_values "dfs.datanode.data.dir" "\/home\/${USERNAME}\/hdfs-data\/dataN
 [ "$REPLICAS" -ge 2 ] && update_xml_values "dfs.replication" "2" "${HADOOP_CONF_DIR}/hdfs-site.xml"
 
 # Update spark-defaults.conf
-update_spark_defaults "spark.eventLog.dir" "hdfs://${MASTER_HOSTNAME}:9000/spark-logs"
-update_spark_defaults "spark.history.fs.logDirectory" "hdfs://${MASTER_HOSTNAME}:9000/spark-logs"
-update_spark_defaults "spark.yarn.stagingDir" "hdfs://${MASTER_HOSTNAME}:9000/user"
-update_spark_defaults "spark.yarn.jars" "hdfs://${MASTER_HOSTNAME}:9000/spark-libs/*"
-update_spark_defaults "spark.sql.warehouse.dir" "hdfs://${MASTER_HOSTNAME}:9000/user/${USERNAME}/spark-warehouse" 
+#update_spark_defaults "spark.eventLog.dir" "hdfs://${MASTER_HOSTNAME}:9000/spark-logs"
+#update_spark_defaults "spark.history.fs.logDirectory" "hdfs://${MASTER_HOSTNAME}:9000/spark-logs"
+#update_spark_defaults "spark.yarn.stagingDir" "hdfs://${MASTER_HOSTNAME}:9000/user"
+#update_spark_defaults "spark.yarn.jars" "hdfs://${MASTER_HOSTNAME}:9000/spark-libs/*"
+#update_spark_defaults "spark.sql.warehouse.dir" "hdfs://${MASTER_HOSTNAME}:9000/user/${USERNAME}/spark-warehouse" 
 update_spark_defaults "spark.driver.memory" "${MEM_DRV}"
 update_spark_defaults "spark.executor.memory" "${MEM_EXE}"
+update_spark_defaults "spark.yarn.am.memory" "${MEM_AMS}"
 if grep -q "^spark.driver.extraJavaOptions" "${SPARK_HOME}/conf/spark-defaults.conf"; then
     update_spark_defaults "spark.driver.extraJavaOptions" "-Dderby.system.home=${HOME}/derby-metastore -Dderby.stream.error.file=${HOME}/derby-metastore/derby.log"
 else

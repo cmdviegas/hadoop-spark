@@ -18,7 +18,7 @@
 function addToPATH {
   case ":$PATH:" in
     *":$1:"*) :;; # already there
-    *) export PATH="${PATH}:$1";; # or PATH="$PATH:$1"
+    *) export PATH="${PATH}:$1";; 
   esac
 }
 
