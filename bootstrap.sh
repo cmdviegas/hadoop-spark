@@ -145,11 +145,10 @@ if [ "$1" == "MASTER" ] ; then
     printf "\n${INFO} ${GREEN_COLOR}$(tput blink)ALL SET!${RESET_COLORS}\n\n"
     printf "TIP: To access spark-master, type: ${YELLOW_COLOR}docker exec -it spark-master bash${RESET_COLORS}\n"
 fi
+# Starting bash terminal
+/bin/bash
 
 if [ "$1" == "WORKER" ] && printf "${INFO} I'm up and ready${RESET_COLORS}!\n"
 
 unset USERNAME
 unset PASSWORD
-
-# Starting bash terminal
-/bin/bash
