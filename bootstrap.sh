@@ -62,9 +62,9 @@ sudo service ssh start
 
 ###
 #### ~/hadoop/etc/hadoop/workers
-# update hadoop workers file according to number of replicas
+# update hadoop workers file according to number of worker nodes
 truncate -s 0 ${HADOOP_CONF_DIR}/workers
-for i in $(seq 1 "${REPLICAS}"); do
+for i in $(seq 1 "${NUM_WORKER_NODES}"); do
     echo "spark-worker-$i" >> "${HADOOP_CONF_DIR}/workers"
 done
 ###
@@ -87,7 +87,7 @@ if [ "$1" == "MASTER" ] ; then
         WORKERS_REACHABLE=true
         # Read the file containing the IP addresses
         while IFS= read -r ip; do
-            if ! ssh -o "ConnectTimeout=1" "$ip" exit >/dev/null 2>&1; then
+            if ! ssh -o "ConnectTimeout=2" "$ip" exit >/dev/null 2>&1; then
                 # If any worker node is not reachable, set WORKERS_REACHABLE to false and break the loop
                 WORKERS_REACHABLE=false
                 break
@@ -131,7 +131,7 @@ if [ "$1" == "MASTER" ] ; then
     start-history-server.sh
 
     # Starting spark connect server (optional)
-    printf "${INFO} Starting SPARK CONNECT server${RESET_COLORS}...\n"
+    #printf "${INFO} Starting SPARK CONNECT server${RESET_COLORS}...\n"
     #start-connect-server.sh --packages org.apache.spark:spark-connect_2.12:${SPARK_VERSION}
 
     # Checking HDFS status (optional)
@@ -145,10 +145,11 @@ if [ "$1" == "MASTER" ] ; then
     printf "\n${INFO} ${GREEN_COLOR}$(tput blink)ALL SET!${RESET_COLORS}\n\n"
     printf "TIP: To access spark-master, type: ${YELLOW_COLOR}docker exec -it spark-master bash${RESET_COLORS}\n"
 fi
-# Starting bash terminal
-/bin/bash
 
 if [ "$1" == "WORKER" ] && printf "${INFO} I'm up and ready${RESET_COLORS}!\n"
 
 unset USERNAME
 unset PASSWORD
+
+# Starting bash terminal
+/bin/bash

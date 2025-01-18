@@ -56,7 +56,7 @@ services:
     <<: *spark-common
     deploy:
       mode: replicated
-      replicas: ${REPLICAS}
+      replicas: ${NUM_WORKER_NODES}
     command: WORKER
     depends_on:
       spark-master:
