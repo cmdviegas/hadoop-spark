@@ -132,7 +132,7 @@ if [ "$1" == "MASTER" ] ; then
 
     # Starting spark connect server (optional)
     printf "${INFO} Starting SPARK CONNECT server${RESET_COLORS}...\n"
-    start-connect-server.sh --packages org.apache.spark:spark-connect_2.12:${SPARK_VERSION}
+    #start-connect-server.sh --packages org.apache.spark:spark-connect_2.12:${SPARK_VERSION}
 
     # Checking HDFS status (optional)
     printf "${INFO} Checking HDFS nodes report${RESET_COLORS}...\n"
