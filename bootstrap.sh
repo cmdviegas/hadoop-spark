@@ -143,7 +143,11 @@ if [ "$1" == "MASTER" ] ; then
     yarn node -list
 
     printf "\n${INFO} ${GREEN_COLOR}$(tput blink)ALL SET!${RESET_COLORS}\n\n"
-    printf "TIP: To access spark-master, type: ${YELLOW_COLOR}docker exec -it spark-master bash${RESET_COLORS}\n"
+    printf "TIP: To access spark-master, type: ${YELLOW_COLOR}docker exec -it spark-master bash${RESET_COLORS}\n\n"
+    printf "The following services are now available for access through web browser:\n
+    http://localhost:${LIGHTBLUE_COLOR}9870 \t ${YELLOW_COLOR}HDFS${RESET_COLORS}
+    http://localhost:${LIGHTBLUE_COLOR}8088 \t ${YELLOW_COLOR}YARN Scheduler${RESET_COLORS}
+    http://localhost:${LIGHTBLUE_COLOR}18080 \t ${YELLOW_COLOR}Spark History Server${RESET_COLORS}\n\n"
 fi
 
 if [ "$1" == "WORKER" ] ; then
