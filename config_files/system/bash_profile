@@ -23,7 +23,7 @@ function addToPATH {
 }
 
 # JAVA
-export JAVA_HOME="/usr/lib/jvm/java-11-openjdk-amd64"
+export JAVA_HOME=""
 #export _JAVA_OPTIONS="-Xmx2048m -Xms512m"
 addToPATH "${JAVA_HOME}/bin"
 
@@ -38,7 +38,7 @@ export HADOOP_OPTS="${HADOOP_OPTS} -XX:-PrintWarnings -Djava.net.preferIPv4Stack
 addToPATH "${HADOOP_HOME}/sbin:${HADOOP_HOME}/bin"
 
 # HDFS
-export HDFS_NAMENODE_USER=spark
+export HDFS_NAMENODE_USER=""
 export HDFS_DATANODE_USER="${HDFS_NAMENODE_USER}" HDFS_SECONDARYNAMENODE_USER="${HDFS_NAMENODE_USER}"
 
 # YARN

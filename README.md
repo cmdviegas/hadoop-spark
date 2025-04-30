@@ -26,6 +26,12 @@ docker exec -it spark-master bash
 
 ### :memo: Changelog
 
+#### 29/04/2025
+- :package: Updated `Apache Spark` version to 3.5.5;
+- :package: Updated `Python` version to 3.11;
+- :lipstick: Minor fixes and optimizations.
+- :sparkles: Build Summary: hadoop:3.4.1 | spark:3.5.5+2.12 | psql-jdbc42.7.5 | graphframes:0.8.4 | jdk:11 | python3.11 | ubuntu22.04
+
 #### 18/01/2025
 - :package: Updated `Apache Spark` version to 3.5.4;
 - :package: Updated `PostgresSQL JDBC driver` to 42.7.5;

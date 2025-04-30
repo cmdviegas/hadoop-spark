@@ -33,9 +33,9 @@ function append_spark_config() {
     echo "$1 $2" >> "${SPARK_HOME}/conf/spark-defaults.conf"
 }
 
-# Update core-site.xml, yarn-site.xml, mapred-site.xml, hdfs-site.xml
+# Update core-site.xml, yarn-site.xml, mapred-site.xml, hdfs-site.xml, hadoop-env.sh
 #update_xml_values "fs.defaultFS" "hdfs://${MASTER_HOSTNAME}:9000" "${HADOOP_CONF_DIR}/core-site.xml"
-update_xml_values "hadoop.http.staticuser.user" "${USERNAME}" "${HADOOP_CONF_DIR}/core-site.xml"
+update_xml_values "hadoop.http.staticuser.user" "${CONTAINER_USERNAME}" "${HADOOP_CONF_DIR}/core-site.xml"
 #update_xml_values "yarn.resourcemanager.hostname" "${MASTER_HOSTNAME}" "${HADOOP_CONF_DIR}/yarn-site.xml"
 update_xml_values "yarn.nodemanager.resource.memory-mb" "${YARN_NODEMANAGER_RESOURCE_MEMORY_MB}" "${HADOOP_CONF_DIR}/yarn-site.xml"
 update_xml_values "yarn.scheduler.maximum-allocation-mb" "${YARN_SCHEDULER_MAXIMUM_ALLOCATION_MB}" "${HADOOP_CONF_DIR}/yarn-site.xml"
@@ -44,16 +44,17 @@ update_xml_values "yarn.scheduler.capacity.maximum-am-resource-percent" "${YARN_
 update_xml_values "yarn.app.mapreduce.am.resource.mb" "${YARN_APP_MAPREDUCE_AM_RESOURCE_MB}" "${HADOOP_CONF_DIR}/mapred-site.xml"
 update_xml_values "mapreduce.map.memory.mb" "${MAPREDUCE_MAP_MEMORY_MB}" "${HADOOP_CONF_DIR}/mapred-site.xml"
 update_xml_values "mapreduce.reduce.memory.mb" "${MAPREDUCE_REDUCE_MEMORY_MB}" "${HADOOP_CONF_DIR}/mapred-site.xml"
-update_xml_values "dfs.namenode.name.dir" "\/home\/${USERNAME}\/hdfs-data\/nameNode" "${HADOOP_CONF_DIR}/hdfs-site.xml"
-update_xml_values "dfs.datanode.data.dir" "\/home\/${USERNAME}\/hdfs-data\/dataNode" "${HADOOP_CONF_DIR}/hdfs-site.xml"
+update_xml_values "dfs.namenode.name.dir" "\/home\/${CONTAINER_USERNAME}\/hdfs-data\/nameNode" "${HADOOP_CONF_DIR}/hdfs-site.xml"
+update_xml_values "dfs.datanode.data.dir" "\/home\/${CONTAINER_USERNAME}\/hdfs-data\/dataNode" "${HADOOP_CONF_DIR}/hdfs-site.xml"
 [ "$NUM_WORKER_NODES" -ge 2 ] && update_xml_values "dfs.replication" "2" "${HADOOP_CONF_DIR}/hdfs-site.xml"
+sed -i "s|^export JAVA_HOME=.*|export JAVA_HOME=\"${JAVA_HOME}\"|" "${HADOOP_CONF_DIR}/hadoop-env.sh"
 
 # Update spark-defaults.conf
 #update_spark_defaults "spark.eventLog.dir" "hdfs://${MASTER_HOSTNAME}:9000/spark-logs"
 #update_spark_defaults "spark.history.fs.logDirectory" "hdfs://${MASTER_HOSTNAME}:9000/spark-logs"
 #update_spark_defaults "spark.yarn.stagingDir" "hdfs://${MASTER_HOSTNAME}:9000/user"
 #update_spark_defaults "spark.yarn.jars" "hdfs://${MASTER_HOSTNAME}:9000/spark-libs/*"
-#update_spark_defaults "spark.sql.warehouse.dir" "hdfs://${MASTER_HOSTNAME}:9000/user/${USERNAME}/spark-warehouse" 
+#update_spark_defaults "spark.sql.warehouse.dir" "hdfs://${MASTER_HOSTNAME}:9000/user/${CONTAINER_USERNAME}/spark-warehouse" 
 update_spark_defaults "spark.driver.memory" "${SPARK_DRIVER_MEMORY}"
 update_spark_defaults "spark.executor.memory" "${SPARK_EXECUTOR_MEMORY}"
 update_spark_defaults "spark.yarn.am.memory" "${SPARK_YARN_AM_MEMORY}"
