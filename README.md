@@ -24,7 +24,7 @@ The cluster uses **YARN** for resource scheduling and **HDFS** for distributed f
   - `18080` – Spark History Server UI
   - `15002` – Spark Connect
 
-#### Worker Nodes (`worker` service)
+#### Worker Nodes (`spark-worker-<id>`)
 
 - **DataNode** (HDFS)
 - **NodeManager** (YARN)
@@ -32,9 +32,9 @@ The cluster uses **YARN** for resource scheduling and **HDFS** for distributed f
 
 All nodes share a mounted volume for data exchange and run an initialization script (`bootstrap.sh`) on startup.
 
-⚠️ Note: All cluster parameters — such as the default user credentials, resource allocation (e.g., memory and CPU limits), number of worker nodes, and other deployment-specific settings — are configurable via the `.env` file. This file is the primary configuration source for the cluster setup.
-
 ### :rocket: How to build and run
+
+⚠️ Note: All cluster parameters — such as the default user credentials, resource allocation (e.g., memory and CPU limits), number of worker nodes, and other deployment-specific settings — are configurable via the `.env` file. This file is the primary configuration source for the cluster setup.
 
 ⚠️ Optional (Recommended): Before starting, it is advised to pre-download Apache Hadoop and Apache Spark by running the `download.sh` script. This step will speed up the build process.
 
