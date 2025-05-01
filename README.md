@@ -1,17 +1,13 @@
 ## Hadoop and Spark Cluster Deployment
 
-This script deploys a cluster with `Apache Hadoop` 3.4.x and `Apache Spark` 3.5.x in fully distributed mode using `Docker` containers as the underlying infrastructure. 
+This script deploys a cluster with `Apache Hadoop 3.4.x` and `Apache Spark 3.5.x` in fully distributed mode using `Docker` containers as the underlying infrastructure. This setup is designed for teaching and experimentation, but may be suitable for scalable data processing tasks also.
 
-This setup is designed for teaching, experimentation, and scalable data processing tasks.
-
-It consists of **one master node** and a configurable number of **worker nodes**, deployed over a custom Docker network.
+It consists of **one master node** and a configurable number of **worker nodes**, deployed over a custom `Docker` network.
 
 ### 🗂️ Architecture
 
-- **1 Master Node**: `spark-master`
-- **N Worker Nodes**: `worker` service (replicated via `${NUM_WORKER_NODES}`)
-
-Worker nodes are replicated dynamically using the `deploy.mode: replicated` directive, enabling scalable execution.
+- **Master Node**: `spark-master` — responsible for coordinating the cluster, managing resources (via YARN), and serving as the Spark Master and HDFS NameNode.
+- **Worker Nodes**: `spark-worker-<id>` — replicated containers acting as Spark Workers, HDFS DataNodes, and YARN NodeManagers, where `<id>` denotes the worker instance ID.
 
 ### ⚙️ Resource Management and Services
 
