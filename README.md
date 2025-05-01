@@ -1,6 +1,83 @@
-## Deploying a cluster with Apache Hadoop 3.4.x + Apache Spark 3.5.x
+# Deploying a cluster with Apache Hadoop 3.4.x + Apache Spark 3.5.x
 
-This script deploys an Apache Hadoop and Apache Spark cluster in fully distributed mode using Docker as the underlying infrastructure. By default, this project creates three containers: one master node and two worker nodes.
+This script deploys a <ins>cluster</ins> with `Apache Hadoop` and `Apache Spark` in <ins>fully distributed</ins> mode using `Docker` containers as the underlying infrastructure. This setup is focused in supports scalability, fault tolerance, and parallel data processing, making it suitable for large-scale data engineering workloads.
+
+
+
+
+This Hadoop and Spark cluster is containerized using **Docker Compose**, designed for teaching, experimentation, and scalable data processing tasks. It consists of **one master node** and a configurable number of **worker nodes**, deployed over a custom Docker network.
+
+## 🗂️ Architecture
+
+- **1 Master Node**: `spark-master`
+- **N Worker Nodes**: `worker` service (replicated via `${NUM_WORKER_NODES}`)
+
+Worker nodes are replicated dynamically using the `deploy.mode: replicated` directive, enabling scalable execution.
+
+## ⚙️ Resource Management and Services
+
+The cluster uses **YARN** for resource scheduling and **HDFS** for distributed file storage. Key services per node:
+
+### Master Node (`spark-master`)
+
+- **ResourceManager** (YARN)
+- **NameNode** (HDFS)
+- **Spark Master**
+- **Exposed Ports**:
+  - `9870` – HDFS Web UI
+  - `8088` – YARN ResourceManager UI
+  - `18080` – Spark History Server UI
+  - `15002` – Spark Connect
+
+### Worker Nodes (`worker` service)
+
+- **DataNode** (HDFS)
+- **NodeManager** (YARN)
+- **Spark Worker**
+
+All nodes share a mounted volume for data exchange and run an initialization script (`bootstrap.sh`) on startup.
+
+## 🧱 Build Configuration
+
+Images are built from a Dockerfile with the following build arguments:
+
+- `SPARK_VER=${SPARK_VERSION}`
+- `HADOOP_VER=${HADOOP_VERSION}`
+- `USER=${CONTAINER_USERNAME}`
+- `PASS=${CONTAINER_PASSWORD}`
+
+The image is tagged as: `sparkcluster/${IMAGE_NAME}`.
+
+## 🗃️ Volumes and Persistence
+
+- `master_volume`: Docker named volume attached to the master node to persist user files and configuration.
+
+All nodes also mount a shared volume:
+
+```yaml
+./myfiles:/home/${CONTAINER_USERNAME}/myfiles
+
+
+
+
+
+
+
+
+
+
+
+
+
+This cluster is structured in a master-slave architecture. By default, it creates three containers: one master node and two worker nodes.
+
+Resource management is handled by Hadoop YARN, which coordinates the execution of Spark and Hadoop jobs across the cluster. In this setup:
+
+- The master node hosts the ResourceManager (YARN) and also acts as NameNode for the Hadoop HDFS. Additionally, it runs the NodeManager service to allow task execution locally when required.
+
+- Each slave node functions as a DataNode in the HDFS, storing blocks of data and participating in distributed storage. They also run NodeManager instances, enabling them to execute Spark and MapReduce tasks under YARN's coordination.
+
+- Apache Spark operates in YARN cluster mode, leveraging YARN's scheduling capabilities to manage executors dynamically across the slave nodes. 
 
 ⚠️ Note: You can adjust cluster parameters such as username, password, memory resources, and other settings by editing the `.env` file. This file is the primary configuration source for your cluster setup.
 
