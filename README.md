@@ -29,14 +29,14 @@ docker exec -it spark-master bash
 #### 29/04/2025
 - :package: Updated `Apache Spark` version to 3.5.5;
 - :package: Updated `Python` version to 3.11;
-- :lipstick: Minor fixes and optimizations.
-- :sparkles: Build Summary: hadoop:3.4.1 | spark:3.5.5+2.12 | psql-jdbc42.7.5 | graphframes:0.8.4 | jdk:11 | python3.11 | ubuntu22.04
+- :wrench: Minor fixes and optimizations.
+- :clipboard: Build Summary: hadoop:3.4.1 | spark:3.5.5+2.12 | psql-jdbc42.7.5 | graphframes:0.8.4 | jdk:11 | python3.11 | ubuntu22.04
 
 #### 18/01/2025
 - :package: Updated `Apache Spark` version to 3.5.4;
 - :package: Updated `PostgresSQL JDBC driver` to 42.7.5;
 - :package: Added support for Spark Connect. By default it is started at port 15002/tcp;
-- :lipstick: Minor fixes and optimizations.
+- :wrench: Minor fixes and optimizations.
 
 #### 07/11/2024 
  - :package: Updated `Apache Hadoop` version to 3.4.1;
@@ -47,7 +47,7 @@ docker exec -it spark-master bash
  - :lipstick: `node-master` renamed to `spark-master`;
  - :lipstick: `node-*` renamed to `worker-*`;
  - :lipstick: Newer variables at `.env` file;
- - :lipstick: Minor fixes and optimizations.
+ - :wrench: Minor fixes and optimizations.
 
 #### 23/10/2024 
  - :package: Updated `Apache Spark` version to 3.5.3;
@@ -56,7 +56,7 @@ docker exec -it spark-master bash
  - :package: Updated `graphframes` to 0.8.4;
  - :rotating_light: `Apache Hive` (external) removed from this repository; 
  - :lipstick: Folder `apps` now called `myfiles`;
- - :lipstick: Minor fixes and optimizations.
+ - :wrench: Minor fixes and optimizations.
 
 #### 16/08/2024 
  - :package: Updated `Apache Spark` version to 3.5.2;
@@ -77,7 +77,7 @@ docker exec -it spark-master bash
  - :package: Added `graphframes` to be used by Spark Graphframes;
  - :package: Downgraded to Java 8, since Hive does not support Java 11;
  - :rotating_light: `$HIVEEXTERNAL` does not exist anymore;
- - :lipstick: Other minor improvements.
+ - :wrench: Other minor improvements.
 
 #### 23/04/2023 
  - :package: Updated `Apache Hadoop` version to 3.3.5;
@@ -94,7 +94,7 @@ docker exec -it spark-master bash
  - :rotating_light: Auto download Hadoop, Spark and Hive (if needed);
  - :lipstick: Added a `sql` folder with config files for PostgreSQL configuration as metastore of Hive;
  - :lipstick: Added sub-folders to `config_files` with specific configuration files for hadoop, spark, hive and system;
- - :lipstick: Other improvements.
+ - :wrench: Other improvements.
 
 ### :page_facing_up: License
 
