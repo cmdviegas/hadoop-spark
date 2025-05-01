@@ -28,7 +28,7 @@ The cluster uses **YARN** for resource scheduling and **HDFS** for distributed f
   - `18080` – Spark History Server UI
   - `15002` – Spark Connect
 
-### Worker Nodes (`worker` service)
+#### Worker Nodes (`worker` service)
 
 - **DataNode** (HDFS)
 - **NodeManager** (YARN)
@@ -36,49 +36,7 @@ The cluster uses **YARN** for resource scheduling and **HDFS** for distributed f
 
 All nodes share a mounted volume for data exchange and run an initialization script (`bootstrap.sh`) on startup.
 
-## 🧱 Build Configuration
-
-Images are built from a Dockerfile with the following build arguments:
-
-- `SPARK_VER=${SPARK_VERSION}`
-- `HADOOP_VER=${HADOOP_VERSION}`
-- `USER=${CONTAINER_USERNAME}`
-- `PASS=${CONTAINER_PASSWORD}`
-
-The image is tagged as: `sparkcluster/${IMAGE_NAME}`.
-
-## 🗃️ Volumes and Persistence
-
-- `master_volume`: Docker named volume attached to the master node to persist user files and configuration.
-
-All nodes also mount a shared volume:
-
-```yaml
-./myfiles:/home/${CONTAINER_USERNAME}/myfiles
-```
-
-
-
-
-
-
-
-
-
-
-
-
-This cluster is structured in a master-slave architecture. By default, it creates three containers: one master node and two worker nodes.
-
-Resource management is handled by Hadoop YARN, which coordinates the execution of Spark and Hadoop jobs across the cluster. In this setup:
-
-- The master node hosts the ResourceManager (YARN) and also acts as NameNode for the Hadoop HDFS. Additionally, it runs the NodeManager service to allow task execution locally when required.
-
-- Each slave node functions as a DataNode in the HDFS, storing blocks of data and participating in distributed storage. They also run NodeManager instances, enabling them to execute Spark and MapReduce tasks under YARN's coordination.
-
-- Apache Spark operates in YARN cluster mode, leveraging YARN's scheduling capabilities to manage executors dynamically across the slave nodes. 
-
-⚠️ Note: You can adjust cluster parameters such as username, password, memory resources, and other settings by editing the `.env` file. This file is the primary configuration source for your cluster setup.
+⚠️ Note: All cluster parameters — such as the default user credentials, resource allocation (e.g., memory and CPU limits), number of worker nodes, and other deployment-specific settings — are configurable via the `.env` file. This file is the primary configuration source for the cluster setup.
 
 ### :rocket: How to build and run
 
