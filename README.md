@@ -1,11 +1,10 @@
-# Deploying a cluster with Apache Hadoop 3.4.x + Apache Spark 3.5.x
+# Hadoop and Spark Cluster Deployment
 
-This script deploys a <ins>cluster</ins> with `Apache Hadoop` and `Apache Spark` in <ins>fully distributed</ins> mode using `Docker` containers as the underlying infrastructure. This setup is focused in supports scalability, fault tolerance, and parallel data processing, making it suitable for large-scale data engineering workloads.
+This script deploys a <ins>cluster</ins> with `Apache Hadoop` 3.4.x and `Apache Spark` 3.5.x in <ins>fully distributed</ins> mode using `Docker` containers as the underlying infrastructure. 
 
+This setup is designed for teaching, experimentation, and scalable data processing tasks.
 
-
-
-This Hadoop and Spark cluster is containerized using **Docker Compose**, designed for teaching, experimentation, and scalable data processing tasks. It consists of **one master node** and a configurable number of **worker nodes**, deployed over a custom Docker network.
+It consists of **one master node** and a configurable number of **worker nodes**, deployed over a custom Docker network.
 
 ## 🗂️ Architecture
 
@@ -56,7 +55,7 @@ All nodes also mount a shared volume:
 
 ```yaml
 ./myfiles:/home/${CONTAINER_USERNAME}/myfiles
-
+```
 
 
 
