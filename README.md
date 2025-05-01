@@ -11,7 +11,7 @@ The cluster consists of **one master node** and a configurable number of **worke
 
 ### ⚙️ Resource Management and Services
 
-The cluster uses **YARN** for resource scheduling and **HDFS** for distributed file storage. Key services per node:
+The cluster uses **YARN** for resource scheduling and **HDFS** for distributed file storage. Here are the key services on each node:
 
 #### Master Node (`spark-master`)
 
@@ -30,26 +30,24 @@ The cluster uses **YARN** for resource scheduling and **HDFS** for distributed f
 - **NodeManager** (YARN)
 - **Spark Worker**
 
-All nodes share a mounted volume for data exchange and run an initialization script (`bootstrap.sh`) on startup.
-
 ### :rocket: How to build and run
 
 ⚠️ Note: All cluster parameters — such as the default user credentials, resource allocation (e.g., memory and CPU limits), number of worker nodes, and other deployment-specific settings — are configurable via the `.env` file. This file is the primary configuration source for the cluster setup.
 
 ⚠️ Optional (Recommended): Before starting, it is advised to pre-download Apache Hadoop and Apache Spark by running the `download.sh` script. This step will speed up the build process.
 
-⚠️ Note: It is advised to use Docker Compose 1.18.0 or higher to ensure compatibility.
-
 #### To build and run this option:
 ```
 docker compose build && docker compose up 
 ```
 
+⚠️ Note: It is advised to use `Docker Compose 1.18.0` or higher to ensure compatibility.
+
 ### :bulb: Tips
 
 #### Accessing the Master Node
 
-To access the master node:
+To access the master node, run the following command:
 ```
 docker exec -it spark-master bash
 ```
