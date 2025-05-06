@@ -14,7 +14,7 @@
 # This is a bash script to automatically download Hadoop and Spark and Hive (if needed)
 #
 
-if [ -f ${PWD}/.env ]; then
+if [ -f "${PWD}/.env" ]; then
   HADOOP_VERSION=$(grep '^HADOOP_VERSION=' "${PWD}/.env" | cut -d '=' -f2)
   SPARK_VERSION=$(grep '^SPARK_VERSION=' "${PWD}/.env" | cut -d '=' -f2)
 else

@@ -79,6 +79,4 @@ fi
 unset CONTAINER_USERNAME
 unset CONTAINER_PASSWORD
 
-/usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf
-
-exec /bin/bash
+/bin/bash
