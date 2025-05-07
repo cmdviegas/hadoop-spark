@@ -1,1 +1,1 @@
-⚠️ Place your files and scripts in this folder. It will be mapped as a volume in order to be accessible inside container.
+⚠️ Place your files and scripts in this folder — it is mounted as a volume inside the container, making its contents accessible during runtime.

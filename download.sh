@@ -11,7 +11,7 @@
 # (C) 2022-2025 CARLOS M D VIEGAS
 # https://github.com/cmdviegas
 #
-# This is a bash script to automatically download Hadoop and Spark and Hive (if needed)
+# This is a bash script to automatically download Hadoop and Spark (if needed)
 #
 
 if [ -f "${PWD}/.env" ]; then
@@ -29,6 +29,6 @@ fi
 
 echo "Downloading Apache Hadoop $HADOOP_VERSION and Apache Spark $SPARK_VERSION ..."
 
-wget -nc --no-check-certificate "https://archive.apache.org/dist/hadoop/core/hadoop-$HADOOP_VERSION/hadoop-$HADOOP_VERSION.tar.gz"
+wget -nc --inet4-only --no-check-certificate "https://archive.apache.org/dist/hadoop/core/hadoop-$HADOOP_VERSION/hadoop-$HADOOP_VERSION.tar.gz"
 
-wget -nc --no-check-certificate "https://archive.apache.org/dist/spark/spark-$SPARK_VERSION/spark-$SPARK_VERSION-bin-hadoop3.tgz"
+wget -nc --inet4-only --no-check-certificate "https://archive.apache.org/dist/spark/spark-$SPARK_VERSION/spark-$SPARK_VERSION-bin-hadoop3.tgz"

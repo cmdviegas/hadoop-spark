@@ -10,47 +10,47 @@
 # (C) 2022-2025 CARLOS M D VIEGAS
 # https://github.com/cmdviegas
 
-name: spark
+name: ${STACK_NAME}
 
-x-spark-common:
-  &spark-common
-  image: sparkcluster/${IMAGE_NAME}
+x-common:
+  &common
+  image: ${IMAGE_NAME}
   tty: true
   restart: on-failure
-  entrypoint: ./bootstrap.sh
+  entrypoint: ["./bootstrap.sh"]
   networks:
     - spark_network
   volumes:
-    - ./myfiles:/home/${CONTAINER_USERNAME}/myfiles
+    - ./myfiles:/home/${MY_USERNAME}/myfiles
 
 services:
   worker:
-    <<: *spark-common
+    <<: *common
     deploy:
       mode: replicated
       replicas: ${NUM_WORKER_NODES}
-    command: WORKER
+    command: ["WORKER"]
     
-  spark-master:
-    <<: *spark-common
+  master:
+    <<: *common
     container_name: spark-master
     hostname: spark-master
     build:
       context: .
       dockerfile: Dockerfile
       args:
-        USER: ${CONTAINER_USERNAME} # USERNAME (change at .env file)
-        PASS: ${CONTAINER_PASSWORD} # PASSWORD (change at .env file)
-        SPARK_VER: ${SPARK_VERSION}
-        HADOOP_VER: ${HADOOP_VERSION}
+        MY_USERNAME: ${MY_USERNAME} # USERNAME (change at .env file)
+        MY_PASSWORD: ${MY_PASSWORD} # PASSWORD (change at .env file)
+        SPARK_VERSION: ${SPARK_VERSION}
+        HADOOP_VERSION: ${HADOOP_VERSION}
     ports:
       - "9870:9870/tcp" # HDFS
       - "8088:8088/tcp" # YARN
       - "18080:18080/tcp" # SPARK UI
       - "15002:15002/tcp" # SPARK CONNECT
     volumes:
-      - master:/home/${CONTAINER_USERNAME}/
-    command: MASTER
+      - master:/home/${MY_USERNAME}/
+    command: ["MASTER"]
 
 networks:
   spark_network:

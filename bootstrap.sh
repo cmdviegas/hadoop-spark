@@ -36,11 +36,6 @@
 ###
 
 ###
-#### Set JAVA_HOME dynamically based on installed Java version
-JAVA_HOME_DIR=$(dirname "$(dirname "$(readlink -f "$(command -v java)")")")
-sed -i "s|^export JAVA_HOME=.*|export JAVA_HOME=\"$JAVA_HOME_DIR\"|" ${HOME}/.bashrc
-
-###
 #### Load .bashrc
 eval "$(tail -n +10 ${HOME}/.bashrc)" # Alternative to 'source .bashrc'
 ###
@@ -60,23 +55,21 @@ sudo service ssh start > /dev/null 2>&1
 # Update hadoop workers file according to the amount of worker nodes
 truncate -s 0 ${HADOOP_CONF_DIR}/workers
 for i in $(seq 1 "${NUM_WORKER_NODES}"); do
-    echo "spark-worker-$i" >> "${HADOOP_CONF_DIR}/workers"
+    echo "${STACK_NAME}-worker-$i" >> "${HADOOP_CONF_DIR}/workers"
 done
 ###
 
 ###
 #### Start services
-# Start hadoop services (only at spark-master)
+# Start hadoop/spark services (only at master)
 if [ "$1" == "MASTER" ] ; then
     sleep 5
     [ -f "${HOME}/start-services.sh" ] && bash -c "${HOME}/start-services.sh"
-fi
-
-if [ "$1" == "WORKER" ] ; then
+else
     printf "I'm up and ready!\n"
 fi
 
-unset CONTAINER_USERNAME
-unset CONTAINER_PASSWORD
+unset MY_USERNAME
+unset MY_PASSWORD
 
 /bin/bash

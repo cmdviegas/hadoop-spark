@@ -37,8 +37,8 @@ do
     printf "${INFO} Waiting for WORKERS to be ready${RESET_COLORS}...\n"
     WORKERS_REACHABLE=true
     # Read the file containing the IP addresses
-    while IFS= read -r ip; do
-        if ! ssh -o "ConnectTimeout=3" "$ip" exit >/dev/null 2>&1; then
+    while IFS= read -r worker; do
+        if ! ssh -o "ConnectTimeout=3" "$worker" exit >/dev/null 2>&1; then
             # If any worker node is not reachable, set WORKERS_REACHABLE to false and break the loop
             WORKERS_REACHABLE=false
             break
