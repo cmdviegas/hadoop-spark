@@ -58,7 +58,7 @@ RUN \
     # Check if hadoop exists inside workdir, if not, download it \
     if [ ! -f "${MY_WORKDIR}/hadoop-${HADOOP_VERSION}.tar.gz" ]; then \
         # Download hadoop \
-        aria2c -x 16 --check-certificate=false --allow-overwrite=false \
+        aria2c --disable-ipv6 -x 16 --allow-overwrite=false \
         https://archive.apache.org/dist/hadoop/core/hadoop-${HADOOP_VERSION}/hadoop-${HADOOP_VERSION}.tar.gz; \
     fi \
     && \
@@ -107,7 +107,7 @@ RUN \
     # Check if spark exists inside workdir, if not, download it \
     if [ ! -f "${MY_WORKDIR}/spark-${SPARK_VERSION}-bin-hadoop3.tgz" ]; then \
         # Download spark \
-        aria2c --disable-ipv6 -x 16 --check-certificate=false --allow-overwrite=false \
+        aria2c --disable-ipv6 -x 16 --allow-overwrite=false \
         https://archive.apache.org/dist/spark/spark-${SPARK_VERSION}/spark-${SPARK_VERSION}-bin-hadoop3.tgz; \
     fi \
     && \
@@ -117,7 +117,7 @@ RUN \
     ln -sf ${MY_WORKDIR}/spark-3*-bin-hadoop3 ${SPARK_HOME} \
     && \
     # Additional libs for Spark \
-    aria2c --disable-ipv6 -x 16 --check-certificate=false --allow-overwrite=false --quiet=true -d ${SPARK_HOME}/jars \
+    aria2c --disable-ipv6 -x 16 --allow-overwrite=false --quiet=true -d ${SPARK_HOME}/jars \
     https://jdbc.postgresql.org/download/postgresql-42.7.5.jar \
     https://repos.spark-packages.org/graphframes/graphframes/0.8.4-spark3.5-s_2.12/graphframes-0.8.4-spark3.5-s_2.12.jar
 
