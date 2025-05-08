@@ -20,8 +20,6 @@ x-common:
   entrypoint: ["./bootstrap.sh"]
   networks:
     - spark_network
-  volumes:
-    - ./myfiles:/home/${MY_USERNAME}/myfiles
 
 services:
   worker:
@@ -29,6 +27,8 @@ services:
     deploy:
       mode: replicated
       replicas: ${NUM_WORKER_NODES}
+    volumes:
+      - ./myfiles:/home/${MY_USERNAME}/myfiles
     command: ["WORKER"]
     
   master:
@@ -50,6 +50,7 @@ services:
       - "15002:15002/tcp" # SPARK CONNECT
     volumes:
       - master:/home/${MY_USERNAME}/
+      - ./myfiles:/home/${MY_USERNAME}/myfiles
     command: ["MASTER"]
 
 networks:
