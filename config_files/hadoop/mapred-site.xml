@@ -78,5 +78,29 @@
         <description>User added environment variables for reduce, specified as a comma separated list.</description>
     </property>
 
+    <property>
+        <name>mapreduce.jobhistory.address</name>
+        <value>0.0.0.0:10020</value>
+        <description>The socket address where the JobHistory Server listens for client requests. Default port is 10020.</description>
+    </property>
+
+    <property>
+        <name>mapreduce.jobhistory.webapp.address</name>
+        <value>0.0.0.0:19888</value>
+        <description>The address and port where the JobHistory Server's web UI is available. Default port is 19888.</description>
+    </property>
+
+    <property>
+        <name>mapreduce.jobhistory.done-dir</name>
+        <value>/tmp/hadoop/mapred/done</value>
+        <description>The HDFS or local directory where completed job history logs are stored after being processed.</description>
+    </property>
+
+    <property>
+        <name>mapreduce.jobhistory.intermediate-done-dir</name>
+        <value>/tmp/hadoop/mapred/intermediate-done</value>
+        <description>The directory where in-progress job history logs are temporarily stored before being moved to the done-dir.</description>
+    </property>
+
 </configuration>
 

@@ -222,7 +222,8 @@ RUN \
     # Cleaning and permission set \
     rm -rf ${MY_WORKDIR}/config_files/ && \
     sudo rm -rf /tmp/* /var/tmp/* && \
-    chmod 0700 bootstrap.sh config-services.sh start-services.sh
+    chmod 0700 bootstrap.sh config-services.sh start-services.sh && \
+    mkdir -p /tmp/hadoop/mapred/{done,intermediate-done}
    
 # Run 'bootstrap.sh' on startup
 ENTRYPOINT ["./bootstrap.sh"]

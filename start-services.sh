@@ -26,8 +26,10 @@ WARN="[${RED_COLOR}ERROR${RESET_COLORS}]${YELLOW_COLOR}"
 BOOT_STATUS=false
 
 # Format HDFS
-printf "${INFO} Formatting filesystem${RESET_COLORS}...\n"
-hdfs namenode -format -nonInteractive
+if [ ! -d "$(grep -A2 '<name>dfs.namenode.name.dir</name>' "${HADOOP_CONF_DIR}/hdfs-site.xml" | grep '<value>' | sed -E 's/.*<value>(.*)<\/value>.*/\1/')/current" ]; then
+    printf "${INFO} Formatting filesystem${RESET_COLORS}...\n"
+    HADOOP_ROOT_LOGGER=ERROR,console hdfs namenode -format -nonInteractive
+fi
 
 # Start HDFS and YARN services
 # Test if all workers are alive and ready to create the cluster
@@ -49,6 +51,8 @@ do
         printf "${INFO} Starting HDFS and YARN services${RESET_COLORS}...\n"
         sleep 1
         start-dfs.sh && start-yarn.sh
+        sleep 1
+        mapred --daemon start historyserver
         break
     fi
     # Wait before checking again
@@ -100,5 +104,6 @@ if [ "$BOOT_STATUS" = "true" ]; then
     printf "The following services are now available for access through web browser:\n
     http://localhost:${LIGHTBLUE_COLOR}9870 \t ${YELLOW_COLOR}HDFS${RESET_COLORS}
     http://localhost:${LIGHTBLUE_COLOR}8088 \t ${YELLOW_COLOR}YARN Scheduler${RESET_COLORS}
-    http://localhost:${LIGHTBLUE_COLOR}18080 \t ${YELLOW_COLOR}Spark History Server${RESET_COLORS}\n\n"
+    http://localhost:${LIGHTBLUE_COLOR}19888 \t ${YELLOW_COLOR}MAPRED Job History${RESET_COLORS}
+    http://localhost:${LIGHTBLUE_COLOR}18080 \t ${YELLOW_COLOR}SPARK History Server${RESET_COLORS}\n\n"
 fi

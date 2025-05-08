@@ -46,6 +46,7 @@ services:
     ports:
       - "9870:9870/tcp" # HDFS
       - "8088:8088/tcp" # YARN
+      - "19888:19888/tcp" # JOB HISTORY
       - "18080:18080/tcp" # SPARK UI
       - "15002:15002/tcp" # SPARK CONNECT
     volumes:
