@@ -190,13 +190,10 @@ COPY --from=build-spark \
     ${MY_WORKDIR}/spark ${SPARK_HOME}/
 
 # Copy all files from local folder to container, except the ones in .dockerignore
+COPY --chown=${MY_USERNAME}:${MY_USERNAME} \ 
+    config_files/ ${MY_WORKDIR}/config_files
 COPY --chown=${MY_USERNAME}:${MY_USERNAME} \
-    config_files/ \
-    bootstrap.sh \
-    config-services.sh \
-    start-services.sh \
-    .env \
-    ${MY_WORKDIR}/
+    bootstrap.sh config-services.sh start-services.sh .env ${MY_WORKDIR}/
 
 RUN \
     # Convert charset from UTF-16 to UTF-8 to ensure compatibility \
