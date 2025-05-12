@@ -182,18 +182,12 @@ USER ${MY_USERNAME}
 WORKDIR ${MY_WORKDIR}
 
 # Copy all files from build stage to the container
-COPY --from=build-hadoop \
-    --chown=${MY_USERNAME}:${MY_USERNAME} \
-    ${MY_WORKDIR}/hadoop ${HADOOP_HOME}/
-COPY --from=build-spark \
-    --chown=${MY_USERNAME}:${MY_USERNAME} \
-    ${MY_WORKDIR}/spark ${SPARK_HOME}/
+COPY --from=build-hadoop --chown=${MY_USERNAME}:${MY_USERNAME} ${MY_WORKDIR}/hadoop ${HADOOP_HOME}/
+COPY --from=build-spark --chown=${MY_USERNAME}:${MY_USERNAME} ${MY_WORKDIR}/spark ${SPARK_HOME}/
 
 # Copy all files from local folder to container, except the ones in .dockerignore
-COPY --chown=${MY_USERNAME}:${MY_USERNAME} \ 
-    config_files/ ${MY_WORKDIR}/config_files
-COPY --chown=${MY_USERNAME}:${MY_USERNAME} \
-    bootstrap.sh config-services.sh start-services.sh .env ${MY_WORKDIR}/
+COPY --chown=${MY_USERNAME}:${MY_USERNAME} config_files/ ${MY_WORKDIR}/config_files
+COPY --chown=${MY_USERNAME}:${MY_USERNAME} bootstrap.sh config-services.sh start-services.sh .env ${MY_WORKDIR}/
 
 RUN \
     # Convert charset from UTF-16 to UTF-8 to ensure compatibility \
