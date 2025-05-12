@@ -24,13 +24,13 @@ FROM ubuntu:24.04 AS build-hadoop
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 # Environment vars
-ARG HADOOP_VERSION
-ARG MY_USERNAME
-ARG MY_WORKDIR="/home/${MY_USERNAME}"
+ARG HADOOP_VERSION \
+    MY_USERNAME \
+    MY_WORKDIR="/home/${MY_USERNAME}"
 
-ENV HADOOP_VERSION="${HADOOP_VERSION}"
-ENV HADOOP_HOME="${MY_WORKDIR}/hadoop"
-ENV DEBIAN_FRONTEND=noninteractive 
+ENV HADOOP_VERSION="${HADOOP_VERSION}" \
+    HADOOP_HOME="${MY_WORKDIR}/hadoop" \
+    DEBIAN_FRONTEND=noninteractive
 
 # Set working dir
 WORKDIR ${MY_WORKDIR}
@@ -73,13 +73,13 @@ FROM ubuntu:24.04 AS build-spark
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 # Environment vars
-ARG SPARK_VERSION
-ARG MY_USERNAME
-ARG MY_WORKDIR="/home/${MY_USERNAME}"
+ARG SPARK_VERSION \
+    MY_USERNAME \
+    MY_WORKDIR="/home/${MY_USERNAME}"
 
-ENV SPARK_VERSION="${SPARK_VERSION}"
-ENV SPARK_HOME="${MY_WORKDIR}/spark"
-ENV DEBIAN_FRONTEND=noninteractive 
+ENV SPARK_VERSION="${SPARK_VERSION}" \
+    SPARK_HOME="${MY_WORKDIR}/spark" \
+    DEBIAN_FRONTEND=noninteractive
 
 # Set working dir
 WORKDIR ${MY_WORKDIR}
@@ -129,20 +129,19 @@ FROM ubuntu:24.04 AS final
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 # Environment vars
-ARG HADOOP_VERSION
-ARG SPARK_VERSION
-ARG MY_USERNAME
-ARG MY_PASSWORD
+ARG HADOOP_VERSION \
+    SPARK_VERSION \
+    MY_USERNAME \
+    MY_PASSWORD
 
-ENV MY_USERNAME="${MY_USERNAME}"
-ENV MY_PASSWORD="${MY_PASSWORD}"
-ENV MY_WORKDIR="/home/${MY_USERNAME}"
-
-ENV HADOOP_VERSION="${HADOOP_VERSION}"
-ENV HADOOP_HOME="${MY_WORKDIR}/hadoop"
-ENV SPARK_VERSION="${SPARK_VERSION}"
-ENV SPARK_HOME="${MY_WORKDIR}/spark"
-ENV DEBIAN_FRONTEND=noninteractive 
+ENV MY_USERNAME="${MY_USERNAME}" \
+    MY_PASSWORD="${MY_PASSWORD}" \
+    MY_WORKDIR="/home/${MY_USERNAME}" \
+    HADOOP_VERSION="${HADOOP_VERSION}" \
+    HADOOP_HOME="${MY_WORKDIR}/hadoop" \
+    SPARK_VERSION="${SPARK_VERSION}" \
+    SPARK_HOME="${MY_WORKDIR}/spark" \
+    DEBIAN_FRONTEND=noninteractive
 
 RUN \
     # Update system and install required packages \
@@ -186,12 +185,21 @@ USER ${MY_USERNAME}
 WORKDIR ${MY_WORKDIR}
 
 # Copy all files from build stage to the container
-COPY --from=build-hadoop --chown=${MY_USERNAME}:${MY_USERNAME} ${MY_WORKDIR}/hadoop ${HADOOP_HOME}/
-COPY --from=build-spark --chown=${MY_USERNAME}:${MY_USERNAME} ${MY_WORKDIR}/spark ${SPARK_HOME}/
+COPY --from=build-hadoop \
+    --chown=${MY_USERNAME}:${MY_USERNAME} \
+    ${MY_WORKDIR}/hadoop ${HADOOP_HOME}/
+COPY --from=build-spark \
+    --chown=${MY_USERNAME}:${MY_USERNAME} \
+    ${MY_WORKDIR}/spark ${SPARK_HOME}/
 
 # Copy all files from local folder to container, except the ones in .dockerignore
-COPY --chown=${MY_USERNAME}:${MY_USERNAME} config_files/ ${MY_WORKDIR}/config_files
-COPY --chown=${MY_USERNAME}:${MY_USERNAME} bootstrap.sh config-services.sh start-services.sh .env ${MY_WORKDIR}/
+COPY --chown=${MY_USERNAME}:${MY_USERNAME} \
+    config_files/ \
+    bootstrap.sh \
+    config-services.sh \
+    start-services.sh \
+    .env \
+    ${MY_WORKDIR}/
 
 RUN \
     # Convert charset from UTF-16 to UTF-8 to ensure compatibility \
