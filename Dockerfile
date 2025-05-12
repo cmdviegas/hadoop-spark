@@ -88,18 +88,21 @@ WORKDIR ${MY_WORKDIR}
 COPY spark-*.tgz ${MY_WORKDIR}
 
 RUN \
-    # Install aria2c to download hadoop \
-    apt-get update -qq && \
-    apt-get install -y --no-install-recommends \
-        aria2 \
-        ca-certificates \
-    && \
-    update-ca-certificates \
-    && \
-    # Clean apt cache \
-    apt-get autoremove -yqq --purge && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/* \
+    # Check if spark exist \
+    if [ ! -f "${MY_WORKDIR}/spark-${SPARK_VERSION}-bin-hadoop3.tgz" ]; then \
+        # Install aria2c to download hadoop \
+        apt-get update -qq && \
+        apt-get install -y --no-install-recommends \
+            aria2 \
+            ca-certificates \
+        && \
+        update-ca-certificates \
+        && \
+        # Clean apt cache \
+        apt-get autoremove -yqq --purge && \
+        apt-get clean && \
+        rm -rf /var/lib/apt/lists/*; \
+    fi \
     && \
     # Check if spark exists inside workdir, if not, download it \
     if [ ! -f "${MY_WORKDIR}/spark-${SPARK_VERSION}-bin-hadoop3.tgz" ]; then \
@@ -111,12 +114,7 @@ RUN \
     # Extract spark to the container filesystem \
     tar -zxf spark-${SPARK_VERSION}-bin-hadoop3.tgz -C ${MY_WORKDIR} && \
     rm -rf spark-${SPARK_VERSION}-bin-hadoop3.tgz && \
-    ln -sf ${MY_WORKDIR}/spark-3*-bin-hadoop3 ${SPARK_HOME} \
-    && \
-    # Additional libs for spark \
-    aria2c --disable-ipv6 -x 16 --allow-overwrite=false --quiet=true -d ${SPARK_HOME}/jars \
-    https://jdbc.postgresql.org/download/postgresql-42.7.5.jar \
-    https://repos.spark-packages.org/graphframes/graphframes/0.8.4-spark3.5-s_2.12/graphframes-0.8.4-spark3.5-s_2.12.jar
+    ln -sf ${MY_WORKDIR}/spark-3*-bin-hadoop3 ${SPARK_HOME}
 
 ###
 ##### FINAL IMAGE
@@ -200,6 +198,11 @@ RUN \
     # Set JAVA_HOME dynamically based on installed Java version \
     JAVA_HOME_DIR=$(dirname "$(dirname "$(readlink -f "$(command -v java)")")") && \
     sed -i "s|^export JAVA_HOME=.*|export JAVA_HOME=\"$JAVA_HOME_DIR\"|" "${MY_WORKDIR}/.bashrc" \
+    && \
+    # Additional libs for spark \
+    wget --no-verbose --directory-prefix=${SPARK_HOME}/jars \
+        https://jdbc.postgresql.org/download/postgresql-42.7.5.jar \
+        https://repos.spark-packages.org/graphframes/graphframes/0.8.4-spark3.5-s_2.12/graphframes-0.8.4-spark3.5-s_2.12.jar \
     && \
     # Copy config files to hadoop config folder \
     mv ${MY_WORKDIR}/config_files/hadoop/* ${HADOOP_HOME}/etc/hadoop/ && \
