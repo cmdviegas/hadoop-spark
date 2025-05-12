@@ -39,7 +39,7 @@ WORKDIR ${MY_WORKDIR}
 COPY hadoop-*.tar.gz ${MY_WORKDIR}
 
 RUN \
-    # Check if hadoop or spark exist \
+    # Check if hadoop exist \
     if [ ! -f "${MY_WORKDIR}/hadoop-${HADOOP_VERSION}.tar.gz" ]; then \
         # Install aria2c to download hadoop \
         apt-get update -qq && \
@@ -88,21 +88,18 @@ WORKDIR ${MY_WORKDIR}
 COPY spark-*.tgz ${MY_WORKDIR}
 
 RUN \
-    # Check if hadoop or spark exist \
-    if [ ! -f "${MY_WORKDIR}/spark-${SPARK_VERSION}-bin-hadoop3.tgz" ]; then \
-        # Install aria2c to download hadoop \
-        apt-get update -qq && \
-        apt-get install -y --no-install-recommends \
-            aria2 \
-            ca-certificates \
-        && \
-        update-ca-certificates \
-        && \
-        # Clean apt cache \
-        apt-get autoremove -yqq --purge && \
-        apt-get clean && \
-        rm -rf /var/lib/apt/lists/*; \
-    fi \
+    # Install aria2c to download hadoop \
+    apt-get update -qq && \
+    apt-get install -y --no-install-recommends \
+        aria2 \
+        ca-certificates \
+    && \
+    update-ca-certificates \
+    && \
+    # Clean apt cache \
+    apt-get autoremove -yqq --purge && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* \
     && \
     # Check if spark exists inside workdir, if not, download it \
     if [ ! -f "${MY_WORKDIR}/spark-${SPARK_VERSION}-bin-hadoop3.tgz" ]; then \
@@ -116,7 +113,7 @@ RUN \
     rm -rf spark-${SPARK_VERSION}-bin-hadoop3.tgz && \
     ln -sf ${MY_WORKDIR}/spark-3*-bin-hadoop3 ${SPARK_HOME} \
     && \
-    # Additional libs for Spark \
+    # Additional libs for spark \
     aria2c --disable-ipv6 -x 16 --allow-overwrite=false --quiet=true -d ${SPARK_HOME}/jars \
     https://jdbc.postgresql.org/download/postgresql-42.7.5.jar \
     https://repos.spark-packages.org/graphframes/graphframes/0.8.4-spark3.5-s_2.12/graphframes-0.8.4-spark3.5-s_2.12.jar
