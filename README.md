@@ -55,6 +55,11 @@ docker exec -it spark-master bash
 
 ### :memo: Changelog
 
+#### 14/05/2025
+- :sparkles: Bug fix: `spark_shuffle` not detected by yarn, since Spark 3.5.x;
+- :wrench: Minor fixes and optimizations.
+- :clipboard: Build Summary: hadoop:3.4.1 | spark:3.5.5+2.12 | psql-jdbc:42.7.5 | graphframes:0.8.4 | jdk:11 | python:3.12 | ubuntu:24.04
+
 #### 08/05/2025
 - :sparkles: Added `MapReduce Job History`;
 - :wrench: Minor fixes and optimizations.

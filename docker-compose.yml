@@ -29,6 +29,7 @@ services:
       replicas: ${NUM_WORKER_NODES}
     volumes:
       - ./myfiles:/home/${MY_USERNAME}/myfiles
+      - .env:/home/${MY_USERNAME}/.env
     command: ["WORKER"]
     
   master:
@@ -52,6 +53,7 @@ services:
     volumes:
       - master:/home/${MY_USERNAME}/
       - ./myfiles:/home/${MY_USERNAME}/myfiles
+      - .env:/home/${MY_USERNAME}/.env
     command: ["MASTER"]
 
 networks:
@@ -65,5 +67,5 @@ networks:
 
 volumes:
   master:
-    name: master_volume
+    name: ${STACK_NAME}_master_volume
     driver: local

@@ -43,12 +43,11 @@ RUN \
     # Check if hadoop exist \
     if [ ! -f "${MY_WORKDIR}/hadoop-${HADOOP_VERSION}.tar.gz" ]; then \
         # Install aria2c to download hadoop \
+        sed --in-place --regexp-extended "s|(http://archive\.ubuntu\.com/ubuntu/)|(http://ftp.br.debian.org/ubuntu/)|" /etc/apt/sources.list && \
         apt-get update -qq && \
         apt-get install -y --no-install-recommends \
             aria2 \
             ca-certificates \
-        && \
-        update-ca-certificates \
         && \
         # Clean apt cache \
         apt-get autoremove -yqq --purge && \
@@ -92,12 +91,11 @@ RUN \
     # Check if spark exist \
     if [ ! -f "${MY_WORKDIR}/spark-${SPARK_VERSION}-bin-hadoop3.tgz" ]; then \
         # Install aria2c to download hadoop \
+        sed --in-place --regexp-extended "s|(http://archive\.ubuntu\.com/ubuntu/)|(http://ftp.br.debian.org/ubuntu/)|" /etc/apt/sources.list && \
         apt-get update -qq && \
         apt-get install -y --no-install-recommends \
             aria2 \
             ca-certificates \
-        && \
-        update-ca-certificates \
         && \
         # Clean apt cache \
         apt-get autoremove -yqq --purge && \
@@ -141,6 +139,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 RUN \
     # Update system and install required packages \
+    sed --in-place --regexp-extended "s|(http://archive\.ubuntu\.com/ubuntu/)|(http://ftp.br.debian.org/ubuntu/)|" /etc/apt/sources.list && \
     apt-get update -qq && \
     apt-get install -y --no-install-recommends \
         openjdk-11-jdk-headless \
@@ -148,7 +147,9 @@ RUN \
         python3-pip \
         python3-pandas \
         python3-grpcio \
+        python3-protobuf \
         sudo \
+        nano \
         dos2unix \
         ssh \
         wget \
@@ -157,9 +158,7 @@ RUN \
         net-tools \
         ca-certificates \
     && \
-    update-ca-certificates \
-    && \
-    pip install -q --break-system-packages --no-warn-script-location -q graphframes grpcio-status protobuf \
+    pip install -q --break-system-packages --no-warn-script-location -q graphframes grpcio-status \
     && \
     # Clean apt cache \
     apt-get autoremove -yqq --purge && \
@@ -169,6 +168,8 @@ RUN \
     # Creates symbolic link to make 'python' and 'python3' recognized as a system command \
     ln -sf /usr/bin/python3.12 /usr/bin/python && \
     ln -sf /usr/bin/python /usr/bin/python3 \
+    && \
+    userdel --remove ubuntu || true \
     && \
     # Creates user and adds it to sudoers \
     adduser --disabled-password --gecos "" ${MY_USERNAME} && \
@@ -186,7 +187,7 @@ COPY --from=build-spark --chown=${MY_USERNAME}:${MY_USERNAME} ${MY_WORKDIR}/spar
 
 # Copy all files from local folder to container, except the ones in .dockerignore
 COPY --chown=${MY_USERNAME}:${MY_USERNAME} config_files/ ${MY_WORKDIR}/config_files
-COPY --chown=${MY_USERNAME}:${MY_USERNAME} bootstrap.sh config-services.sh start-services.sh .env ${MY_WORKDIR}/
+COPY --chown=${MY_USERNAME}:${MY_USERNAME} bootstrap.sh config-services.sh start-services.sh ${MY_WORKDIR}/
 
 RUN \
     # Convert charset from UTF-16 to UTF-8 to ensure compatibility \
@@ -211,6 +212,9 @@ RUN \
     # Copy config files to spark config folder \
     mv ${MY_WORKDIR}/config_files/spark/* ${SPARK_HOME}/conf && \
     chmod 0755 ${SPARK_HOME}/conf/*.sh \
+    && \
+    # Create a symbolic link for the spark_shuffle in Hadoop's YARN lib directory \
+    ln -sf ${SPARK_HOME}/yarn/spark-${SPARK_VERSION}-yarn-shuffle.jar ${HADOOP_HOME}/share/hadoop/yarn/lib/spark-${SPARK_VERSION}-yarn-shuffle.jar \
     && \
     # Configure ssh for passwordless access \
     mkdir -p ./.ssh && \

@@ -44,14 +44,20 @@
 
     <property>
         <name>yarn.nodemanager.aux-services</name>
-        <value>mapreduce_shuffle</value>
-        <description>The auxiliary service name.</description>
+        <value>mapreduce_shuffle,spark_shuffle</value>
+        <description>Auxiliary services for MapReduce and Spark</description>
     </property>
 
     <property>
         <name>yarn.nodemanager.aux-services.mapreduce_shuffle.class</name>
         <value>org.apache.hadoop.mapred.ShuffleHandler</value>
-        <description>The auxiliary service class to use.</description>
+        <description>The auxiliary service class for MapReduce</description>
+    </property>
+
+    <property>
+        <name>yarn.nodemanager.aux-services.spark_shuffle.class</name>
+        <value>org.apache.spark.network.yarn.YarnShuffleService</value>
+        <description>The auxiliary service class for Spark</description>
     </property>
 
     <property>
@@ -62,7 +68,7 @@
 
     <property>
         <name>yarn.scheduler.capacity.maximum-am-resource-percent</name>
-        <value>0.9</value>
+        <value>0.4</value>
         <description>Maximum percent of resources in the cluster which can be used to run application masters - controls number of concurrent active applications.</description>
     </property>
 
@@ -86,7 +92,7 @@
 
     <property>
         <name>yarn.application.classpath</name>
-        <value>${HADOOP_CONF_DIR},${HADOOP_COMMON_HOME}/share/hadoop/common/*,${HADOOP_COMMON_HOME}/share/hadoop/common/lib/*,${HADOOP_HDFS_HOME}/share/hadoop/hdfs/*,${HADOOP_HDFS_HOME}/share/hadoop/hdfs/lib/*,${HADOOP_CONF_DIR}/*,${HADOOP_YARN_HOME}/share/hadoop/yarn/*,${HADOOP_YARN_HOME}/share/hadoop/yarn/lib/*</value>
+        <value>${HADOOP_CONF_DIR},${HADOOP_COMMON_HOME}/share/hadoop/common/*,${HADOOP_COMMON_HOME}/share/hadoop/common/lib/*,${HADOOP_HDFS_HOME}/share/hadoop/hdfs/*,${HADOOP_HDFS_HOME}/share/hadoop/hdfs/lib/*,${HADOOP_CONF_DIR}/*,${HADOOP_YARN_HOME}/share/hadoop/yarn/*,${HADOOP_YARN_HOME}/share/hadoop/yarn/lib/*,${SPARK_HOME}/yarn/*</value>
         <description>CLASSPATH for YARN applications.</description>
     </property>
 

@@ -66,7 +66,7 @@ if [ "$1" == "MASTER" ] ; then
     sleep 5
     [ -f "${HOME}/start-services.sh" ] && bash -c "${HOME}/start-services.sh"
 else
-    printf "I'm up and ready!\n"
+    printf "I'm up, awaiting master connection...\n"
 fi
 
 unset MY_USERNAME

@@ -20,6 +20,8 @@
 [ -f "${HOME}/.env" ] && . "${HOME}/.env"
 ###
 
+MASTER_HOSTNAME="${STACK_NAME}-master"
+
 ###
 #### Hadoop and Spark properties
 # Functions to update hadoop and spark properties dynamically according vars in .env file.
@@ -34,9 +36,9 @@ function append_spark_config() {
 }
 
 # Update core-site.xml, yarn-site.xml, mapred-site.xml, hdfs-site.xml, hadoop-env.sh
-#update_xml_values "fs.defaultFS" "hdfs://${MASTER_HOSTNAME}:9000" "${HADOOP_CONF_DIR}/core-site.xml"
+update_xml_values "fs.defaultFS" "hdfs://${MASTER_HOSTNAME}:9000" "${HADOOP_CONF_DIR}/core-site.xml"
 update_xml_values "hadoop.http.staticuser.user" "${MY_USERNAME}" "${HADOOP_CONF_DIR}/core-site.xml"
-#update_xml_values "yarn.resourcemanager.hostname" "${MASTER_HOSTNAME}" "${HADOOP_CONF_DIR}/yarn-site.xml"
+update_xml_values "yarn.resourcemanager.hostname" "${MASTER_HOSTNAME}" "${HADOOP_CONF_DIR}/yarn-site.xml"
 update_xml_values "yarn.nodemanager.resource.memory-mb" "${YARN_NODEMANAGER_RESOURCE_MEMORY_MB}" "${HADOOP_CONF_DIR}/yarn-site.xml"
 update_xml_values "yarn.scheduler.maximum-allocation-mb" "${YARN_SCHEDULER_MAXIMUM_ALLOCATION_MB}" "${HADOOP_CONF_DIR}/yarn-site.xml"
 update_xml_values "yarn.scheduler.minimum-allocation-mb" "${YARN_SCHEDULER_MINIMUM_ALLOCATION_MB}" "${HADOOP_CONF_DIR}/yarn-site.xml"
@@ -50,11 +52,11 @@ update_xml_values "dfs.datanode.data.dir" "\/home\/${MY_USERNAME}\/hdfs-data\/da
 sed -i "s|^export JAVA_HOME=.*|export JAVA_HOME=\"${JAVA_HOME}\"|" "${HADOOP_CONF_DIR}/hadoop-env.sh"
 
 # Update spark-defaults.conf
-#update_spark_defaults "spark.eventLog.dir" "hdfs://${MASTER_HOSTNAME}:9000/spark-logs"
-#update_spark_defaults "spark.history.fs.logDirectory" "hdfs://${MASTER_HOSTNAME}:9000/spark-logs"
-#update_spark_defaults "spark.yarn.stagingDir" "hdfs://${MASTER_HOSTNAME}:9000/user"
-#update_spark_defaults "spark.yarn.jars" "hdfs://${MASTER_HOSTNAME}:9000/spark-libs/*"
-#update_spark_defaults "spark.sql.warehouse.dir" "hdfs://${MASTER_HOSTNAME}:9000/user/${MY_USERNAME}/spark-warehouse" 
+update_spark_defaults "spark.eventLog.dir" "hdfs://${MASTER_HOSTNAME}:9000/spark-logs"
+update_spark_defaults "spark.history.fs.logDirectory" "hdfs://${MASTER_HOSTNAME}:9000/spark-logs"
+update_spark_defaults "spark.yarn.stagingDir" "hdfs://${MASTER_HOSTNAME}:9000/user"
+update_spark_defaults "spark.yarn.jars" "hdfs://${MASTER_HOSTNAME}:9000/spark-libs/*"
+update_spark_defaults "spark.sql.warehouse.dir" "hdfs://${MASTER_HOSTNAME}:9000/user/${MY_USERNAME}/spark-warehouse" 
 update_spark_defaults "spark.driver.memory" "${SPARK_DRIVER_MEMORY}"
 update_spark_defaults "spark.executor.memory" "${SPARK_EXECUTOR_MEMORY}"
 update_spark_defaults "spark.yarn.am.memory" "${SPARK_YARN_AM_MEMORY}"

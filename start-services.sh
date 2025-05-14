@@ -77,7 +77,10 @@ if ! hdfs dfs -test -d "/user/${HDFS_NAMENODE_USER}"; then
         BOOT_STATUS=true
     else
         printf "${WARN} There are no live nodes in the cluster. Please, check config files.${RESET_COLORS}\n"
+        BOOT_STATUS=false
     fi
+else
+    BOOT_STATUS=true
 fi
 
 # Starting SPARK history server
