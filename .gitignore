@@ -1,3 +1,4 @@
 hadoop*.tar.gz
 spark*.tgz
 apache-hive*.tar.gz
+myfiles/*
