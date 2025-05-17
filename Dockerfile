@@ -26,12 +26,14 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 # Environment vars
 ARG HADOOP_VERSION
 ARG MY_USERNAME
+ARG APT_MIRROR
 
 ENV MY_USERNAME=${MY_USERNAME}
 ENV MY_WORKDIR=/home/${MY_USERNAME}
 ENV HADOOP_VERSION=${HADOOP_VERSION}
 ENV HADOOP_HOME=${MY_WORKDIR}/hadoop
 ENV DEBIAN_FRONTEND=noninteractive
+ENV APT_MIRROR="${APT_MIRROR:-http://archive.ubuntu.com/ubuntu}"
 
 # Set working dir
 WORKDIR ${MY_WORKDIR}
@@ -43,7 +45,7 @@ RUN \
     # Check if hadoop exist \
     if [ ! -f "${MY_WORKDIR}/hadoop-${HADOOP_VERSION}.tar.gz" ]; then \
         # Install aria2c to download hadoop \
-        sed --in-place --regexp-extended "s|(http://archive\.ubuntu\.com/ubuntu/)|(http://ftp.br.debian.org/ubuntu/)|" /etc/apt/sources.list && \
+        sed -i "s|http://archive.ubuntu.com/ubuntu|${APT_MIRROR}|g" /etc/apt/sources.list.d/ubuntu.sources && \
         apt-get update -qq && \
         apt-get install -y --no-install-recommends \
             aria2 \
@@ -76,10 +78,12 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 ARG SPARK_VERSION
 ARG MY_USERNAME
 ARG MY_WORKDIR=/home/${MY_USERNAME}
+ARG APT_MIRROR
 
 ENV SPARK_VERSION=${SPARK_VERSION}
 ENV SPARK_HOME=${MY_WORKDIR}/spark
 ENV DEBIAN_FRONTEND=noninteractive
+ENV APT_MIRROR="${APT_MIRROR:-http://archive.ubuntu.com/ubuntu}"
 
 # Set working dir
 WORKDIR ${MY_WORKDIR}
@@ -91,7 +95,7 @@ RUN \
     # Check if spark exist \
     if [ ! -f "${MY_WORKDIR}/spark-${SPARK_VERSION}-bin-hadoop3.tgz" ]; then \
         # Install aria2c to download hadoop \
-        sed --in-place --regexp-extended "s|(http://archive\.ubuntu\.com/ubuntu/)|(http://ftp.br.debian.org/ubuntu/)|" /etc/apt/sources.list && \
+        sed -i "s|http://archive.ubuntu.com/ubuntu|${APT_MIRROR}|g" /etc/apt/sources.list.d/ubuntu.sources && \
         apt-get update -qq && \
         apt-get install -y --no-install-recommends \
             aria2 \
@@ -127,6 +131,7 @@ ARG HADOOP_VERSION
 ARG SPARK_VERSION
 ARG MY_USERNAME
 ARG MY_PASSWORD
+ARG APT_MIRROR
 
 ENV MY_USERNAME=${MY_USERNAME}
 ENV MY_PASSWORD=${MY_PASSWORD}
@@ -136,10 +141,11 @@ ENV HADOOP_HOME=${MY_WORKDIR}/hadoop
 ENV SPARK_VERSION=${SPARK_VERSION}
 ENV SPARK_HOME=${MY_WORKDIR}/spark
 ENV DEBIAN_FRONTEND=noninteractive
+ENV APT_MIRROR="${APT_MIRROR:-http://archive.ubuntu.com/ubuntu}"
 
 RUN \
     # Update system and install required packages \
-    sed --in-place --regexp-extended "s|(http://archive\.ubuntu\.com/ubuntu/)|(http://ftp.br.debian.org/ubuntu/)|" /etc/apt/sources.list && \
+    sed -i "s|http://archive.ubuntu.com/ubuntu|${APT_MIRROR}|g" /etc/apt/sources.list.d/ubuntu.sources && \
     apt-get update -qq && \
     apt-get install -y --no-install-recommends \
         openjdk-11-jdk-headless \
@@ -158,7 +164,12 @@ RUN \
         net-tools \
         ca-certificates \
     && \
-    pip install -q --break-system-packages --no-warn-script-location -q graphframes grpcio-status \
+    pip install -q --break-system-packages --no-warn-script-location \
+        graphframes \
+        grpcio-status \
+        pyspark==${SPARK_VERSION} \
+        pyarrow \
+        jupyterlab \
     && \
     # Clean apt cache \
     apt-get autoremove -yqq --purge && \

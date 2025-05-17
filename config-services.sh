@@ -23,6 +23,15 @@
 MASTER_HOSTNAME="${STACK_NAME}-master"
 
 ###
+#### ~/hadoop/etc/hadoop/workers
+# Update hadoop workers file according to the amount of worker nodes
+truncate -s 0 ${HADOOP_CONF_DIR}/workers
+for i in $(seq 1 "${NUM_WORKER_NODES}"); do
+    echo "${STACK_NAME}-worker-$i" >> "${HADOOP_CONF_DIR}/workers"
+done
+###
+
+###
 #### Hadoop and Spark properties
 # Functions to update hadoop and spark properties dynamically according vars in .env file.
 function update_xml_values() { 

@@ -51,19 +51,10 @@ sudo service ssh start > /dev/null 2>&1
 ###
 
 ###
-#### ~/hadoop/etc/hadoop/workers
-# Update hadoop workers file according to the amount of worker nodes
-truncate -s 0 ${HADOOP_CONF_DIR}/workers
-for i in $(seq 1 "${NUM_WORKER_NODES}"); do
-    echo "${STACK_NAME}-worker-$i" >> "${HADOOP_CONF_DIR}/workers"
-done
-###
-
-###
 #### Start services
 # Start hadoop/spark services (only at master)
 if [ "$1" == "MASTER" ] ; then
-    sleep 5
+    sleep 3
     [ -f "${HOME}/start-services.sh" ] && bash -c "${HOME}/start-services.sh"
 else
     printf "I'm up, awaiting master connection...\n"

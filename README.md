@@ -2,6 +2,8 @@
 
 This script deploys a cluster with `Apache Hadoop 3.4.x` and `Apache Spark 3.5.x` in fully distributed mode using `Docker` containers as the underlying infrastructure. This setup is primarily intended for teaching and experimentation, but it may also be suitable for scalable data processing workloads in controlled environments.
 
+JupyterLab is now integrated, allowing users to interact with the Spark cluster through notebooks, making development, testing, and data exploration more convenient and user-friendly.
+
 ### 🗂️ Architecture
 
 The cluster consists of **one master node** and a configurable number of **worker nodes**, deployed over a custom `Docker` network.
@@ -24,6 +26,7 @@ The cluster uses **YARN** for resource scheduling and **HDFS** for distributed f
   - `19888` – MAPRED Job History UI
   - `18080` – Spark History Server UI
   - `15002` – Spark Connect
+  - `8888` – Jupyter Lab
 
 #### Worker Nodes (`spark-worker-<id>`)
 
@@ -54,6 +57,10 @@ docker exec -it spark-master bash
 ```
 
 ### :memo: Changelog
+
+#### 16/05/2025
+- :sparkles: Add `JupyterLab` version 4.4.2;
+- :clipboard: Build Summary: hadoop:3.4.1 | spark:3.5.5+2.12 | psql-jdbc:42.7.5 | graphframes:0.8.4 | jdk:11 | python:3.12 | ubuntu:24.04 | jupyter:4.4.2
 
 #### 14/05/2025
 - :sparkles: Bug fix: `spark_shuffle` not detected by yarn, since Spark 3.5.x;

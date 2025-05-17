@@ -25,6 +25,26 @@ INFO="[${GREEN_COLOR}INFO${RESET_COLORS}]${LIGHTBLUE_COLOR}"
 WARN="[${RED_COLOR}ERROR${RESET_COLORS}]${YELLOW_COLOR}"
 BOOT_STATUS=false
 
+###
+#### Jupyter lab
+
+# Dark theme
+mkdir -p ${HOME}/.jupyter/lab/user-settings/@jupyterlab/apputils-extension/
+cat > ${HOME}/.jupyter/lab/user-settings/@jupyterlab/apputils-extension/themes.jupyterlab-settings <<EOF
+{
+  "theme": "JupyterLab Dark"
+}
+EOF
+
+# Start server
+nohup jupyter lab \
+  --ServerApp.ip=0.0.0.0 \
+  --ServerApp.port=8888 \
+  --ServerApp.open_browser=False \
+  --IdentityProvider.token='' \
+  --PasswordIdentityProvider.password_required=False > jupyter.log 2>&1 &
+###
+
 # Format HDFS
 if [ ! -d "$(grep -A2 '<name>dfs.namenode.name.dir</name>' "${HADOOP_CONF_DIR}/hdfs-site.xml" | grep '<value>' | sed -E 's/.*<value>(.*)<\/value>.*/\1/')/current" ]; then
     printf "${INFO} Formatting filesystem${RESET_COLORS}...\n"
@@ -108,5 +128,6 @@ if [ "$BOOT_STATUS" = "true" ]; then
     http://localhost:${LIGHTBLUE_COLOR}9870 \t ${YELLOW_COLOR}HDFS${RESET_COLORS}
     http://localhost:${LIGHTBLUE_COLOR}8088 \t ${YELLOW_COLOR}YARN Scheduler${RESET_COLORS}
     http://localhost:${LIGHTBLUE_COLOR}19888 \t ${YELLOW_COLOR}MAPRED Job History${RESET_COLORS}
-    http://localhost:${LIGHTBLUE_COLOR}18080 \t ${YELLOW_COLOR}SPARK History Server${RESET_COLORS}\n\n"
+    http://localhost:${LIGHTBLUE_COLOR}18080 \t ${YELLOW_COLOR}SPARK History Server${RESET_COLORS}\n\n
+    http://localhost:${LIGHTBLUE_COLOR}8888 \t ${YELLOW_COLOR}Jupyter Lab${RESET_COLORS}\n\n"
 fi
