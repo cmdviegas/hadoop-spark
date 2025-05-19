@@ -48,7 +48,7 @@ docker compose build && docker compose up
 
 ⚠️ Note: It is advised to use `Docker Compose 1.18.0` or higher to ensure compatibility.
 
-⚠️ ⚠️ ⚠️ Important: It is recommended to run `docker compose run --rm gen-compose` command every time `$NUM_WORKER_NODES` variable is changed. This ensures that `docker-compose.yml` file is updated with the new cluster configuration.
+⚠️ Important: It is recommended to run `docker compose run --rm gen-compose` command every time `$NUM_WORKER_NODES` variable is changed. This ensures that `docker-compose.yml` file is updated with the new cluster configuration.
 
 ### :bulb: Tips
 
