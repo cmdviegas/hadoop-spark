@@ -36,5 +36,11 @@
         <description>The name of the default file system.</description>
     </property>
 
+    <property>
+        <name>hadoop.http.staticuser.user</name>
+        <value>myuser</value>
+        <description>User to be used for browsing files in the HDFS web UI.</description>
+    </property>
+
 </configuration>
 

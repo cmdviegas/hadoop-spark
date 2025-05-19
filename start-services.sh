@@ -128,6 +128,6 @@ if [ "$BOOT_STATUS" = "true" ]; then
     http://localhost:${LIGHTBLUE_COLOR}9870 \t ${YELLOW_COLOR}HDFS${RESET_COLORS}
     http://localhost:${LIGHTBLUE_COLOR}8088 \t ${YELLOW_COLOR}YARN Scheduler${RESET_COLORS}
     http://localhost:${LIGHTBLUE_COLOR}19888 \t ${YELLOW_COLOR}MAPRED Job History${RESET_COLORS}
-    http://localhost:${LIGHTBLUE_COLOR}18080 \t ${YELLOW_COLOR}SPARK History Server${RESET_COLORS}\n\n
+    http://localhost:${LIGHTBLUE_COLOR}18080 \t ${YELLOW_COLOR}SPARK History Server${RESET_COLORS}\n
     http://localhost:${LIGHTBLUE_COLOR}8888 \t ${YELLOW_COLOR}Jupyter Lab${RESET_COLORS}\n\n"
 fi

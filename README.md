@@ -64,33 +64,39 @@ docker exec -it spark-master bash
 #### 19/05/2025
 - :sparkles: For security reasons, the `$MY_PASSWORD` variable has been removed from the `.env` file. A dedicated secrets file (`.password`) has been introduced for setting the user password, if required;
 - :sparkles: Each worker node is now deployed as a separate service with a specific hostname (`spark-worker-<id>`). A script generates `docker-compose.yml` dynamically based on `$NUM_WORKER_NODES` variable (change it at `.env` file). A new method for building and running the cluster has been defined. See the updated commands above;
-- :clipboard: Build Summary: hadoop:3.4.1 | spark:3.5.5+2.12 | psql-jdbc:42.7.5 | graphframes:0.8.4 | jdk:11 | python:3.12 | ubuntu:24.04 | jupyterlab:4.4.2
+- :clipboard: Build Summary: 
+  * hadoop:3.4.1
+  * spark:3.5.5+2.12
+  * psql-jdbc:42.7.5
+  * graphframes:0.8.4
+  * jdk:11
+  * python:3.12
+  * ubuntu:24.04
+  * jupyterlab:4.4.2
+- :bug: Known issues:
+  * File uploads via HDFS WebUI are currently non-functional (docker issue).
+  * Node hostname links in Spark/HDFS WebUI are unresponsive (docker issue).
 
 #### 16/05/2025
 - :sparkles: Add `JupyterLab` version 4.4.2;
-- :clipboard: Build Summary: hadoop:3.4.1 | spark:3.5.5+2.12 | psql-jdbc:42.7.5 | graphframes:0.8.4 | jdk:11 | python:3.12 | ubuntu:24.04 | jupyterlab:4.4.2
 
 #### 14/05/2025
 - :sparkles: Bug fix: `spark_shuffle` not detected by yarn, since Spark 3.5.x;
 - :wrench: Minor fixes and optimizations.
-- :clipboard: Build Summary: hadoop:3.4.1 | spark:3.5.5+2.12 | psql-jdbc:42.7.5 | graphframes:0.8.4 | jdk:11 | python:3.12 | ubuntu:24.04
 
 #### 08/05/2025
 - :sparkles: Added `MapReduce Job History`;
 - :wrench: Minor fixes and optimizations.
-- :clipboard: Build Summary: hadoop:3.4.1 | spark:3.5.5+2.12 | psql-jdbc:42.7.5 | graphframes:0.8.4 | jdk:11 | python:3.12 | ubuntu:24.04
 
 #### 06/05/2025
 - :package: Updated `Ubuntu` version to 24.04 LTS;
 - :package: Updated `Python` version to 3.12;
 - :wrench: Minor fixes and optimizations.
-- :clipboard: Build Summary: hadoop:3.4.1 | spark:3.5.5+2.12 | psql-jdbc:42.7.5 | graphframes:0.8.4 | jdk:11 | python:3.12 | ubuntu:24.04
 
 #### 29/04/2025
 - :package: Updated `Apache Spark` version to 3.5.5;
 - :package: Updated `Python` version to 3.11;
 - :wrench: Minor fixes and optimizations.
-- :clipboard: Build Summary: hadoop:3.4.1 | spark:3.5.5+2.12 | psql-jdbc:42.7.5 | graphframes:0.8.4 | jdk:11 | python:3.11 | ubuntu:22.04
 
 #### 18/01/2025
 - :package: Updated `Apache Spark` version to 3.5.4;
