@@ -41,6 +41,14 @@ eval "$(tail -n +10 ${HOME}/.bashrc)" # Alternative to 'source .bashrc'
 ###
 
 ###
+#### Set user password according secrets file
+if [ -f "$MY_SECRETS_FILE" ]; then
+  MY_PASSWORD=$(cat "$MY_SECRETS_FILE")
+  echo "${MY_USERNAME}:${MY_PASSWORD}" | sudo chpasswd -e
+fi
+###
+
+###
 #### Run script to update hadoop and spark config files
 [ -f "${HOME}/config-services.sh" ] && bash -c "${HOME}/config-services.sh"
 ###
@@ -59,8 +67,5 @@ if [ "$1" == "MASTER" ] ; then
 else
     printf "I'm up, awaiting master connection...\n"
 fi
-
-unset MY_USERNAME
-unset MY_PASSWORD
 
 /bin/bash

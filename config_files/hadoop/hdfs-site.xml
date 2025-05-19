@@ -44,7 +44,7 @@
 
     <property>
         <name>dfs.replication</name>
-        <value>1</value>
+        <value>2</value>
         <description>Default block replication across data nodes. The actual number of replications can be specified when the file is created.</description>
     </property>
 

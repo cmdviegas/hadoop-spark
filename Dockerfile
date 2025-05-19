@@ -94,7 +94,7 @@ COPY spark-*.tgz ${MY_WORKDIR}
 RUN \
     # Check if spark exist \
     if [ ! -f "${MY_WORKDIR}/spark-${SPARK_VERSION}-bin-hadoop3.tgz" ]; then \
-        # Install aria2c to download hadoop \
+        # Install aria2c to download spark \
         sed -i "s|http://archive.ubuntu.com/ubuntu|${APT_MIRROR}|g" /etc/apt/sources.list.d/ubuntu.sources && \
         apt-get update -qq && \
         apt-get install -y --no-install-recommends \
@@ -130,11 +130,9 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 ARG HADOOP_VERSION
 ARG SPARK_VERSION
 ARG MY_USERNAME
-ARG MY_PASSWORD
 ARG APT_MIRROR
 
 ENV MY_USERNAME=${MY_USERNAME}
-ENV MY_PASSWORD=${MY_PASSWORD}
 ENV MY_WORKDIR=/home/${MY_USERNAME}
 ENV HADOOP_VERSION=${HADOOP_VERSION}
 ENV HADOOP_HOME=${MY_WORKDIR}/hadoop
@@ -168,8 +166,8 @@ RUN \
         graphframes \
         grpcio-status \
         pyspark==${SPARK_VERSION} \
-        pyarrow \
-        jupyterlab \
+        pyarrow==20.0.0 \
+        jupyterlab==4.4.2 \
     && \
     # Clean apt cache \
     apt-get autoremove -yqq --purge && \
@@ -180,11 +178,11 @@ RUN \
     ln -sf /usr/bin/python3.12 /usr/bin/python && \
     ln -sf /usr/bin/python /usr/bin/python3 \
     && \
+    # Removes default ubuntu user \
     userdel --remove ubuntu || true \
     && \
-    # Creates user and adds it to sudoers \
+    # Creates myuser according $MY_USERNAME and adds it to sudoers \
     adduser --disabled-password --gecos "" ${MY_USERNAME} && \
-    echo "${MY_USERNAME}:${MY_PASSWORD}" | chpasswd && \
     usermod -aG sudo ${MY_USERNAME} && \
     echo "${MY_USERNAME} ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/${MY_USERNAME}
 
