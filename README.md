@@ -40,9 +40,10 @@ The cluster uses **YARN** for resource scheduling and **HDFS** for distributed f
 
 ⚠️ Optional (Recommended): Before starting, it is advised to pre-download Apache Hadoop and Apache Spark by running the `download.sh` script. This step will speed up the build process.
 
-#### To build and run this option:
+#### To build and run:
 ```
-docker compose build && docker compose up 
+docker compose --rm init
+docker compose build && docker compose -f workers.yml -f docker-compose.yml up
 ```
 
 ⚠️ Note: It is advised to use `Docker Compose 1.18.0` or higher to ensure compatibility.
@@ -57,6 +58,10 @@ docker exec -it spark-master bash
 ```
 
 ### :memo: Changelog
+
+#### 18/05/2025
+- :sparkles: Each worker node is now deployed as a separate service with a specific hostname (`spark-worker-<id>`). A script generates `workers.yml` dynamically based on `$NUM_WORKER_NODES` var (change it at `.env` file). A new method for building and running the cluster has been established. See the updated commands above;
+- :clipboard: Build Summary: hadoop:3.4.1 | spark:3.5.5+2.12 | psql-jdbc:42.7.5 | graphframes:0.8.4 | jdk:11 | python:3.12 | ubuntu:24.04 | jupyter:4.4.2
 
 #### 16/05/2025
 - :sparkles: Add `JupyterLab` version 4.4.2;

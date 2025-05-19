@@ -12,50 +12,48 @@
 
 name: ${STACK_NAME}
 
-x-common:
-  &common
-  image: ${IMAGE_NAME}
-  tty: true
-  restart: on-failure
-  entrypoint: ["./bootstrap.sh"]
-  networks:
-    - spark_network
-
 services:
-  worker:
-    <<: *common
-    deploy:
-      mode: replicated
-      replicas: ${NUM_WORKER_NODES}
+  init:
+    image: ubuntu:24.04
+    profiles: [init]
+    working_dir: /workspace
     volumes:
-      - ./myfiles:/home/${MY_USERNAME}/myfiles
-      - .env:/home/${MY_USERNAME}/.env
-    command: ["WORKER"]
-    
+      - ./:/workspace
+    environment:
+      - NUM_WORKER_NODES=${NUM_WORKER_NODES}
+    command: ["bash", "gen-workers.sh"]
+    networks:
+      - spark_network
+
   master:
-    <<: *common
-    container_name: spark-master
-    hostname: spark-master
+    image: ${IMAGE_NAME}
+    container_name: ${STACK_NAME}-master
+    hostname: ${STACK_NAME}-master
+    tty: true
+    restart: on-failure
     build:
       context: .
       dockerfile: Dockerfile
       args:
-        MY_USERNAME: ${MY_USERNAME} # USERNAME (change at .env file)
-        MY_PASSWORD: ${MY_PASSWORD} # PASSWORD (change at .env file)
+        MY_USERNAME: ${MY_USERNAME}
+        MY_PASSWORD: ${MY_PASSWORD}
         SPARK_VERSION: ${SPARK_VERSION}
         HADOOP_VERSION: ${HADOOP_VERSION}
         APT_MIRROR: ${APT_MIRROR}
+    networks:
+      - spark_network
     ports:
-      - "9870:9870/tcp" # HDFS
-      - "8088:8088/tcp" # YARN
-      - "19888:19888/tcp" # JOB HISTORY
-      - "18080:18080/tcp" # SPARK UI
-      - "15002:15002/tcp" # SPARK CONNECT
-      - "8888:8888/tcp" # JUPYTER LAB
+      - "9870:9870/tcp"
+      - "8088:8088/tcp"
+      - "19888:19888/tcp"
+      - "18080:18080/tcp"
+      - "15002:15002/tcp"
+      - "8888:8888/tcp"
     volumes:
       - master:/home/${MY_USERNAME}/
       - ./myfiles:/home/${MY_USERNAME}/myfiles
       - .env:/home/${MY_USERNAME}/.env
+    entrypoint: ["bash", "bootstrap.sh"]
     command: ["MASTER"]
 
 networks:
