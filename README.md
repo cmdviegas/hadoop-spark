@@ -74,8 +74,8 @@ docker exec -it spark-master bash
   * ubuntu:24.04
   * jupyterlab:4.4.2
 - :bug: Known issues:
-  * File uploads via HDFS WebUI are currently non-functional (docker issue due to port forwarding).
-  * Nodes hostname links in Spark/HDFS WebUI are unresponsive (docker issue due to port forwarding).
+  * File uploads via HDFS WebUI are currently non-functional (docker issue due to port forwarding);
+  * Nodes hostname links in Spark/Yarn WebUI are unresponsive (docker issue due to port forwarding).
 
 #### 16/05/2025
 - :sparkles: Add `JupyterLab` version 4.4.2;
