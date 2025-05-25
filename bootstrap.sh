@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # ██████╗  ██████╗ █████╗
 # ██╔══██╗██╔════╝██╔══██╗
 # ██║  ██║██║     ███████║
@@ -12,60 +12,42 @@
 # https://github.com/cmdviegas
 #
 
-### Description:
-# This is a bash script to initialize services
+# Description: This script initializes hadoop, spark and other required services
 
-### How it works:
-# On first startup:
-# - Load .bashrc
-# - Start SSH server
-# - Format namenode HDFS (spark-master only)
-# - Creates HDFS folders and copy files to them (spark-master only)
-# - Edit HADOOP/SPARK properties in .xml/.conf files according to values defined in .env
-# - Start HDFS, YARN and SPARK HISTORY SERVER
+# How it works:
+# 1- Loads .bashrc
+# 2- Sets user password according scecrets file
+# 3- Sets hadoop workers list according to NUM_WORKER_NODES
+# 4- Starts SSH server
+# 5- Calls 'services.sh' script to run hadoop and spark services (only at spark-master)
 
-# In the next startups:
-# - Load .bashrc
-# - Start SSH server
-# - Edit HADDOP/SPARK properties in .xml/.conf files according to values defined in .env
-# - Start HDFS, YARN and SPARK HISTORY SERVER
+# Log helpers
+log_info()  { printf "%b %s\n" "${INFO}" "$1"; }
 
-###
-#### Load env variables
-[ -f "${HOME}/.env" ] && . "${HOME}/.env"
-###
+# Load .bashrc
+eval "$(tail -n +10 "${HOME}/.bashrc")" # Alternative to 'source .bashrc' (hack for debian-based systems)
 
-###
-#### Load .bashrc
-eval "$(tail -n +10 ${HOME}/.bashrc)" # Alternative to 'source .bashrc'
-###
-
-###
-#### Set user password according secrets file
+# Sets user password according secrets file
 if [ -f "$MY_SECRETS_FILE" ]; then
   MY_PASSWORD=$(cat "$MY_SECRETS_FILE")
-  echo "${MY_USERNAME}:${MY_PASSWORD}" | sudo chpasswd -e
+  echo "myuser:${MY_PASSWORD}" | sudo chpasswd -e
 fi
-###
 
-###
-#### Run script to update hadoop and spark config files
-[ -f "${HOME}/config-services.sh" ] && bash -c "${HOME}/config-services.sh"
-###
+# Updates hadoop workers file according to the amount of worker nodes
+truncate -s 0 ${HADOOP_CONF_DIR}/workers
+for i in $(seq 1 "${NUM_WORKER_NODES}"); do
+  echo "${STACK_NAME}-worker-$i" >> "${HADOOP_CONF_DIR}/workers"
+done
 
-###
-#### Start ssh server
+# Starts ssh server
 sudo service ssh start > /dev/null 2>&1
-###
 
-###
-#### Start services
-# Start hadoop/spark services (only at master)
+# Starts hadoop/spark services (only at master)
 if [ "$1" == "MASTER" ] ; then
-    sleep 3
-    [ -f "${HOME}/start-services.sh" ] && bash -c "${HOME}/start-services.sh"
+  sleep 8
+  [ -f "${HOME}/services.sh" ] && bash -c "${HOME}/services.sh start"
 else
-    printf "I'm up, awaiting master connection...\n"
+  log_info "Node ${YELLOW_COLOR}${HOSTNAME}${RESET_COLORS} started, awaiting master connection..."
 fi
 
-/bin/bash
+exec /bin/bash

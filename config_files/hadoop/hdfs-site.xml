@@ -32,13 +32,13 @@
 
     <property>
         <name>dfs.namenode.name.dir</name>
-        <value>/hdfs-data/nameNode</value>
+        <value>/home/${user.name}/hdfs-data/nameNode</value>
         <description>Determines where on the local filesystem the DFS name node should store the name table(fsimage).</description>
     </property>
 
     <property>
         <name>dfs.datanode.data.dir</name>
-        <value>/hdfs-data/dataNode</value>
+        <value>/home/${user.name}/hdfs-data/dataNode</value>
         <description>Determines where on the local filesystem an DFS data node should store its blocks.</description>
     </property>
 

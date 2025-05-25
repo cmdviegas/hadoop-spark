@@ -38,9 +38,10 @@ The cluster uses **YARN** for resource scheduling and **HDFS** for distributed f
 
 ⚠️ Note: All cluster parameters — such as the default user credentials, resource allocation (e.g., memory and CPU limits), number of worker nodes, and other deployment-specific settings — are configurable via the `.env` file. This file is the primary configuration source for the cluster setup.
 
-⚠️ Optional (Recommended): Before starting, it is advised to pre-download Apache Hadoop and Apache Spark by running the `download.sh` script. This step will speed up the build process.
-
 #### To build and run:
+
+⚠️ Optional (Recommended): Before starting, it is advised to pre-download Apache Hadoop and Apache Spark by running the one of the following scripts according to your operating system: `download.sh` (GNU/Linux), `download.bat` (Windows cmd/powershell) or `download.mac.sh` (MacOS terminal). This step speeds up the build process; however, it is not mandatory, as all required resources are downloaded during the build.
+
 ```
 docker compose run --rm gen-compose
 docker compose build && docker compose up
@@ -61,10 +62,11 @@ docker exec -it spark-master bash
 
 ### :memo: Changelog
 
-#### 19/05/2025
-- :sparkles: For security reasons, the `$MY_PASSWORD` variable has been removed from the `.env` file. A dedicated secrets file (`.password`) has been introduced for setting the user password, if required;
-- :sparkles: Each worker node is now deployed as a separate service with a specific hostname (`spark-worker-<id>`). A script generates `docker-compose.yml` dynamically based on `$NUM_WORKER_NODES` variable (change it at `.env` file). A new method for building and running the cluster has been defined. See the updated commands above;
-- :clipboard: Build Summary: 
+#### 24/05/2025
+- :sparkles: All confguration files for Hadoop and Spark located in the `config_files` folder are now bind-mounted into the containers at their respective destination directories. This allows you to edit these files externally, and any changes will automatically apply across all containers (just restart them after any change). Due to this change, resource variables are no longer in the `.env` file. You can use `services.sh` `[start|stop]` to restart cluster services;
+- :sparkles: Added new scripts (`download.bat` for Windows CMD and PowerShell, and `download.mac.sh` for macOS Terminal) to facilitate downloading Hadoop and Spark files;
+- :wrench: Refactored some shell scripts for better maintainability and performance.
+- :clipboard: Build Summary:
   * hadoop:3.4.1
   * spark:3.5.5+2.12
   * psql-jdbc:42.7.5
@@ -74,8 +76,13 @@ docker exec -it spark-master bash
   * ubuntu:24.04
   * jupyterlab:4.4.2
 - :bug: Known issues:
-  * File uploads via HDFS WebUI are currently non-functional (docker issue due to port forwarding);
-  * Nodes hostname links in Spark/Yarn WebUI are unresponsive (docker issue due to port forwarding).
+  * File uploads via the HDFS WebUI are currently not functional (Docker limitation due to port forwarding);
+  * Hostname links in Spark/YARN WebUI are unresponsive (Docker limitation due to port forwarding);
+  * HDFS capacity information is inaccurate (Docker limitation).
+
+#### 19/05/2025
+- :sparkles: For security reasons, the `$MY_PASSWORD` variable has been removed from the `.env` file. A dedicated secrets file (`.password`) has been introduced for setting the user password, if required;
+- :sparkles: Each worker node is now deployed as a separate service with a specific hostname (`spark-worker-<id>`). A script generates `docker-compose.yml` dynamically based on `$NUM_WORKER_NODES` variable (change it at `.env` file). A new method for building and running the cluster has been defined. See the updated commands above;
 
 #### 16/05/2025
 - :sparkles: Add `JupyterLab` version 4.4.2;

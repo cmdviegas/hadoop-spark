@@ -11,7 +11,6 @@
 # (C) 2022-2025 CARLOS M D VIEGAS
 # https://github.com/cmdviegas
 
-
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
 # this work for additional information regarding copyright ownership.

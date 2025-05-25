@@ -31,27 +31,45 @@
 <configuration>
 
     <property>
+        <name>yarn.app.mapreduce.am.resource.memory-mb</name>
+        <value>1536</value>
+        <description>Sets the memory requested for the application master container to the value in MB. Defaults to 1536.</description>
+    </property>
+
+    <property>
+        <name>yarn.app.mapreduce.am.resource.vcores</name>
+        <value>1</value>
+        <description>Sets the CPU requested for the application master container to the value. Defaults to 1.</description>
+    </property>
+
+    <property>
+        <name>mapreduce.map.resource.memory-mb</name>
+        <value>1024</value>
+        <description>Sets the memory requested for all map task containers to the value in MB. Defaults to 1024.</description>
+    </property>
+
+    <property>
+        <name>mapreduce.reduce.resource.memory-mb</name>
+        <value>1024</value>
+        <description>Sets the memory requested for all reduce task containers to the value in MB. Defaults to 1024.</description>
+    </property>
+
+    <property>
+        <name>mapreduce.map.resource.vcores</name>
+        <value>1</value>
+        <description>Sets the CPU requested for all map task containers to the value. Defaults to 1.</description>
+    </property>
+
+    <property>
+        <name>mapreduce.reduce.resource.vcores</name>
+        <value>1</value>
+        <description>Sets the CPU requested for all reduce task containers to the value. Defaults to 1.</description>
+    </property>
+    
+    <property>
         <name>mapreduce.framework.name</name>
         <value>yarn</value>
         <description>The runtime framework for executing MapReduce jobs. Can be one of local, classic or yarn.</description>
-    </property>
-
-    <property>
-        <name>yarn.app.mapreduce.am.resource.mb</name>
-        <value>1024</value>
-        <description>The amount of memory the MR AppMaster needs.</description>
-    </property>
-
-    <property>
-        <name>mapreduce.map.memory.mb</name>
-        <value>512</value>
-        <description>The amount of memory to request from the scheduler for each map task.</description>
-    </property>
-
-    <property>
-        <name>mapreduce.reduce.memory.mb</name>
-        <value>512</value>
-        <description>The amount of memory to request from the scheduler for each reduce task.</description>
     </property>
 
     <property>
@@ -91,14 +109,20 @@
     </property>
 
     <property>
+        <name>yarn.app.mapreduce.am.staging-dir</name>
+        <value>/user/${user.name}/.hadoopStaging</value>
+        <description>Staging directory for Application Master.</description>
+    </property>
+
+    <property>
         <name>mapreduce.jobhistory.done-dir</name>
-        <value>/tmp/hadoop/mapred/done</value>
+        <value>/user/${user.name}/mapredHistory/done</value>
         <description>The HDFS or local directory where completed job history logs are stored after being processed.</description>
     </property>
 
     <property>
         <name>mapreduce.jobhistory.intermediate-done-dir</name>
-        <value>/tmp/hadoop/mapred/intermediate-done</value>
+        <value>/user/${user.name}/mapredHistory/intermediate-done</value>
         <description>The directory where in-progress job history logs are temporarily stored before being moved to the done-dir.</description>
     </property>
 
