@@ -62,10 +62,9 @@ docker exec -it spark-master bash
 
 ### :memo: Changelog
 
-#### 24/05/2025
-- :sparkles: All confguration files for Hadoop and Spark located in the `config_files` folder are now bind-mounted into the containers at their respective destination directories. This allows you to edit these files externally, and any changes will automatically apply across all containers (just restart them after any change). Due to this change, resource variables are no longer in the `.env` file. You can use `services.sh` `[start|stop]` to restart cluster services;
-- :sparkles: Added new scripts (`download.bat` for Windows CMD and PowerShell, and `download.mac.sh` for macOS Terminal) to facilitate downloading Hadoop and Spark files;
-- :wrench: Refactored some shell scripts for better maintainability and performance.
+#### 28/05/2025
+- :wrench: Refactored `services.sh` for better performance on managing services;
+- :wrench: Minor fixes and optimizations.
 - :clipboard: Build Summary:
   * hadoop:3.4.1
   * spark:3.5.5+2.12
@@ -79,6 +78,11 @@ docker exec -it spark-master bash
   * File uploads via the HDFS WebUI are currently not functional (Docker limitation due to port forwarding);
   * Hostname links in Spark/YARN WebUI are unresponsive (Docker limitation due to port forwarding);
   * HDFS capacity information is inaccurate (Docker limitation).
+
+#### 24/05/2025
+- :sparkles: All confguration files for Hadoop and Spark located in the `config_files` folder are now bind-mounted into the containers at their respective destination directories. This allows you to edit these files externally, and any changes will automatically apply across all containers (just restart them after any change). Due to this change, resource variables are no longer in the `.env` file. You can use `services.sh` `[start|stop]` to restart cluster services;
+- :sparkles: Added new scripts (`download.bat` for Windows CMD and PowerShell, and `download.mac.sh` for macOS Terminal) to facilitate downloading Hadoop and Spark files;
+- :wrench: Refactored some shell scripts for better maintainability and performance.
 
 #### 19/05/2025
 - :sparkles: For security reasons, the `$MY_PASSWORD` variable has been removed from the `.env` file. A dedicated secrets file (`.password`) has been introduced for setting the user password, if required;

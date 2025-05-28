@@ -193,14 +193,8 @@ COPY --from=build-spark --chown=${MY_USERNAME}:${MY_USERNAME} ${MY_WORKDIR}/spar
 # Copy files from local folder to container, except the ones in .dockerignore
 COPY --chown=${MY_USERNAME}:${MY_USERNAME} config_files/system/.bash_common ${MY_WORKDIR}/.bash_common
 COPY --chown=${MY_USERNAME}:${MY_USERNAME} config_files/system/ssh_config ${MY_WORKDIR}/.ssh/config
-COPY --chown=${MY_USERNAME}:${MY_USERNAME} config_files/jupyterlab/themes.jupyterlab-settings \
-${MY_WORKDIR}/.jupyter/lab/user-settings/@jupyterlab/apputils-extension/themes.jupyterlab-settings
-COPY --chown=${MY_USERNAME}:${MY_USERNAME} config_files/jupyterlab/plugin.jupyterlab-settings \
-${MY_WORKDIR}/.jupyter/lab/user-settings/@jupyterlab/fileeditor-extension/plugin.jupyterlab-settings
-COPY --chown=${MY_USERNAME}:${MY_USERNAME} config_files/jupyterlab/tracker.jupyterlab-settings \
-${MY_WORKDIR}/.jupyter/lab/user-settings/@jupyterlab/notebook-extension/tracker.jupyterlab-settings
-COPY --chown=${MY_USERNAME}:${MY_USERNAME} config_files/jupyterlab/commands.jupyterlab-settings \
-${MY_WORKDIR}/.jupyter/lab/user-settings/@jupyterlab/codemirror-extension/commands.jupyterlab-settings
+COPY --chown=${MY_USERNAME}:${MY_USERNAME} config_files/jupyterlab/overrides.json \
+/usr/local/share/jupyter/lab/settings/overrides.json
 COPY --chown=${MY_USERNAME}:${MY_USERNAME} bootstrap.sh services.sh ${MY_WORKDIR}/
 
 RUN \

@@ -1,8 +1,0 @@
-{
-    "theme": "JupyterLab Dark",
-    "overrides": {
-        "code-font-size": "16px",
-        "content-font-size1": "16px",
-        "ui-font-size1": "15px"
-    }
-}
