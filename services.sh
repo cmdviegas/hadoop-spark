@@ -318,6 +318,7 @@ start_all_services() {
     if [[ "${SPARK_CONNECT_SERVER}" == "enable" ]]; then
         start_spark_connect
     fi
+    report
     sleep 2
     status_all_services
 
