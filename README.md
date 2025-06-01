@@ -77,7 +77,7 @@ Additionally, if you have enabled Spark Connect (in the .env file), you can conn
 
 #### 01/06/2025
 - :package: Updated `Apache Spark` version to 3.5.6;
-- :sparkles: A new method to initialize the cluster has been introduced. Simply run `docker compose run --rm init` to update the docker-compose.yml file according to the NUM_WORKER_NODES variable and download all Hadoop and Spark resources. The old download scripts have been removed;
+- :sparkles: A new method to initialize the cluster has been introduced. Simply run `docker compose run --rm init` to update the `docker-compose.yml` file according to the `NUM_WORKER_NODES` variable and download all Hadoop and Spark resources. The old download scripts have been removed;
 - :wrench: The `Dockerfile` was optimized. Hadoop and Spark are no longer downloaded during the build process, as it was very slow. Instead, this is now handled by the new init service described above;
 - :wrench: Minor fixes and optimizations.
 - :clipboard: Build Summary:
