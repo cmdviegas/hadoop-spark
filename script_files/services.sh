@@ -152,7 +152,7 @@ start_yarn() {
     # Check if there is any existing ResourceManager process
     if [ -n "$(pgrep -f 'org.apache.hadoop.yarn.server.resourcemanager.ResourceManager')" ]; then
         stop_yarn # Stop any existing ResourceManager process
-        sleep 1
+        sleep 3
     fi
     start-yarn.sh # Start YARN ResourceManager and NodeManagers    
 }
@@ -255,7 +255,7 @@ check_service_status() {
     pid=$(pgrep -f "${process_name}" | head -n 1)
     printf "       ${YELLOW_COLOR}%-18s${RESET_COLORS}: " "${service_name}"
     if [ -n "${pid}" ]; then
-        printf "${GREEN_COLOR}RUNNING${RESET_COLORS} (PID: %5d)   Available on: ${app_url}" "${pid}"
+        printf "${GREEN_COLOR}RUNNING${RESET_COLORS} (PID: %5d) → ${app_url}" "${pid}"
         printf "\n"
     else
         printf "${RED_COLOR}STOPPED${RESET_COLORS}\n"
@@ -310,6 +310,8 @@ show_usage() {
 
 # Legacy functions for 'all' service
 start_all_services() {
+    log_info "Initializing cluster services..."
+    sleep 3
     start_hdfs && \
     start_yarn && \
     start_mapred_history && \
@@ -325,13 +327,27 @@ start_all_services() {
     if [[ "$BOOT_STATUS" == "true" ]]; then
         printf "\n"
         log_info "$(tput blink)ALL SET!${RESET_COLORS}"
-        printf "\n       TIP: To access ${YELLOW_COLOR}spark-master${RESET_COLORS} terminal, type: ${YELLOW_COLOR}docker exec -it spark-master bash${RESET_COLORS}\n\n"
+        printf "\n       TIP: To access ${YELLOW_COLOR}spark-master${RESET_COLORS} terminal, type:\n       ${YELLOW_COLOR}docker exec -it spark-master bash${RESET_COLORS}\n\n"
     else
         log_error "Some errors occurred. Please review them and try again."
     fi
 }
 
 stop_all_services() {
+    # Some animation for stopping services
+    animate_dots() {
+        local message="$1"
+        echo -n "${message}"
+        while true; do
+            for dots in "" "." ".." "..."; do
+                printf "\r${message}${dots}   "
+                sleep 0.5
+            done
+        done
+    }
+    animate_dots "${INFO} Stopping cluster services" &
+    local animation_pid=$!
+
     stop_spark_connect
     stop_jupyterlab
     stop_spark_history
@@ -339,9 +355,27 @@ stop_all_services() {
     stop_yarn
     stop_hdfs
 
-    sleep 1
+    kill ${animation_pid}
 
+    sleep 1
+    printf "\n"
     status_all_services
+}
+
+show_motd() {
+    printf "${GREEN_COLOR}
+   ██████  ██▓███   ▄▄▄       ██▀███   ██ ▄█▀
+ ▒██    ▒ ▓██░  ██▒▒████▄    ▓██ ▒ ██▒ ██▄█▒ 
+ ░ ▓██▄   ▓██░ ██▓▒▒██  ▀█▄  ▓██ ░▄█ ▒▓███▄░ 
+   ▒   ██▒▒██▄█▓▒ ▒░██▄▄▄▄██ ▒██▀▀█▄  ▓██ █▄ 
+ ▒██████▒▒▒██▒ ░  ░ ▓█   ▓██▒░██▓ ▒██▒▒██▒ █▄
+ ▒ ▒▓▒ ▒ ░▒▓▒░ ░  ░ ▒▒   ▓▒█░░ ▒▓ ░▒▓░▒ ▒▒ ▓▒
+ ░ ░▒  ░ ░░▒ ░       ▒   ▒▒ ░  ░▒ ░ ▒░░ ░▒ ▒░
+ ░  ░  ░  ░░         ░   ▒     ░░   ░ ░ ░░ ░ 
+       ░                 ░  ░   ░     ░ ${LIGHTBLUE_COLOR}${SPARK_VERSION}${RESET_COLORS}
+
+                         © CARLOS VIEGAS 2025
+                 ${YELLOW_COLOR}https://github.com/cmdviegas${RESET_COLORS}\n\n"
 }
 
 # Main script logic
@@ -354,6 +388,7 @@ fi
 if [ $# -eq 1 ]; then
     case "$1" in
         start)
+            show_motd
             start_all_services
             ;;
         stop)

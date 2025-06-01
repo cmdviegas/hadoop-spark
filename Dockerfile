@@ -23,14 +23,11 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 # Environment vars
 ARG HADOOP_VERSION
-ARG APT_MIRROR
 
 ENV MY_USERNAME=myuser
 ENV MY_WORKDIR=/home/${MY_USERNAME}
 ENV HADOOP_VERSION=${HADOOP_VERSION}
 ENV HADOOP_HOME=${MY_WORKDIR}/hadoop
-ENV DEBIAN_FRONTEND=noninteractive
-ENV APT_MIRROR="${APT_MIRROR:-http://archive.ubuntu.com/ubuntu}"
 
 # Set working dir
 WORKDIR ${MY_WORKDIR}
@@ -40,31 +37,15 @@ COPY hadoop-*.tar.gz ${MY_WORKDIR}
 
 RUN \
     # Check if hadoop exist \
-    if [ ! -f "${MY_WORKDIR}/hadoop-${HADOOP_VERSION}.tar.gz" ]; then \
-        # Install aria2c to download hadoop \
-        sed -i "s|http://archive.ubuntu.com/ubuntu|${APT_MIRROR}|g" /etc/apt/sources.list.d/ubuntu.sources && \
-        apt-get update -qq && \
-        apt-get install -y --no-install-recommends \
-            aria2 \
-            ca-certificates \
-        && \
-        # Clean apt cache \
-        apt-get autoremove -yqq --purge && \
-        apt-get clean && \
-        rm -rf /var/lib/apt/lists/*; \
-    fi \
-    && \    
-    # Check if hadoop exists inside workdir, if not, download it \
-    if [ ! -f "${MY_WORKDIR}/hadoop-${HADOOP_VERSION}.tar.gz" ]; then \
-        # Download hadoop \
-        aria2c --disable-ipv6 -x 16 --allow-overwrite=false \
-        https://dlcdn.apache.org/hadoop/core/hadoop-${HADOOP_VERSION}/hadoop-${HADOOP_VERSION}.tar.gz; \
-    fi \
-    && \
-    # Extract hadoop to the container filesystem \
-    tar -zxf hadoop-${HADOOP_VERSION}.tar.gz -C ${MY_WORKDIR} && \
-    rm -rf hadoop-${HADOOP_VERSION}.tar.gz && \
-    ln -sf ${MY_WORKDIR}/hadoop-3* ${HADOOP_HOME}
+    if [ -f "${MY_WORKDIR}/hadoop-${HADOOP_VERSION}.tar.gz" ]; then \
+        # Extract hadoop to the container filesystem \
+        tar -zxf hadoop-${HADOOP_VERSION}.tar.gz -C ${MY_WORKDIR} && \
+        rm -rf hadoop-${HADOOP_VERSION}.tar.gz && \
+        ln -sf ${MY_WORKDIR}/hadoop-3* ${HADOOP_HOME}; \
+    else \
+        echo "🚨 BUILD FAILED 🚨 hadoop-${HADOOP_VERSION}.tar.gz not found. ⚠️ You must run docker compose run --rm init ⚠️" && \
+        exit 1; \
+    fi
 
 # BUILD STAGE for Spark
 FROM ubuntu:24.04 AS build-spark
@@ -74,14 +55,11 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 # Environment vars
 ARG SPARK_VERSION
-ARG APT_MIRROR
 
 ENV MY_USERNAME=myuser
 ENV MY_WORKDIR=/home/${MY_USERNAME}
 ENV SPARK_VERSION=${SPARK_VERSION}
 ENV SPARK_HOME=${MY_WORKDIR}/spark
-ENV DEBIAN_FRONTEND=noninteractive
-ENV APT_MIRROR="${APT_MIRROR:-http://archive.ubuntu.com/ubuntu}"
 
 # Set working dir
 WORKDIR ${MY_WORKDIR}
@@ -90,32 +68,16 @@ WORKDIR ${MY_WORKDIR}
 COPY spark-*.tgz ${MY_WORKDIR}
 
 RUN \
-    # Check if spark exist \
-    if [ ! -f "${MY_WORKDIR}/spark-${SPARK_VERSION}-bin-hadoop3.tgz" ]; then \
-        # Install aria2c to download spark \
-        sed -i "s|http://archive.ubuntu.com/ubuntu|${APT_MIRROR}|g" /etc/apt/sources.list.d/ubuntu.sources && \
-        apt-get update -qq && \
-        apt-get install -y --no-install-recommends \
-            aria2 \
-            ca-certificates \
-        && \
-        # Clean apt cache \
-        apt-get autoremove -yqq --purge && \
-        apt-get clean && \
-        rm -rf /var/lib/apt/lists/*; \
-    fi \
-    && \
-    # Check if spark exists inside workdir, if not, download it \
-    if [ ! -f "${MY_WORKDIR}/spark-${SPARK_VERSION}-bin-hadoop3.tgz" ]; then \
-        # Download spark \
-        aria2c --disable-ipv6 -x 16 --allow-overwrite=false \
-        https://dlcdn.apache.org/spark/spark-${SPARK_VERSION}/spark-${SPARK_VERSION}-bin-hadoop3.tgz; \
-    fi \
-    && \
-    # Extract spark to the container filesystem \
-    tar -zxf spark-${SPARK_VERSION}-bin-hadoop3.tgz -C ${MY_WORKDIR} && \
-    rm -rf spark-${SPARK_VERSION}-bin-hadoop3.tgz && \
-    ln -sf ${MY_WORKDIR}/spark-3*-bin-hadoop3 ${SPARK_HOME}
+    # Check if spark exists \
+    if [ -f "${MY_WORKDIR}/spark-${SPARK_VERSION}-bin-hadoop3.tgz" ]; then \
+        # Extract spark to the container filesystem \
+        tar -zxf spark-${SPARK_VERSION}-bin-hadoop3.tgz -C ${MY_WORKDIR} && \
+        rm -rf spark-${SPARK_VERSION}-bin-hadoop3.tgz && \
+        ln -sf ${MY_WORKDIR}/spark-3*-bin-hadoop3 ${SPARK_HOME}; \
+    else \
+        echo "🚨 BUILD FAILED 🚨 spark-${SPARK_VERSION}-bin-hadoop3.tgz not found. ⚠️ You must run docker compose run --rm init ⚠️" && \
+        exit 1; \
+    fi
 
 # FINAL IMAGE STAGE
 FROM ubuntu:24.04 AS final
@@ -143,24 +105,21 @@ RUN \
     apt-get update -qq && \
     apt-get install -y --no-install-recommends \
         openjdk-11-jdk-headless \
-        python3.12-minimal \
+        python3.12 \
         python3-pip \
-        python3-pandas \
-        python3-grpcio \
-        python3-protobuf \
         sudo \
         nano \
         dos2unix \
         ssh \
         wget \
-        iproute2 \
         iputils-ping \
-        net-tools \
-        ca-certificates \
     && \
     pip install -q --break-system-packages --no-warn-script-location \
-        graphframes \
+        pandas==2.2.3 \
+        grpcio==1.68.1 \
         grpcio-status \
+        protobuf==5.28.3 \
+        graphframes \
         pyspark==${SPARK_VERSION} \
         pyarrow==20.0.0 \
         jupyterlab==4.4.2 \
@@ -195,7 +154,7 @@ COPY --chown=${MY_USERNAME}:${MY_USERNAME} config_files/system/.bash_common ${MY
 COPY --chown=${MY_USERNAME}:${MY_USERNAME} config_files/system/ssh_config ${MY_WORKDIR}/.ssh/config
 COPY --chown=${MY_USERNAME}:${MY_USERNAME} config_files/jupyterlab/overrides.json \
 /usr/local/share/jupyter/lab/settings/overrides.json
-COPY --chown=${MY_USERNAME}:${MY_USERNAME} bootstrap.sh services.sh ${MY_WORKDIR}/
+COPY --chown=${MY_USERNAME}:${MY_USERNAME} script_files/bootstrap.sh script_files/services.sh ${MY_WORKDIR}/
 
 RUN \
     # Convert charset from UTF-16 to UTF-8 to ensure compatibility \
@@ -209,7 +168,7 @@ RUN \
     sed -i "s|^export JAVA_HOME=.*|export JAVA_HOME=\"${JAVA_HOME_DIR}\"|" "${HOME}/.bash_common" \
     && \
     # Additional libs for spark \
-    wget --no-verbose --directory-prefix=${SPARK_HOME}/jars \
+    wget -q --no-check-certificate --directory-prefix=${SPARK_HOME}/jars \
         https://jdbc.postgresql.org/download/postgresql-42.7.5.jar \
         https://repos.spark-packages.org/graphframes/graphframes/0.8.4-spark3.5-s_2.12/graphframes-0.8.4-spark3.5-s_2.12.jar \
     && \

@@ -1,19 +1,19 @@
 ## Hadoop and Spark Cluster Deployment
 
-This script deploys a cluster with `Apache Hadoop 3.4.x` and `Apache Spark 3.5.x` in fully distributed mode using `Docker` containers as the underlying infrastructure. This setup is primarily intended for teaching and experimentation, but it may also be suitable for scalable data processing workloads in controlled environments.
+This script deploys a cluster with `Apache Hadoop 3.4.1` and `Apache Spark 3.5.6` in fully distributed mode using `Docker` containers as the underlying infrastructure. This setup is primarily intended for teaching and experimentation, but it may also be suitable for scalable data processing workloads in controlled environments.
 
-JupyterLab is now integrated, allowing users to interact with the Spark cluster through notebooks, making development, testing, and data exploration more convenient and user-friendly.
+In addition, `JupyterLab` is integrated into the cluster, allowing users to interact with the Spark through notebooks, making development, testing, and data exploration more convenient and user-friendly.
 
 ### 🗂️ Architecture
 
 The cluster consists of **one master node** and a configurable number of **worker nodes**, deployed over a custom `Docker` network.
 
 - **Master Node**: `spark-master` — responsible for coordinating the cluster, managing resources (via YARN), and serving as the Spark Master and HDFS NameNode.
-- **Worker Nodes**: `spark-worker-<id>` — replicated containers acting as Spark Workers, HDFS DataNodes, and YARN NodeManagers, where `<id>` denotes the worker instance ID.
+- **Worker Nodes**: `spark-worker-<id>` — multiple containers acting as Spark Workers, HDFS DataNodes, and YARN NodeManagers, where `<id>` denotes the worker instance ID.
 
 ### ⚙️ Resource Management and Services
 
-The cluster uses **YARN** for resource scheduling and **HDFS** for distributed file storage. Here are the key services on each node:
+The cluster uses **YARN** for resource scheduling and **HDFS** for distributed file storage. All Spark applications use YARN as the underlying resource manager. Below are the key services on each node:
 
 #### Master Node (`spark-master`)
 
@@ -36,38 +36,53 @@ The cluster uses **YARN** for resource scheduling and **HDFS** for distributed f
 
 ### :rocket: How to build and run
 
-⚠️ Note: All cluster parameters — such as the default user credentials, resource allocation (e.g., memory and CPU limits), number of worker nodes, and other deployment-specific settings — are configurable via the `.env` file. This file is the primary configuration source for the cluster setup.
+⚠️ Note: The number of worker nodes is configurable via the `.env` file, by changing `NUM_WORKER_NODES` value.
+
+⚠️ Important: There is a script that downloads the Hadoop and Spark distributions and generates an updated docker-compose.yml file reflecting the new cluster configuration based on the NUM_WORKER_NODES variable. It is recommended to run the command docker compose run --rm init every time the NUM_WORKER_NODES variable is changed.
+
+<!-- ⚠️ Important: It is recommended to run `docker compose run --rm gen-compose` command every time `NUM_WORKER_NODES` variable is changed. This ensures that `docker-compose.yml` file is updated with the new cluster configuration.
+
+
+⚠️ Optional (Recommended): Before starting, it is advised to pre-download Apache Hadoop and Apache Spark by running one of the following scripts according to your operating system: `download.sh` (GNU/Linux), `download.bat` (Windows cmd/powershell) or `download.mac.sh` (MacOS terminal). This step speeds up the build process; however, it is not mandatory, as all required resources are downloaded during the build.-->
 
 #### To build and run:
 
-⚠️ Optional (Recommended): Before starting, it is advised to pre-download Apache Hadoop and Apache Spark by running the one of the following scripts according to your operating system: `download.sh` (GNU/Linux), `download.bat` (Windows cmd/powershell) or `download.mac.sh` (MacOS terminal). This step speeds up the build process; however, it is not mandatory, as all required resources are downloaded during the build.
-
 ```
-docker compose run --rm gen-compose
+docker compose run --rm init
 docker compose build && docker compose up
 ```
 
-⚠️ Note: It is advised to use `Docker Compose 1.18.0` or higher to ensure compatibility.
+`docker compose run --rm init` updates the `docker-compose.yml` file based on the number of worker nodes and downloads the Hadoop and Spark distributions.
 
-⚠️ Important: It is recommended to run `docker compose run --rm gen-compose` command every time `$NUM_WORKER_NODES` variable is changed. This ensures that `docker-compose.yml` file is updated with the new cluster configuration.
+`docker compose build && docker compose up` builds the hadoop-spark Docker image and then starts the containers running the Hadoop and Spark services.
+
+If needed, you can run `docker compose run --rm init default` to restore the `docker-compose.yml` file to its default configuration.
+
+⚠️ Note: It is advised to use `Docker Compose CLI v1.28.0+` or higher to ensure compatibility.
 
 ### :bulb: Tips
 
 #### Accessing the Master Node
 
-To access the master node, run the following command:
+After deploying the containers, you can use the cluster by accessing the `spark-master` node via terminal and run pyspark or spark-submit. To access the `spark-master`, run the following command in a terminal:
 ```
 docker exec -it spark-master bash
 ```
 
+Alternatively, you can access JupyterLab through a web browser: http://localhost:8888
+
+Additionally, if you have enabled Spark Connect (in the .env file), you can connect remotely by creating a SparkSession that points to the master node at `sc://{IP_ADDRESS}:15002`.
+
 ### :memo: Changelog
 
-#### 28/05/2025
-- :wrench: Refactored `services.sh` for better performance on managing services;
+#### 01/06/2025
+- :package: Updated `Apache Spark` version to 3.5.6;
+- :sparkles: A new method to initialize the cluster has been introduced. Simply run `docker compose run --rm init` to update the docker-compose.yml file according to the NUM_WORKER_NODES variable and download all Hadoop and Spark resources. The old download scripts have been removed;
+- :wrench: The `Dockerfile` was optimized. Hadoop and Spark are no longer downloaded during the build process, as it was very slow. Instead, this is now handled by the new init service described above;
 - :wrench: Minor fixes and optimizations.
 - :clipboard: Build Summary:
   * hadoop:3.4.1
-  * spark:3.5.5+2.12
+  * spark:3.5.6+2.12
   * psql-jdbc:42.7.5
   * graphframes:0.8.4
   * jdk:11
@@ -78,6 +93,10 @@ docker exec -it spark-master bash
   * File uploads via the HDFS WebUI are currently not functional (Docker limitation due to port forwarding);
   * Hostname links in Spark/YARN WebUI are unresponsive (Docker limitation due to port forwarding);
   * HDFS capacity information is inaccurate (Docker limitation).
+
+#### 28/05/2025
+- :wrench: Refactored `services.sh` for better performance on managing services;
+- :wrench: Minor fixes and optimizations.
 
 #### 24/05/2025
 - :sparkles: All confguration files for Hadoop and Spark located in the `config_files` folder are now bind-mounted into the containers at their respective destination directories. This allows you to edit these files externally, and any changes will automatically apply across all containers (just restart them after any change). Due to this change, resource variables are no longer in the `.env` file. You can use `services.sh` `[start|stop]` to restart cluster services;
