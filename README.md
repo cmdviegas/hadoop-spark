@@ -43,8 +43,8 @@ The cluster consists of **one master node** and a configurable number of **worke
 
 ### Configuration
 
-- **Number of Workers**: Set number of worker nodes (`NUM_WORKER_NODES`) in `.env` file.
-- **Cluster Initialization**: Use `docker compose run --rm init` to download Hadoop/Spark and regenerate `docker-compose.yml`.
+- **Number of Workers**: Set the desired number of worker nodes by changing `NUM_WORKER_NODES` variable in `.env` file.
+- **Cluster Initialization**: Use `docker compose run --rm init` to download Hadoop/Spark and regenerate `docker-compose.yml` according to the `NUM_WORKER_NODES` variable.
 
     ⚠️ Important: Re-run `docker compose run --rm init` every time you change `NUM_WORKER_NODES`.
 
