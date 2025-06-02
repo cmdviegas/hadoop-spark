@@ -84,6 +84,10 @@ docker exec -it spark-master bash
 > [!WARNING]\
 > Please be advised that enabling `Spark Connect Server` prevent local `pyspark`/`spark-submit` and `JupyterLab` usage.
 
+## :memo: Changelog
+
+[See CHANGELOG.md](CHANGELOG.md)
+
 ## :page_facing_up: License
 
 Copyright (c) 2022-2025 [CARLOS M. D. VIEGAS](https://github.com/cmdviegas).
