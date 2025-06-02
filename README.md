@@ -43,8 +43,8 @@ The cluster consists of **one master node** and a configurable number of **worke
 
 ### Configuration
 
-- **Number of Workers**: Set the desired number of worker nodes by changing `NUM_WORKER_NODES` variable in `.env` file.
-- **Cluster Initialization**: Use `docker compose run --rm init` to download Hadoop/Spark and regenerate `docker-compose.yml` according to the `NUM_WORKER_NODES` variable.
+- **Number of workers**: Set the desired number of worker nodes by changing `NUM_WORKER_NODES` variable in `.env` file.
+- **Cluster initialization**: Use `docker compose run --rm init` to download Hadoop/Spark and regenerate `docker-compose.yml` according to the `NUM_WORKER_NODES` variable.
 
     ⚠️ Important: Re-run `docker compose run --rm init` every time you change `NUM_WORKER_NODES`.
 
@@ -55,17 +55,24 @@ docker compose run --rm init
 docker compose build && docker compose up
 ```
 
-- `docker compose run --rm init` updates the `docker-compose.yml` file based on the number of worker nodes and downloads the Hadoop and Spark distributions.
+#### Description: 
+- `docker compose run --rm init` - updates the `docker-compose.yml` file based on the number of worker nodes and downloads the Hadoop and Spark distributions.
 
-- `docker compose build && docker compose up` builds the hadoop-spark Docker image and then starts the containers running the Hadoop and Spark services.
+  - If needed, you can run `docker compose run --rm init default` to restore the `docker-compose.yml` file to its default configuration.
 
-- If needed, you can run `docker compose run --rm init default` to restore the `docker-compose.yml` file to its default configuration.
+- `docker compose build && docker compose up` - builds the hadoop-spark image and then starts the containers running Hadoop and Spark services.
 
-## 💻 Usage:
+> [!WARNING]\
+> Teste
+
+> [!NOTE]\
+> Test
+
+## 💻 Services usage:
 
 ### Accessing the Cluster
 
-After deploying the containers, you can use the cluster by accessing the `spark-master` node via terminal and run pyspark or spark-submit. To access the `spark-master`, run the following command in a terminal:
+After deploying the containers, you can use the cluster by accessing the `spark-master` node via terminal and run `pyspark` or `spark-submit`. To access the `spark-master`, run the following command in a terminal:
 ```
 docker exec -it spark-master bash
 ```
