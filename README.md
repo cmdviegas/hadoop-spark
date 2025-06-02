@@ -45,8 +45,11 @@ The cluster consists of **one master node** and a configurable number of **worke
 
 - **Number of workers**: Set the desired number of worker nodes by changing `NUM_WORKER_NODES` variable in `.env` file.
 - **Cluster initialization**: Use `docker compose run --rm init` to download Hadoop/Spark and regenerate `docker-compose.yml` according to the `NUM_WORKER_NODES` variable.
-
-    ⚠️ Important: Re-run `docker compose run --rm init` every time you change `NUM_WORKER_NODES`.
+> [!IMPORTANT]\
+> Re-run `docker compose run --rm init` every time you change `NUM_WORKER_NODES`.
+- **Spark connect**: If needed, enable spark connect server by setting `SPARK_CONNECT_SERVER` variable to true in `.env` file.
+> [!WARNING]\
+> Please be advised that enabling Spark Connect Server will prevent local PySpark terminal and JupyterLab usage.
 
 ### To build and run:
 
@@ -55,18 +58,13 @@ docker compose run --rm init
 docker compose build && docker compose up
 ```
 
-#### Description: 
-- `docker compose run --rm init` - updates the `docker-compose.yml` file based on the number of worker nodes and downloads the Hadoop and Spark distributions.
-
-  - If needed, you can run `docker compose run --rm init default` to restore the `docker-compose.yml` file to its default configuration.
-
-- `docker compose build && docker compose up` - builds the hadoop-spark image and then starts the containers running Hadoop and Spark services.
-
-> [!WARNING]\
-> Teste
-
 > [!NOTE]\
-> Test
+> #### Description: 
+> - `docker compose run --rm init` - updates the `docker-compose.yml` file based on the number of worker nodes and downloads the Hadoop and Spark distributions.
+>
+>  - If needed, you can run `docker compose run --rm init default` to restore the `docker-compose.yml` file to its default configuration.
+>
+> - `docker compose build && docker compose up` - builds the hadoop-spark image and then starts the containers running Hadoop and Spark services.
 
 ## 💻 Services usage:
 
@@ -77,9 +75,11 @@ After deploying the containers, you can use the cluster by accessing the `spark-
 docker exec -it spark-master bash
 ```
 
-Alternatively, you can access `JupyterLab` through a web browser: http://localhost:8888
+> [!NOTE]\
+> Alternatively, you can access `JupyterLab` through a web browser: http://localhost:8888
 
-Additionally, if you have enabled `Spark Connect` (in the .env file), you can connect remotely by creating a SparkSession that points to the master node at `sc://{IP_ADDRESS}:15002`.
+> [!NOTE]\
+> Additionally, if you have enabled `Spark Connect` (in the .env file), you can connect remotely by creating a SparkSession that points to the master node at `sc://{IP_ADDRESS}:15002`.
 
 ## :memo: Changelog
 
