@@ -59,8 +59,12 @@ docker compose build && docker compose up
 
 > [!NOTE]\
 > `docker compose run --rm init` - updates the `docker-compose.yml` file based on the number of worker nodes and downloads the Hadoop and Spark distributions.
-> If needed, you can run `docker compose run --rm init default` to restore the `docker-compose.yml` file to its default configuration.
+>
 > `docker compose build && docker compose up` - builds the hadoop-spark image and then starts the containers running Hadoop and Spark services.
+
+> [!IMPORTANT]\
+> If needed, you can run `docker compose run --rm init default` to restore the `docker-compose.yml` file to its default configuration.
+
 
 ## 💻 Services usage:
 
