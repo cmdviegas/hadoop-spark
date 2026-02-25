@@ -1,6 +1,6 @@
 # Hadoop and Spark Cluster Deployment
 
-This project deploys a cluster with `Apache Hadoop 3.4.1` and `Apache Spark 3.5.6` in fully distributed mode using `Docker` containers as the underlying infrastructure. This setup is primarily intended for teaching and experimentation, but it may also be suitable for scalable data processing workloads in controlled environments.
+This project deploys a cluster with `Apache Hadoop 3.4.1` and `Apache Spark 3.5.8` in fully distributed mode using `Docker` containers as the underlying infrastructure. This setup is primarily intended for teaching and experimentation, but it may also be suitable for scalable data processing workloads in controlled environments.
 
 In addition, `JupyterLab` is integrated into the cluster, allowing users to interact with the Spark through notebooks, making development, testing, and data exploration more convenient and user-friendly.
 
@@ -90,7 +90,7 @@ docker exec -it spark-master bash
 
 ## :page_facing_up: License
 
-Copyright (c) 2022-2025 [CARLOS M. D. VIEGAS](https://github.com/cmdviegas).
+Copyright (c) 2022-2026 [CARLOS M. D. VIEGAS](https://github.com/cmdviegas).
 
 This script is licensed under the [MIT License](https://github.com/cmdviegas/docker-hadoop-cluster/blob/master/LICENSE) and is free, open-source software.
 
